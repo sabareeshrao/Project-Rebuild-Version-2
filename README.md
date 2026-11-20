@@ -54,3 +54,11 @@ If you peek inside it, you'll see that we're training a GPT with a context size 
 python sample.py --out_dir=out-shakespeare-char
 ```
 
+This generates a few samples, for example:
+
+```
+ANGELO:
+And cowards it be strawn to my bed,
+And thrust the gates of my threats,
+Because he that ale away, and hang'd
+An one with him.
