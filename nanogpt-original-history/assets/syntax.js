@@ -44,3 +44,57 @@ export function sourceKind(path,text) {
   if(s.startsWith('"""')||s.startsWith("'''"))return 'docstring';
   return 'code';
 }
+
+
+// Classify source *at the actual historical snapshot*, not from a line's
+// final state. A removed line therefore retains its pre-edit comment identity.
+// Standalone Python # comments and standalone triple-quoted documentation are
+// eligible for the independent Comments overlay; trailing inline # is not.
+export function classifyFileLines(path,lines) {
+  const kinds=new Map();
+  if(!path.endsWith('.py')) {
+    for(const item of lines)kinds.set(item.id,'text');
+    return kinds;
+  }
+  let quote=null;
+  for(const item of lines) {
+    const raw=item.text,trim=raw.trimStart();
+    if(quote) {
+      kinds.set(item.id,'docstring');
+      let cursor=0;
+      while(true) {
+        const end=raw.indexOf(quote,cursor);
+        if(end<0)break;
+        let backslashes=0;
+        for(let j=end-1;j>=0&&raw[j]==='\\';j--)backslashes++;
+        if(backslashes%2===0){quote=null;break;}
+        cursor=end+quote.length;
+      }
+      continue;
+    }
+    if(trim.startsWith('#')){
+      kinds.set(item.id,'comment');
+      continue;
+    }
+    const candidate=trim.startsWith('"""')?'"""':
+      trim.startsWith("'''")?"'''":null;
+    if(candidate) {
+      kinds.set(item.id,'docstring');
+      // Triple quotes on the same line are not a continuing block.
+      // The closing delimiter must not be backslash-escaped.
+      let closed=false,cursor=candidate.length;
+      while(true) {
+        const end=trim.indexOf(candidate,cursor);
+        if(end<0)break;
+        let backslashes=0;
+        for(let j=end-1;j>=0&&trim[j]==='\\';j--)backslashes++;
+        if(backslashes%2===0){closed=true;break;}
+        cursor=end+candidate.length;
+      }
+      if(!closed)quote=candidate;
+      continue;
+    }
+    kinds.set(item.id,'code');
+  }
+  return kinds;
+}
