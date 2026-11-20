@@ -182,3 +182,11 @@ THEODORE:
 I do not steal; I sell the stolen goods.
 
 THEODORE:
+Thou know'st not what thou sell'st; thou, a woman,
+Thou art ever a victim, a thing of no worth:
+Thou hast no right, no right, but to be sold.
+```
+
+Whoa there, GPT, entering some dark place over there. I didn't really tune the hyperparameters in the config too much, feel free to try!
+
+## sampling / inference
