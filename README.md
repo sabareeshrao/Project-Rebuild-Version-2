@@ -38,3 +38,11 @@ If you are not a deep learning professional and you just want to feel the magic 
 
 ```sh
 python data/shakespeare_char/prepare.py
+```
+
+This creates a `train.bin` and `val.bin` in that data directory. Now it is time to train your GPT. The size of it very much depends on the computational resources of your system:
+
+**I have a GPU**. Great, we can quickly train a baby GPT with the settings provided in the [config/train_shakespeare_char.py](config/train_shakespeare_char.py) config file:
+
+```sh
+python train.py config/train_shakespeare_char.py
