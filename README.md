@@ -142,3 +142,11 @@ $ python train.py config/eval_gpt2.py
 $ python train.py config/eval_gpt2_medium.py
 $ python train.py config/eval_gpt2_large.py
 $ python train.py config/eval_gpt2_xl.py
+```
+
+and observe the following losses on train and val:
+
+| model | params | train loss | val loss |
+| ------| ------ | ---------- | -------- |
+| gpt2 | 124M         | 3.11  | 3.12     |
+| gpt2-medium | 350M  | 2.85  | 2.84     |
