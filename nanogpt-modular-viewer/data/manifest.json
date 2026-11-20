@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 1,
+  "project": "nanoGPT — Source History",
+  "repository": "sabareeshrao/Project-Rebuild-Version-2",
+  "history": {
+    "totalNanoGPTCommits": 235,
+    "completedThrough": 15,
+    "plannedBatchSize": 15,
+    "batchNumber": 1,
+    "sourceMode": "append-only-verified",
+    "description": "Only the 235 reconstructed nanoGPT commits; viewer, handover and learning commits excluded."
+  },
+  "files": [
+    {
+      "id": "FIL-001",
+      "path": "model.py",
+      "moduleId": "MOD-001",
+      "module": "model",
+      "directoryId": "DIR-001",
+      "directory": "(repository root)",
+      "lineCount": 76,
+      "chunks": [
+        {
+          "id": "001-015",
+          "batch": 1,
+          "startCommit": 1,
+          "endCommit": 15,
+          "startLine": 1,
+          "endLine": 76,
+          "path": "batches/001-015.json"
+        }
+      ]
+    }
+  ],
+  "scopes": [
+    {
+      "fileId": "FIL-001",
+      "kind": "class",
+      "id": "CLS-001",
+      "name": "LayerNorm",
+      "from": 18,
+      "to": 28
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-001",
+      "name": "__init__()",
+      "from": 21,
+      "to": 25
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-001",
+      "name": "__init__() body",
+      "from": 22,
+      "to": 25
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-002",
+      "name": "forward()",
+      "from": 26,
+      "to": 28
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-002",
+      "name": "forward() body",
+      "from": 27,
+      "to": 28
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "class",
+      "id": "CLS-002",
+      "name": "CausalSelfAttention",
+      "from": 29,
+      "to": 77
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-003",
+      "name": "__init__()",
+      "from": 31,
+      "to": 51
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-003",
+      "name": "__init__() body",
+      "from": 32,
+      "to": 51
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-001",
+      "name": "if not self.flash",
+      "from": 46,
+      "to": 51
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-004",
+      "name": "forward()",
+      "from": 52,
+      "to": 77
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-004",
+      "name": "forward() body",
+      "from": 53,
+      "to": 77
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-002",
+      "name": "if self.flash",
+      "from": 62,
+      "to": 64
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-003",
+      "name": "else",
+      "from": 65,
+      "to": 71
+    }
+  ],
+  "commits": [
+    {
+      "n": 1,
+      "sha": "cac2c626c007c5a5bb298f001a9efa7091a313ca",
+      "title": "start original nanoGPT model module header",
+      "message": "build: start original nanoGPT model module header",
+      "added": 8,
+      "total": 8,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/cac2c626c007c5a5bb298f001a9efa7091a313ca",
+      "fileTotals": {
+        "FIL-001": 8
+      },
+      "fileAdded": {
+        "FIL-001": 8
+      }
+    },
+    {
+      "n": 2,
+      "sha": "1b0b2d229884d905b7c736112345c520f2250a34",
+      "title": "introduce original GPT model imports",
+      "message": "build: introduce original GPT model imports",
+      "added": 8,
+      "total": 16,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/1b0b2d229884d905b7c736112345c520f2250a34",
+      "fileTotals": {
+        "FIL-001": 16
+      },
+      "fileAdded": {
+        "FIL-001": 8
+      }
+    },
+    {
+      "n": 3,
+      "sha": "7515b19bf95404294b3ca6a6ab0b22d829fff7df",
+      "title": "declare original optional-bias LayerNorm",
+      "message": "build: declare original optional-bias LayerNorm",
+      "added": 4,
+      "total": 20,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/7515b19bf95404294b3ca6a6ab0b22d829fff7df",
+      "fileTotals": {
+        "FIL-001": 20
+      },
+      "fileAdded": {
+        "FIL-001": 4
+      }
+    },
+    {
+      "n": 4,
+      "sha": "ac18d044565fa9cd11f10ff88b5e9395a979bf9e",
+      "title": "initialize learnable LayerNorm scale and bias",
+      "message": "build: initialize learnable LayerNorm scale and bias",
+      "added": 4,
+      "total": 24,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/ac18d044565fa9cd11f10ff88b5e9395a979bf9e",
+      "fileTotals": {
+        "FIL-001": 24
+      },
+      "fileAdded": {
+        "FIL-001": 4
+      }
+    },
+    {
+      "n": 5,
+      "sha": "feb101a3c891690892790bc0c362cb1666c2a385",
+      "title": "complete original LayerNorm forward calculation",
+      "message": "build: complete original LayerNorm forward calculation",
+      "added": 3,
+      "total": 27,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/feb101a3c891690892790bc0c362cb1666c2a385",
+      "fileTotals": {
+        "FIL-001": 27
+      },
+      "fileAdded": {
+        "FIL-001": 3
+      }
+    },
+    {
+      "n": 6,
+      "sha": "9db19cfc88373aba66663b88f453121a8d58c4b1",
+      "title": "declare original causal self-attention projections",
+      "message": "build: declare original causal self-attention projections",
+      "added": 6,
+      "total": 33,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/9db19cfc88373aba66663b88f453121a8d58c4b1",
+      "fileTotals": {
+        "FIL-001": 33
+      },
+      "fileAdded": {
+        "FIL-001": 6
+      }
+    },
+    {
+      "n": 7,
+      "sha": "cb6a068138863bda2adf018d727588fd11e19cc6",
+      "title": "configure packed QKV and output projection",
+      "message": "build: configure packed QKV and output projection",
+      "added": 4,
+      "total": 37,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/cb6a068138863bda2adf018d727588fd11e19cc6",
+      "fileTotals": {
+        "FIL-001": 37
+      },
+      "fileAdded": {
+        "FIL-001": 4
+      }
+    },
+    {
+      "n": 8,
+      "sha": "596e8c5dfc066e3a9b90245c9db3e2f1c7b73731",
+      "title": "configure attention dropout and head metadata",
+      "message": "build: configure attention dropout and head metadata",
+      "added": 6,
+      "total": 43,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/596e8c5dfc066e3a9b90245c9db3e2f1c7b73731",
+      "fileTotals": {
+        "FIL-001": 43
+      },
+      "fileAdded": {
+        "FIL-001": 6
+      }
+    },
+    {
+      "n": 9,
+      "sha": "1143003f280676a06cf33ea738d9f5070024244d",
+      "title": "detect PyTorch scaled dot-product attention",
+      "message": "build: detect PyTorch scaled dot-product attention",
+      "added": 2,
+      "total": 45,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/1143003f280676a06cf33ea738d9f5070024244d",
+      "fileTotals": {
+        "FIL-001": 45
+      },
+      "fileAdded": {
+        "FIL-001": 2
+      }
+    },
+    {
+      "n": 10,
+      "sha": "03f761745efe3006334eab8f1bd8af02062891a3",
+      "title": "register original manual causal mask fallback",
+      "message": "build: register original manual causal mask fallback",
+      "added": 5,
+      "total": 50,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/03f761745efe3006334eab8f1bd8af02062891a3",
+      "fileTotals": {
+        "FIL-001": 50
+      },
+      "fileAdded": {
+        "FIL-001": 5
+      }
+    },
+    {
+      "n": 11,
+      "sha": "804c657b5c8f1bb5df5909b0fd67437a30dd5236",
+      "title": "start original causal attention forward pass",
+      "message": "build: start original causal attention forward pass",
+      "added": 4,
+      "total": 54,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/804c657b5c8f1bb5df5909b0fd67437a30dd5236",
+      "fileTotals": {
+        "FIL-001": 54
+      },
+      "fileAdded": {
+        "FIL-001": 4
+      }
+    },
+    {
+      "n": 12,
+      "sha": "42288e37d76d41404f0173056b664493f64f39e8",
+      "title": "split QKV into individual attention heads",
+      "message": "build: split QKV into individual attention heads",
+      "added": 6,
+      "total": 60,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/42288e37d76d41404f0173056b664493f64f39e8",
+      "fileTotals": {
+        "FIL-001": 60
+      },
+      "fileAdded": {
+        "FIL-001": 6
+      }
+    },
+    {
+      "n": 13,
+      "sha": "e7e9d63f05aba8ec8fb2fc63de0634bcbf7fc7f3",
+      "title": "apply causal scaled dot-product attention",
+      "message": "build: apply causal scaled dot-product attention",
+      "added": 4,
+      "total": 64,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/e7e9d63f05aba8ec8fb2fc63de0634bcbf7fc7f3",
+      "fileTotals": {
+        "FIL-001": 64
+      },
+      "fileAdded": {
+        "FIL-001": 4
+      }
+    },
+    {
+      "n": 14,
+      "sha": "915dae9f834f6787c6c9de34b8261ad0f872c452",
+      "title": "implement original manual attention fallback",
+      "message": "build: implement original manual attention fallback",
+      "added": 7,
+      "total": 71,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/915dae9f834f6787c6c9de34b8261ad0f872c452",
+      "fileTotals": {
+        "FIL-001": 71
+      },
+      "fileAdded": {
+        "FIL-001": 7
+      }
+    },
+    {
+      "n": 15,
+      "sha": "af0f71fda3840a543379f9e075d032a77d5380f1",
+      "title": "combine attention heads and output projection",
+      "message": "build: combine attention heads and output projection",
+      "added": 5,
+      "total": 76,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/af0f71fda3840a543379f9e075d032a77d5380f1",
+      "fileTotals": {
+        "FIL-001": 76
+      },
+      "fileAdded": {
+        "FIL-001": 5
+      }
+    }
+  ]
+}

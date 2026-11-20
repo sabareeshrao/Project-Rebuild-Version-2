@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050505">
+<title>nanoGPT · Modular Commit-First Code Viewer · Batch 01</title>
+<meta name="description" content="Real nanoGPT source reconstructed commit by commit, with permanent STM IDs, modular data chunks and a windowed page viewer.">
+<link rel="stylesheet" href="./assets/viewer.css">
+</head>
+<body>
+<main class="shell">
+  <header class="site-head">
+    <div>
+      <p class="eyebrow">Original nanoGPT history · Batch 01 / 16</p>
+      <h1>Commit-First Code Explorer</h1>
+      <p class="subtitle">Real source · Stable STM IDs · Modular data · Natural page scrolling</p>
+    </div>
+    <a class="source-link" href="https://github.com/sabareeshrao/Project-Rebuild-Version-2" target="_blank" rel="noopener noreferrer">GitHub repository</a>
+  </header>
+
+  <section class="control-bar" aria-label="Source controls">
+    <div class="control-row">
+      <span class="small-label">View</span>
+      <div id="mode-group" class="mode-group" role="group" aria-label="Code view">
+        <button type="button" class="mode" data-mode="full" aria-pressed="true">Full file</button>
+        <button type="button" class="mode" data-mode="added" aria-pressed="false">Added only</button>
+        <button type="button" class="mode" data-mode="selected" aria-pressed="false">Selected commits</button>
+      </div>
+    </div>
+    <div class="control-row">
+      <span class="small-label">Commit</span>
+      <div class="stepper" role="group" aria-label="Previous or next commit">
+        <button id="previous" class="step" type="button" aria-label="Previous source commit">−</button>
+        <output id="commit-indicator" aria-live="polite">15</output>
+        <button id="next" class="step" type="button" aria-label="Next source commit">+</button>
+      </div>
+      <form id="jump-form" class="jump">
+        <label class="small-label" for="jump-input">Jump</label>
+        <input id="jump-input" type="text" inputmode="text" autocomplete="off" placeholder="5 or 5-10" aria-label="Source commit number or inclusive range">
+        <button class="apply" type="submit">Go</button>
+      </form>
+      <label class="file-picker" for="file-select">
+        <span class="small-label">File</span>
+        <select id="file-select" aria-label="Source file"></select>
+      </label>
+    </div>
+    <div id="categories" class="categories" role="group" aria-label="Color code source by hierarchy category">
+      <button type="button" class="category" data-kind="line" aria-pressed="true">Lines</button>
+      <button type="button" class="category" data-kind="comment" aria-pressed="false">Comments</button>
+      <button type="button" class="category" data-kind="module" aria-pressed="false">Module</button>
+      <button type="button" class="category" data-kind="package" aria-pressed="false">Directory</button>
+      <button type="button" class="category" data-kind="file" aria-pressed="false">File</button>
+      <button type="button" class="category" data-kind="class" aria-pressed="false">Class</button>
+      <button type="button" class="category" data-kind="method" aria-pressed="false">Method</button>
+      <button type="button" class="category" data-kind="block" aria-pressed="false">Code Block</button>
+      <button type="button" class="category" data-kind="nested" aria-pressed="false">Nested Block</button>
+    </div>
+  </section>
+
+  <section class="summary" aria-label="Selected historical source">
+    <div>
+      <div id="commit-title">Loading source history…</div>
+      <a id="commit-link" href="https://github.com/sabareeshrao/Project-Rebuild-Version-2/commits/main" target="_blank" rel="noopener noreferrer">Original GitHub commit</a>
+    </div>
+    <div>
+      <div id="file-name" class="small-label">model.py</div>
+      <div id="file-meta" class="subtitle">Indexed commits 1–15</div>
+    </div>
+  </section>
+  <p id="status" role="status" aria-live="polite">Loading modular source manifest…</p>
+  <p id="hint">Only the selected hierarchy category colors the source chips. Green code dividers appear only between touching sibling groups.</p>
+
+  <section id="line-area" class="line-area" aria-label="Virtualized original source and permanent statement identifiers">
+    <div id="top-spacer" aria-hidden="true"></div>
+    <div id="line-window"></div>
+    <div id="bottom-spacer" aria-hidden="true"></div>
+  </section>
+
+  <p class="footer">
+    Batch 01 includes <strong>15 reconstructed nanoGPT source commits</strong> (76 genuine physical lines in
+    <code>model.py</code>), validated against their GitHub snapshots. All source lines, blank lines and comments retain
+    original STM identities. The viewer loads source JSON chunks as needed and renders nearby rows, not the entire
+    history as DOM nodes. Historical code is not rewritten to make incomplete early commits runnable.
+    No synthetic sky-blue boundary chips or green gap rows are used.
+    Source-history coverage will grow batch by batch; other files and non-append edits must be validated as they are introduced.
+  </p>
+</main>
+<script type="module" src="./assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,544 @@
+{
+  "schemaVersion": 1,
+  "batch": "001-015",
+  "fromCommit": 1,
+  "toCommit": 15,
+  "fromLine": 1,
+  "toLine": 76,
+  "fileId": "FIL-001",
+  "file": "model.py",
+  "lines": [
+    {
+      "n": 1,
+      "id": "STM-001-FIL-001-model.py",
+      "text": "\"\"\"",
+      "firstCommit": 1,
+      "kind": "docstring"
+    },
+    {
+      "n": 2,
+      "id": "STM-002-FIL-001-model.py",
+      "text": "Full definition of a GPT Language Model, all of it in this single file.",
+      "firstCommit": 1,
+      "kind": "docstring"
+    },
+    {
+      "n": 3,
+      "id": "STM-003-FIL-001-model.py",
+      "text": "References:",
+      "firstCommit": 1,
+      "kind": "docstring"
+    },
+    {
+      "n": 4,
+      "id": "STM-004-FIL-001-model.py",
+      "text": "1) the official GPT-2 TensorFlow implementation released by OpenAI:",
+      "firstCommit": 1,
+      "kind": "docstring"
+    },
+    {
+      "n": 5,
+      "id": "STM-005-FIL-001-model.py",
+      "text": "https://github.com/openai/gpt-2/blob/master/src/model.py",
+      "firstCommit": 1,
+      "kind": "docstring"
+    },
+    {
+      "n": 6,
+      "id": "STM-006-FIL-001-model.py",
+      "text": "2) huggingface/transformers PyTorch implementation:",
+      "firstCommit": 1,
+      "kind": "docstring"
+    },
+    {
+      "n": 7,
+      "id": "STM-007-FIL-001-model.py",
+      "text": "https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt2/modeling_gpt2.py",
+      "firstCommit": 1,
+      "kind": "docstring"
+    },
+    {
+      "n": 8,
+      "id": "STM-008-FIL-001-model.py",
+      "text": "\"\"\"",
+      "firstCommit": 1,
+      "kind": "docstring"
+    },
+    {
+      "n": 9,
+      "id": "STM-009-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 2,
+      "kind": "blank"
+    },
+    {
+      "n": 10,
+      "id": "STM-010-FIL-001-model.py",
+      "text": "import math",
+      "firstCommit": 2,
+      "kind": "code"
+    },
+    {
+      "n": 11,
+      "id": "STM-011-FIL-001-model.py",
+      "text": "import inspect",
+      "firstCommit": 2,
+      "kind": "code"
+    },
+    {
+      "n": 12,
+      "id": "STM-012-FIL-001-model.py",
+      "text": "from dataclasses import dataclass",
+      "firstCommit": 2,
+      "kind": "code"
+    },
+    {
+      "n": 13,
+      "id": "STM-013-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 2,
+      "kind": "blank"
+    },
+    {
+      "n": 14,
+      "id": "STM-014-FIL-001-model.py",
+      "text": "import torch",
+      "firstCommit": 2,
+      "kind": "code"
+    },
+    {
+      "n": 15,
+      "id": "STM-015-FIL-001-model.py",
+      "text": "import torch.nn as nn",
+      "firstCommit": 2,
+      "kind": "code"
+    },
+    {
+      "n": 16,
+      "id": "STM-016-FIL-001-model.py",
+      "text": "from torch.nn import functional as F",
+      "firstCommit": 2,
+      "kind": "code"
+    },
+    {
+      "n": 17,
+      "id": "STM-017-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 3,
+      "kind": "blank"
+    },
+    {
+      "n": 18,
+      "id": "STM-018-FIL-001-model.py",
+      "text": "class LayerNorm(nn.Module):",
+      "firstCommit": 3,
+      "kind": "code"
+    },
+    {
+      "n": 19,
+      "id": "STM-019-FIL-001-model.py",
+      "text": "    \"\"\" LayerNorm but with an optional bias. PyTorch doesn't support simply bias=False \"\"\"",
+      "firstCommit": 3,
+      "kind": "docstring"
+    },
+    {
+      "n": 20,
+      "id": "STM-020-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 3,
+      "kind": "blank"
+    },
+    {
+      "n": 21,
+      "id": "STM-021-FIL-001-model.py",
+      "text": "    def __init__(self, ndim, bias):",
+      "firstCommit": 4,
+      "kind": "code"
+    },
+    {
+      "n": 22,
+      "id": "STM-022-FIL-001-model.py",
+      "text": "        super().__init__()",
+      "firstCommit": 4,
+      "kind": "code"
+    },
+    {
+      "n": 23,
+      "id": "STM-023-FIL-001-model.py",
+      "text": "        self.weight = nn.Parameter(torch.ones(ndim))",
+      "firstCommit": 4,
+      "kind": "code"
+    },
+    {
+      "n": 24,
+      "id": "STM-024-FIL-001-model.py",
+      "text": "        self.bias = nn.Parameter(torch.zeros(ndim)) if bias else None",
+      "firstCommit": 4,
+      "kind": "code"
+    },
+    {
+      "n": 25,
+      "id": "STM-025-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 5,
+      "kind": "blank"
+    },
+    {
+      "n": 26,
+      "id": "STM-026-FIL-001-model.py",
+      "text": "    def forward(self, input):",
+      "firstCommit": 5,
+      "kind": "code"
+    },
+    {
+      "n": 27,
+      "id": "STM-027-FIL-001-model.py",
+      "text": "        return F.layer_norm(input, self.weight.shape, self.weight, self.bias, 1e-5)",
+      "firstCommit": 5,
+      "kind": "code"
+    },
+    {
+      "n": 28,
+      "id": "STM-028-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 6,
+      "kind": "blank"
+    },
+    {
+      "n": 29,
+      "id": "STM-029-FIL-001-model.py",
+      "text": "class CausalSelfAttention(nn.Module):",
+      "firstCommit": 6,
+      "kind": "code"
+    },
+    {
+      "n": 30,
+      "id": "STM-030-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 6,
+      "kind": "blank"
+    },
+    {
+      "n": 31,
+      "id": "STM-031-FIL-001-model.py",
+      "text": "    def __init__(self, config):",
+      "firstCommit": 6,
+      "kind": "code"
+    },
+    {
+      "n": 32,
+      "id": "STM-032-FIL-001-model.py",
+      "text": "        super().__init__()",
+      "firstCommit": 6,
+      "kind": "code"
+    },
+    {
+      "n": 33,
+      "id": "STM-033-FIL-001-model.py",
+      "text": "        assert config.n_embd % config.n_head == 0",
+      "firstCommit": 6,
+      "kind": "code"
+    },
+    {
+      "n": 34,
+      "id": "STM-034-FIL-001-model.py",
+      "text": "        # key, query, value projections for all heads, but in a batch",
+      "firstCommit": 7,
+      "kind": "comment"
+    },
+    {
+      "n": 35,
+      "id": "STM-035-FIL-001-model.py",
+      "text": "        self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd, bias=config.bias)",
+      "firstCommit": 7,
+      "kind": "code"
+    },
+    {
+      "n": 36,
+      "id": "STM-036-FIL-001-model.py",
+      "text": "        # output projection",
+      "firstCommit": 7,
+      "kind": "comment"
+    },
+    {
+      "n": 37,
+      "id": "STM-037-FIL-001-model.py",
+      "text": "        self.c_proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)",
+      "firstCommit": 7,
+      "kind": "code"
+    },
+    {
+      "n": 38,
+      "id": "STM-038-FIL-001-model.py",
+      "text": "        # regularization",
+      "firstCommit": 8,
+      "kind": "comment"
+    },
+    {
+      "n": 39,
+      "id": "STM-039-FIL-001-model.py",
+      "text": "        self.attn_dropout = nn.Dropout(config.dropout)",
+      "firstCommit": 8,
+      "kind": "code"
+    },
+    {
+      "n": 40,
+      "id": "STM-040-FIL-001-model.py",
+      "text": "        self.resid_dropout = nn.Dropout(config.dropout)",
+      "firstCommit": 8,
+      "kind": "code"
+    },
+    {
+      "n": 41,
+      "id": "STM-041-FIL-001-model.py",
+      "text": "        self.n_head = config.n_head",
+      "firstCommit": 8,
+      "kind": "code"
+    },
+    {
+      "n": 42,
+      "id": "STM-042-FIL-001-model.py",
+      "text": "        self.n_embd = config.n_embd",
+      "firstCommit": 8,
+      "kind": "code"
+    },
+    {
+      "n": 43,
+      "id": "STM-043-FIL-001-model.py",
+      "text": "        self.dropout = config.dropout",
+      "firstCommit": 8,
+      "kind": "code"
+    },
+    {
+      "n": 44,
+      "id": "STM-044-FIL-001-model.py",
+      "text": "        # flash attention make GPU go brrrrr but support is only in PyTorch >= 2.0",
+      "firstCommit": 9,
+      "kind": "comment"
+    },
+    {
+      "n": 45,
+      "id": "STM-045-FIL-001-model.py",
+      "text": "        self.flash = hasattr(torch.nn.functional, 'scaled_dot_product_attention')",
+      "firstCommit": 9,
+      "kind": "code"
+    },
+    {
+      "n": 46,
+      "id": "STM-046-FIL-001-model.py",
+      "text": "        if not self.flash:",
+      "firstCommit": 10,
+      "kind": "code"
+    },
+    {
+      "n": 47,
+      "id": "STM-047-FIL-001-model.py",
+      "text": "            print(\"WARNING: using slow attention. Flash Attention requires PyTorch >= 2.0\")",
+      "firstCommit": 10,
+      "kind": "code"
+    },
+    {
+      "n": 48,
+      "id": "STM-048-FIL-001-model.py",
+      "text": "            # causal mask to ensure that attention is only applied to the left in the input sequence",
+      "firstCommit": 10,
+      "kind": "comment"
+    },
+    {
+      "n": 49,
+      "id": "STM-049-FIL-001-model.py",
+      "text": "            self.register_buffer(\"bias\", torch.tril(torch.ones(config.block_size, config.block_size))",
+      "firstCommit": 10,
+      "kind": "code"
+    },
+    {
+      "n": 50,
+      "id": "STM-050-FIL-001-model.py",
+      "text": "                                        .view(1, 1, config.block_size, config.block_size))",
+      "firstCommit": 10,
+      "kind": "code"
+    },
+    {
+      "n": 51,
+      "id": "STM-051-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 11,
+      "kind": "blank"
+    },
+    {
+      "n": 52,
+      "id": "STM-052-FIL-001-model.py",
+      "text": "    def forward(self, x):",
+      "firstCommit": 11,
+      "kind": "code"
+    },
+    {
+      "n": 53,
+      "id": "STM-053-FIL-001-model.py",
+      "text": "        B, T, C = x.size() # batch size, sequence length, embedding dimensionality (n_embd)",
+      "firstCommit": 11,
+      "kind": "code"
+    },
+    {
+      "n": 54,
+      "id": "STM-054-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 11,
+      "kind": "blank"
+    },
+    {
+      "n": 55,
+      "id": "STM-055-FIL-001-model.py",
+      "text": "        # calculate query, key, values for all heads in batch and move head forward to be the batch dim",
+      "firstCommit": 12,
+      "kind": "comment"
+    },
+    {
+      "n": 56,
+      "id": "STM-056-FIL-001-model.py",
+      "text": "        q, k, v  = self.c_attn(x).split(self.n_embd, dim=2)",
+      "firstCommit": 12,
+      "kind": "code"
+    },
+    {
+      "n": 57,
+      "id": "STM-057-FIL-001-model.py",
+      "text": "        k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)",
+      "firstCommit": 12,
+      "kind": "code"
+    },
+    {
+      "n": 58,
+      "id": "STM-058-FIL-001-model.py",
+      "text": "        q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)",
+      "firstCommit": 12,
+      "kind": "code"
+    },
+    {
+      "n": 59,
+      "id": "STM-059-FIL-001-model.py",
+      "text": "        v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2) # (B, nh, T, hs)",
+      "firstCommit": 12,
+      "kind": "code"
+    },
+    {
+      "n": 60,
+      "id": "STM-060-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 12,
+      "kind": "blank"
+    },
+    {
+      "n": 61,
+      "id": "STM-061-FIL-001-model.py",
+      "text": "        # causal self-attention; Self-attend: (B, nh, T, hs) x (B, nh, hs, T) -> (B, nh, T, T)",
+      "firstCommit": 13,
+      "kind": "comment"
+    },
+    {
+      "n": 62,
+      "id": "STM-062-FIL-001-model.py",
+      "text": "        if self.flash:",
+      "firstCommit": 13,
+      "kind": "code"
+    },
+    {
+      "n": 63,
+      "id": "STM-063-FIL-001-model.py",
+      "text": "            # efficient attention using Flash Attention CUDA kernels",
+      "firstCommit": 13,
+      "kind": "comment"
+    },
+    {
+      "n": 64,
+      "id": "STM-064-FIL-001-model.py",
+      "text": "            y = torch.nn.functional.scaled_dot_product_attention(q, k, v, attn_mask=None, dropout_p=self.dropout if self.training else 0, is_causal=True)",
+      "firstCommit": 13,
+      "kind": "code"
+    },
+    {
+      "n": 65,
+      "id": "STM-065-FIL-001-model.py",
+      "text": "        else:",
+      "firstCommit": 14,
+      "kind": "code"
+    },
+    {
+      "n": 66,
+      "id": "STM-066-FIL-001-model.py",
+      "text": "            # manual implementation of attention",
+      "firstCommit": 14,
+      "kind": "comment"
+    },
+    {
+      "n": 67,
+      "id": "STM-067-FIL-001-model.py",
+      "text": "            att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))",
+      "firstCommit": 14,
+      "kind": "code"
+    },
+    {
+      "n": 68,
+      "id": "STM-068-FIL-001-model.py",
+      "text": "            att = att.masked_fill(self.bias[:,:,:T,:T] == 0, float('-inf'))",
+      "firstCommit": 14,
+      "kind": "code"
+    },
+    {
+      "n": 69,
+      "id": "STM-069-FIL-001-model.py",
+      "text": "            att = F.softmax(att, dim=-1)",
+      "firstCommit": 14,
+      "kind": "code"
+    },
+    {
+      "n": 70,
+      "id": "STM-070-FIL-001-model.py",
+      "text": "            att = self.attn_dropout(att)",
+      "firstCommit": 14,
+      "kind": "code"
+    },
+    {
+      "n": 71,
+      "id": "STM-071-FIL-001-model.py",
+      "text": "            y = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)",
+      "firstCommit": 14,
+      "kind": "code"
+    },
+    {
+      "n": 72,
+      "id": "STM-072-FIL-001-model.py",
+      "text": "        y = y.transpose(1, 2).contiguous().view(B, T, C) # re-assemble all head outputs side by side",
+      "firstCommit": 15,
+      "kind": "code"
+    },
+    {
+      "n": 73,
+      "id": "STM-073-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 15,
+      "kind": "blank"
+    },
+    {
+      "n": 74,
+      "id": "STM-074-FIL-001-model.py",
+      "text": "        # output projection",
+      "firstCommit": 15,
+      "kind": "comment"
+    },
+    {
+      "n": 75,
+      "id": "STM-075-FIL-001-model.py",
+      "text": "        y = self.resid_dropout(self.c_proj(y))",
+      "firstCommit": 15,
+      "kind": "code"
+    },
+    {
+      "n": 76,
+      "id": "STM-076-FIL-001-model.py",
+      "text": "        return y",
+      "firstCommit": 15,
+      "kind": "code"
+    }
+  ]
+}
