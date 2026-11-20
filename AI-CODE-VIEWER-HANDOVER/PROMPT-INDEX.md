@@ -1,6 +1,6 @@
-# Chronological Prompt Index — 60 User Turns
+# Chronological Prompt Index — 62 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (a summary, not verbatim chat export), the accepted or rejected design decision, and when possible a verified GitHub implementation link. These **60 files were each committed separately** to document improvement history; actual UI implementation commits precede these retrospective documentation commits.
+Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **62 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
 
 **Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 60 records.
 
@@ -66,6 +66,8 @@ Each file below has the **user's prompt**, the assistant's observable outcome (a
 | 058 | Distinguish full prompt history from UI-only change records | [Prompt 058](prompts/058.md) |
 | 059 | Swap filename and STM chip order | [Prompt 059](prompts/059.md) |
 | 060 | Verify filename-first code rows are working | [Prompt 060](prompts/060.md) |
+| 061 | Full nanoGPT handover; confirm three batch continuation | [Prompt 061](prompts/061.md) |
+| 062 | Proceed with implementation of original source batches 02–04 | [Prompt 062](prompts/062.md) |
 
 The full archive covers **more than UI tweaks**: source-code identity, architecture, commit archaeology, batch planning, tests, review feedback and communication. For a UI-only curated list, use [UI-CHANGE-INDEX.md](UI-CHANGE-INDEX.md). For verified counts and important fidelity limits, use [PROMPT-COVERAGE-AUDIT.md](PROMPT-COVERAGE-AUDIT.md).
 
@@ -98,3 +100,5 @@ If a new AI finds a conflict between an earlier and a later prompt, the later ex
 - **058:** clarify the difference between the full all-prompts archive and a UI-specific view, without claiming verbatim assistant exports or inventing unseen chat messages.
 
 - **059–060:** filename chip moved before the STM chip in each modular viewer source row; controlled DOM verification confirms File → STM ID → code ordering while preserving full historical STM IDs. [Implementation commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/6762679193fbba5ce160669fca427454f1ee6e35).
+
+- **061–062:** explicit cross-chat continuation request and implementation approval. Batches 02–04 now index original nanoGPT source commits **001–060**, with **366 original physical lines across 4 files**, 7 JSON chunks and controlled QA. See [Batch tracker](../nanogpt-modular-viewer/BATCH_TRACKER.md), [Batch 02 QA](../nanogpt-modular-viewer/QA-BATCH-002.md), [Batch 03 QA](../nanogpt-modular-viewer/QA-BATCH-003.md) and [Batch 04 QA](../nanogpt-modular-viewer/QA-BATCH-004.md). Old prototype untouched. Original 60-prompt handover/audit documents are historical snapshots; the full live index now contains 62 prompts.
