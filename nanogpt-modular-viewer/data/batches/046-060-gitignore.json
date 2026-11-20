@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "batch": "046-060",
+  "fromCommit": 59,
+  "toCommit": 59,
+  "fromLine": 1,
+  "toLine": 12,
+  "fileId": "FIL-003",
+  "file": ".gitignore",
+  "lines": [
+    {
+      "n": 1,
+      "id": "STM-352-FIL-003-.gitignore",
+      "text": ".DS_Store",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 2,
+      "id": "STM-353-FIL-003-.gitignore",
+      "text": ".idea",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 3,
+      "id": "STM-354-FIL-003-.gitignore",
+      "text": ".ipynb_checkpoints/",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 4,
+      "id": "STM-355-FIL-003-.gitignore",
+      "text": ".vscode",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 5,
+      "id": "STM-356-FIL-003-.gitignore",
+      "text": "__pycache__/",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 6,
+      "id": "STM-357-FIL-003-.gitignore",
+      "text": "*.bin",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 7,
+      "id": "STM-358-FIL-003-.gitignore",
+      "text": "*.pkl",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 8,
+      "id": "STM-359-FIL-003-.gitignore",
+      "text": "*.pt",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 9,
+      "id": "STM-360-FIL-003-.gitignore",
+      "text": "*.pyc",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 10,
+      "id": "STM-361-FIL-003-.gitignore",
+      "text": "input.txt",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 11,
+      "id": "STM-362-FIL-003-.gitignore",
+      "text": "env/",
+      "firstCommit": 59,
+      "kind": "code"
+    },
+    {
+      "n": 12,
+      "id": "STM-363-FIL-003-.gitignore",
+      "text": "venv/",
+      "firstCommit": 59,
+      "kind": "code"
+    }
+  ]
+}
