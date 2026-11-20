@@ -331,3 +331,6 @@ while True:
     # termination conditions
     if iter_num > max_iters:
         break
+
+if ddp:
+    destroy_process_group()
