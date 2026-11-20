@@ -92,3 +92,8 @@ if profile:
             print(f"{k}/{num_steps} loss: {lossf:.4f}")
 
             prof.step() # notify the profiler at end of each step
+
+else:
+
+    # simple benchmarking
+    torch.cuda.synchronize()
