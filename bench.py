@@ -58,3 +58,7 @@ model = GPT(gptconf)
 model.to(device)
 
 optimizer = model.configure_optimizers(weight_decay=1e-2, learning_rate=1e-4, betas=(0.9, 0.95), device_type=device_type)
+
+if compile:
+    print("Compiling model...")
+    model = torch.compile(model) # pytorch 2.0
