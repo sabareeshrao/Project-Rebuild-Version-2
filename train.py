@@ -155,3 +155,9 @@ if init_from == 'scratch':
     model_args['vocab_size'] = meta_vocab_size if meta_vocab_size is not None else 50304
     gptconf = GPTConfig(**model_args)
     model = GPT(gptconf)
+elif init_from == 'resume':
+    print(f"Resuming training from {out_dir}")
+    # resume training from a checkpoint.
+    ckpt_path = os.path.join(out_dir, 'ckpt.pt')
+    checkpoint = torch.load(ckpt_path, map_location=device)
+    checkpoint_model_args = checkpoint['model_args']
