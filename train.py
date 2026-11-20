@@ -312,3 +312,8 @@ while True:
     scaler.update()
     # flush the gradients as soon as we can, no need for this memory anymore
     optimizer.zero_grad(set_to_none=True)
+
+    # timing and logging
+    t1 = time.time()
+    dt = t1 - t0
+    t0 = t1
