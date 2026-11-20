@@ -37,7 +37,10 @@ function display() {
   $('previous').disabled=state.commit===1;
   $('next').disabled=state.commit===data.commits.length;
   $('file-name').textContent=file.path+' · '+file.id;
-  $('file-meta').textContent='Batch 01 · '+data.history.completedThrough+' / '+data.history.totalNanoGPTCommits+
+  const batches=Math.ceil(data.history.totalNanoGPTCommits/data.history.plannedBatchSize);
+  const batchText='Batch '+String(data.history.batchNumber).padStart(2,'0');
+  $('batch-indicator').textContent='Original nanoGPT history · '+batchText+' / '+batches;
+  $('file-meta').textContent=batchText+' · '+data.history.completedThrough+' / '+data.history.totalNanoGPTCommits+
     ' source commits indexed · '+file.lineCount+' lines at batch end';
   const allIndexed=state.mode==='full'&&state.commit===data.commits.length&&!state.selection;
   $('mode-group').querySelectorAll('button').forEach(b=>{
@@ -64,7 +67,7 @@ function display() {
 }
 
 // One click always leaves a single/range filter and restores the cumulative
-// source through the LAST currently indexed nanoGPT commit (15 in Batch 01).
+// source through the LAST currently indexed nanoGPT commit.
 function showAllIndexedCommits() {
   state.commit=store.manifest.commits.length;
   state.mode='full';state.selection=null;
