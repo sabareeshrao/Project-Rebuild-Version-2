@@ -99,7 +99,7 @@ button:disabled{opacity:.3;cursor:not-allowed}
 'use strict';
 var data=JSON.parse(document.getElementById('historical-source').textContent);
 var N=data.commits.length;
-var commit=10,kind='line',addedOnly=false;
+var commit=30,kind='line',addedOnly=false;
 var colors={class:'#DC2626',method:'#2563EB',block:'#EA580C',nested:'#FACC15',line:'#15803D',comment:'#DB2777'};
 var pairs={
 file:[{bg:'#EAD7B7',fg:'#171717'},{bg:'#06B6D4',fg:'#111827'}],
