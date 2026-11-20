@@ -3,7 +3,7 @@ import {WindowedRows} from './virtual.js';
 
 const $ = id => document.getElementById(id);
 const store = new SourceStore();
-const state={commit:1,category:'line',mode:'full',selection:null,fileId:null};
+const state={commit:1,category:'line',commentsOverlay:false,mode:'full',selection:null,fileId:null};
 let viewport=null;
 
 function message(text,error=false){
@@ -49,11 +49,11 @@ function display() {
     b.setAttribute('aria-pressed',String(on));
   });
   $('categories').querySelectorAll('button').forEach(b=>
-    b.setAttribute('aria-pressed',String(b.dataset.kind===state.category)));
+    b.setAttribute('aria-pressed',String(b.dataset.kind==='comment'
+      ? state.commentsOverlay : b.dataset.kind===state.category)));
   message(bounds.description+' · '+bounds.length+' source lines in '+file.path+'.',false);
   const notes={
     line:'Every original line is green by default, including comments and source blanks.',
-    comment:'Only standalone # comments and Python docstrings are pink; other chips are neutral.',
     class:'Class chips are red, including source blanks/comments/docstrings within classes.',
     method:'Method chips are blue, including source blanks/comments/docstrings within methods.',
     block:'Code Block chips are orange for all lines within each block.',
@@ -62,8 +62,11 @@ function display() {
     module:'Module chips alternate Burgundy/Graphite across modules.',
     package:'Directory chips alternate Brown/Silver across directories.'
   };
-  $('hint').textContent=(notes[state.category]||'')+
-    ' A thin green code-area line only separates adjacent sibling groups.';
+  $('hint').textContent=(state.commentsOverlay
+    ? 'Comments ON: pink standalone # comments and docstrings within the selected category. '
+    : 'Comments OFF: tap the pink Comments button to overlay documentation within this category. ')+
+    (notes[state.category]||'')+
+    ' Green dividers only separate touching sibling groups.';
 }
 
 // One click always leaves a single/range filter and restores the cumulative
@@ -99,6 +102,13 @@ function attachControls() {
   $('categories').addEventListener('click',event=>{
     const selected=event.target.closest('button[data-kind]');
     if(!selected)return;
+    if(selected.dataset.kind==='comment'){
+      // Comments is an independent overlay, not an exclusive hierarchy category.
+      // Class + Comments, Method + Comments, etc. can be active together.
+      state.commentsOverlay=!state.commentsOverlay;
+      display();
+      return;
+    }
     if(state.category===selected.dataset.kind)return;
     state.category=selected.dataset.kind;
     // Same source range: virtualizer recolors mounted rows IN PLACE, preserving
