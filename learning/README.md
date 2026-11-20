@@ -1,66 +1,68 @@
-# Learn to build nanoGPT — from zero
+# Learn to build nanoGPT — connected project course
 
-This `learning/` folder teaches **one continuously evolving project**, not one standalone lesson per Git commit.
+This folder teaches one continuously evolving real-world **Python/PyTorch** project, based on the original source and reconstructive Git commit history.
 
-The original model, data preparation, training, sampling and config files stay in their original locations. Lessons may group multiple commits or return to earlier commits when prerequisites make the code understandable.
+**Starting point:** The learner has studied Python at college. The course therefore skips basic `print`, variables, loops and introductory classes, but introduces PyTorch, neural-network operations, tensor shapes and GPT internals as needed. Prior coursework is self-reported, not treated as verified mastery.
 
-## Start here
+## Active Lesson 01 — PyTorch tensors and the first GPT component
 
-1. **[Lesson 01 — From Text to Your First Python Code](lessons/01-first-python/index.html)** (38 mobile-friendly screens, 10 interactive questions, one Python practice challenge)
-2. **[Runnable first Python exercise](lessons/01-first-python/practice.py)**
-3. **[Every original source line tracked](tracker/source-lines.json)**
-4. **[Knowledge and attempt record](progress.json)**
+- **[Open interactive HTML Lesson 01](lessons/01-pytorch-layernorm/index.html)** — 40 connected screens, 12 quiz questions, source-line references, exercise and progress export
+- **[Inspect source-grounded lesson plan](lessons/01-pytorch-layernorm/lesson-data.json)**
+- **[Run the actual model's LayerNorm lab](lessons/01-pytorch-layernorm/practice.py)** from repository root using `python learning/lessons/01-pytorch-layernorm/practice.py`
+- **[Source-line tracker](tracker/source-lines.json)** — 15 Python files, 2 notebooks; 1,627 addressable code-line units
+- **[Knowledge progress record](progress.json)** — evidence-based, no auto-mastering
 
-To use Lesson 01, **download `index.html` and open it in your browser**. GitHub's normal code preview will display HTML source rather than run the lesson. The HTML is a standalone file with embedded styling, content and JavaScript, so it works offline.
+Download the HTML and open it in a browser; GitHub's standard file preview shows source rather than running HTML. The standalone lesson works offline for reading and quiz interactions. Running the Python lab requires PyTorch and the repository source code.
 
-The lesson's **LINES** button opens an original-source inventory (17 files, 1,627 tracked units). Gold source-line chips mean **scheduled for explanation**, never automatically mastered.
+## What Lesson 01 does
 
-## What we are learning to build
+The lesson groups **five early related commits** from the project's reconstruction, which build the custom `LayerNorm` class inside `model.py`, and teaches:
+
+1. How the project data flows from numeric token batches into embeddings and GPT hidden states.
+2. PyTorch tensor shapes `[B,T]` → `[B,T,C]`, and what `n_embd` means.
+3. Why LayerNorm normalizes each token's features, and which dimension it operates on.
+4. `nn.Module`, registered `nn.Parameter` weights, optional bias, and `F.layer_norm`.
+5. A runnable experiment importing the repository's actual `model.LayerNorm`.
+6. Where the same component is reused inside `Block`, `GPT`, and the training configuration.
+
+The course uses original source ranges as evidence and clearly marks later architectural code as **preview**, not already mastered. The original source remains unchanged.
+
+## Project flow we will keep connecting
 
 ```text
-Shakespeare text
-      ↓
-data/shakespeare_char/prepare.py   ← read characters, make token IDs
-      ↓
-data/shakespeare_char/train.bin     ← prepared data
-      ↓
-train.py + model.py                 ← train a GPT model
-      ↓
-Saved checkpoint
-      ↓
-sample.py                           ← generate new text
+Shakespeare source text
+       ↓
+data/shakespeare_char/prepare.py  →  tokenized train/val files
+       ↓
+train.py get_batch()             →  token IDs [B,T] and targets
+       ↓
+model.py GPT                     →  embeddings [B,T,C]
+       ↓
+transformer Blocks               →  LayerNorm, causal attention, MLP
+       ↓
+logits / cross-entropy           →  optimizer updates / checkpoint
+       ↓
+sample.py                        →  autoregressive text generation
 ```
-
-This is a conceptual map of the existing source. Running the full system requires Python, PyTorch and the needed data; the first practice file needs only Python.
 
 ## Roadmap
 
-| Phase | Connected learning milestone | Main source |
-|---|---|---|
-| 1 | Read text, use Python variables, print and string positions | `data/shakespeare_char/prepare.py` |
-| 2 | Find characters, build a vocabulary, encode and decode text | `data/shakespeare_char/prepare.py` |
-| 3 | Create training pairs and understand PyTorch tensors | `data/*/prepare.py`, `train.py` |
-| 4 | Understand Python classes and build LayerNorm and model components | `model.py` |
-| 5 | Build attention, feed-forward layers and the complete GPT | `model.py` |
-| 6 | Connect data, loss, optimizer, evaluation and checkpoints | `train.py`, `configurator.py`, `config/` |
-| 7 | Generate text, load models and tokenize prompts | `sample.py`, `model.py` |
-| 8 | Read benchmarks, experiments and scaling notebooks | `bench.py`, `*.ipynb` |
+| Phase | Connected milestone | Code |
+| --- | --- | --- |
+| 01 | PyTorch tensors, embeddings, custom LayerNorm, model shape conventions | `model.py`, `train.py`, `data/shakespeare_char/prepare.py` |
+| 02 | Causal attention from Q/K/V projections to the causal mask | `model.py` |
+| 03 | Assemble attention, MLP, residual paths, and full GPT forward | `model.py` |
+| 04 | Tokenization, contiguous context windows and next-token targets | `data/`, `train.py` |
+| 05 | Training loop, optimizer, scheduler, checkpoint and evaluation | `train.py`, `config/` |
+| 06 | Load a checkpoint and generate next-token samples | `sample.py`, `model.py` |
+| 07+ | Distributed training, performance, benchmarks, optional finetuning, notebook experiments | Other original source files and notebooks |
 
-This sequence is learning-driven, not a claim that the developer authored files in this order. The reconstructed repository's commit history is still evidence for how each component evolved.
+The number of Git commits per lesson depends on meaningful feature and dependency boundaries, **not** a one-commit-one-lesson rule. The roadmap may be refined as learning evidence accumulates.
 
-## How knowledge is remembered
+## Source-line and knowledge progress rules
 
-- GitHub stores `progress.json` for **what you have demonstrated**, not simply what appears in a lesson.
-- Each interactive HTML lesson stores draft answers locally in your browser.
-- Use **EXPORT** to save an attempt JSON and share it with ChatGPT after finishing.
-- ChatGPT can then review answers and your independently run Python code before deliberately updating `progress.json` and source-line evidence.
-- Merely opening a lesson does **not** sync any answers to GitHub. The HTML contains **no GitHub credentials or automatic GitHub writes**.
-- A later lesson should skip a concept when mastery is evidenced, and provide short revision only where needed.
+The source-line tracker is pinned to the original project source revision `97e264126419dd66e9cd70d7e31f4e1dd1c5fdc3`: 1,220 physical Python lines (including blank/comment lines) plus 407 notebook code-cell source lines, totaling 1,627. Each source line starts `not_started`. A line tagged in a lesson as `architecture_preview` or `line_walkthrough` is **planned coverage**, not verified learning.
 
-## Source-line tracker rules
+The interactive HTML saves local answers only in the learner's browser. Use its **EXPORT** button after studying and send the resulting JSON alongside the Python lab output for review. ChatGPT can then update `progress.json` and per-line learner evidence in GitHub. Merely viewing a lesson, passing a quiz or having prior coursework is never treated as independent coding mastery.
 
-The tracker is pinned to original source commit `97e264126419dd66e9cd70d7e31f4e1dd1c5fdc3`. It includes **15 Python files** with **1,220 physical lines** (including comments and blank lines) and **2 notebooks** with **407 code-cell lines** — **1,627 addressable source units**.
-
-Every line defaults to `not_started`; exceptions, when verified, will be recorded as per-line overrides rather than generating 1,627 duplicate status records. Notebook locations are tracked by (cell number, line within cell), not raw notebook JSON line numbers. If original source changes, reconcile the tracked blob hashes and line ranges before applying new evidence.
-
-**No code from the original project has been changed to create this educational system.**
+The previous `lessons/01-first-python/` absolute-zero draft remains in Git history for reference, but is **superseded** and is not the active Lesson 01.
