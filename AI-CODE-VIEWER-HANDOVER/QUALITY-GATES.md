@@ -62,3 +62,17 @@ When user rejects an implementation: capture exact complaint, identify failure m
 - [ ] Source-row compaction is checked across narrow and desktop viewport sizes when a real-browser test is available; mocked-DOM/JS checks alone do not count as real browser visual QA.
 
 [24 focused controlled checks](../nanogpt-modular-viewer/QA-UI-COMPACT-STM-CHIPS.md) passed when the UI was updated, but real Android/desktop rendering and Pages deployment remain unverified.
+
+## Comments overlay regression gates — Prompt 065
+
+- [ ] **Comments is a toggle**, not an exclusive hierarchy category. Class + Comments and other category + Comments buttons may both be `aria-pressed=true`; toggling it OFF must preserve the base category.
+- [ ] With Class selected and Comments ON: real standalone comments/docstrings inside the class are pink `#DB2777`; ordinary code, blank lines and inline trailing `#` source lines retain Class red `#DC2626`; comment/docstring rows outside all class scopes remain charcoal.
+- [ ] Repeat for Method blue, Block orange and Nested yellow. Out-of-scope comments remain neutral.
+- [ ] With Lines / File / Directory / Module selected, each matching standalone comment/docstring may become pink when Comments is ON; base member lines stay their original palette.
+- [ ] Turning Comments OFF restores original hierarchy colors **without changing the row's STM ID or DOM node**. Switching Class→Method while Comments is ON keeps the toggle ON.
+- [ ] The overlay does not introduce green boundary dividers, synthetic source rows, extra visible chip labels or edited source text.
+- [ ] Scroll offsets, virtualized row measurements and existing mounted rows remain stable on toggling; unchanged commit/range selection still works, including All commits reset.
+- [ ] Keep source identification based on original classification: standalone `#` comments and recognized true docstrings, not trailing inline `#` or ordinary assigned triple quotes.
+- [ ] Browser visual checks must be reported separately from controlled DOM/mock assertions; do not claim Android/desktop screenshots without running them.
+
+[41 passing targeted controlled checks](../nanogpt-modular-viewer/QA-UI-COMMENTS-OVERLAY.md) (33 renderer+virtualization and 8 toolbar interactions); real mobile/desktop and Pages status are not verified.
