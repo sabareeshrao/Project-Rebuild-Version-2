@@ -1,0 +1,440 @@
+{
+  "schema_version": 1,
+  "lesson_id": "01",
+  "title": "From Text to Your First Python Code",
+  "level": "absolute_beginner",
+  "source_revision": "97e264126419dd66e9cd70d7e31f4e1dd1c5fdc3",
+  "why_this_order": "Prerequisite-driven learning while retaining reconstructed Git history and cross-file links; not one commit per lesson.",
+  "slides": [
+    {
+      "tag": "PROJECT START",
+      "text": [
+        "We are going to build a real project called <b>nanoGPT</b>. It learns patterns in text and can generate new text.",
+        "You are starting from zero. We'll begin with tiny Python programs, and every step will connect back to the same project."
+      ],
+      "title": "Build nanoGPT from zero"
+    },
+    {
+      "tag": "OUR FINAL DESTINATION",
+      "text": [
+        "Imagine the computer sees the letters <b>hel</b>. A text generator might predict that the next letter is <b>l</b>.",
+        "Later we will see how the real nanoGPT model learns to make predictions. Today we start with understanding text."
+      ]
+    },
+    {
+      "tag": "HOW THE PROJECT CONNECTS",
+      "text": [
+        "The whole project follows one journey. We prepare text, build a model, train it, then use it to generate text.",
+        "These are connected parts of one application—not separate exercises."
+      ],
+      "type": "flow"
+    },
+    {
+      "tag": "WHAT IS PYTHON?",
+      "text": [
+        "Python is a programming language. We write instructions that a computer can follow.",
+        "A Python source file usually ends in <code>.py</code>."
+      ]
+    },
+    {
+      "tag": "YOUR FIRST LINE",
+      "text": [
+        "<code>print(...)</code> tells Python to display something.",
+        "The words inside quotes are text."
+      ],
+      "code": "print(\"hello\")",
+      "output": "hello"
+    },
+    {
+      "tag": "QUESTION 1",
+      "text": [
+        "What will this program display?"
+      ],
+      "code": "print(\"AI\")",
+      "choices": [
+        "print",
+        "AI",
+        "Nothing",
+        "Error"
+      ],
+      "correct": 1,
+      "why": "The text between quotes is AI. print() displays it.",
+      "skill": "python.print"
+    },
+    {
+      "tag": "STRINGS",
+      "text": [
+        "In Python, <code>\"hello\"</code> is called a <b>string</b>. A string means text.",
+        "Quotes tell Python to treat the characters as text."
+      ],
+      "code": "print(\"hello\")\nprint(\"world\")",
+      "output": "hello\nworld"
+    },
+    {
+      "tag": "SAVE A VALUE",
+      "text": [
+        "We can store text under a name instead of typing it again and again.",
+        "This named storage is called a <b>variable</b>."
+      ],
+      "code": "text = \"hello\""
+    },
+    {
+      "tag": "WHAT DOES = MEAN?",
+      "text": [
+        "In <code>text = \"hello\"</code>, the name is <b>text</b> and its stored value is <b>hello</b>.",
+        "The sign <code>=</code> assigns a value to a name."
+      ],
+      "type": "variable"
+    },
+    {
+      "tag": "QUESTION 2",
+      "text": [
+        "Which part is the variable name?"
+      ],
+      "code": "text = \"hello\"",
+      "choices": [
+        "\"hello\"",
+        "text",
+        "=",
+        "The quotes"
+      ],
+      "correct": 1,
+      "why": "text is the variable name; \"hello\" is its value.",
+      "skill": "python.variables"
+    },
+    {
+      "tag": "PRINT A VARIABLE",
+      "text": [
+        "When we write <code>print(text)</code> without quotes around text, Python prints the stored value."
+      ],
+      "code": "text = \"hello\"\nprint(text)",
+      "output": "hello"
+    },
+    {
+      "tag": "QUOTES MAKE A DIFFERENCE",
+      "text": [
+        "<code>print(text)</code> and <code>print(\"text\")</code> are different.",
+        "The first uses the variable. The second prints the literal word text."
+      ],
+      "code": "text = \"hello\"\nprint(text)\nprint(\"text\")",
+      "output": "hello\ntext"
+    },
+    {
+      "tag": "QUESTION 3",
+      "text": [
+        "What will these statements print?"
+      ],
+      "code": "word = \"cat\"\nprint(word)\nprint(\"word\")",
+      "choices": [
+        "cat then cat",
+        "word then word",
+        "cat then word",
+        "Nothing"
+      ],
+      "correct": 2,
+      "why": "The variable contains cat, but the quoted text is the word word.",
+      "skill": "python.strings"
+    },
+    {
+      "tag": "OUR FIRST TEXT",
+      "text": [
+        "Let's use the same small piece of text through the next steps.",
+        "It contains five characters, including a space."
+      ],
+      "code": "text = \"to be\"\nprint(text)",
+      "output": "to be"
+    },
+    {
+      "tag": "COUNT CHARACTERS",
+      "text": [
+        "A <b>character</b> can be a letter, punctuation, or a space.",
+        "<code>\"to be\"</code> contains t, o, a space, b and e."
+      ],
+      "type": "characters"
+    },
+    {
+      "tag": "MEET len()",
+      "text": [
+        "Python has a function called <code>len()</code>.",
+        "It counts how many characters are in a string."
+      ],
+      "code": "text = \"to be\"\nprint(len(text))",
+      "output": "5"
+    },
+    {
+      "tag": "QUESTION 4",
+      "text": [
+        "What will this display?"
+      ],
+      "code": "text = \"AI!\"\nprint(len(text))",
+      "choices": [
+        "2",
+        "3",
+        "AI!",
+        "Error"
+      ],
+      "correct": 1,
+      "why": "A, I, and ! make three characters.",
+      "skill": "python.len"
+    },
+    {
+      "tag": "CHARACTER POSITIONS",
+      "text": [
+        "A character's position is called an <b>index</b>.",
+        "In Python the first character has index <b>0</b>, not 1."
+      ],
+      "type": "characters"
+    },
+    {
+      "tag": "READ THE FIRST CHARACTER",
+      "text": [
+        "<code>text[0]</code> means the first character of text."
+      ],
+      "code": "text = \"to be\"\nprint(text[0])",
+      "output": "t"
+    },
+    {
+      "tag": "READ THE SECOND",
+      "text": [
+        "<code>text[1]</code> means the second character because counting starts from zero."
+      ],
+      "code": "text = \"to be\"\nprint(text[1])",
+      "output": "o"
+    },
+    {
+      "tag": "QUESTION 5",
+      "text": [
+        "What is at index 2?"
+      ],
+      "code": "text = \"to be\"\nprint(text[2])",
+      "choices": [
+        "t",
+        "o",
+        "a space",
+        "b"
+      ],
+      "correct": 2,
+      "why": "Index 2 is the space between the words. Spaces count as characters.",
+      "skill": "python.indexing"
+    },
+    {
+      "tag": "A COMPLETE LITTLE PROGRAM",
+      "text": [
+        "You can now read these four lines as one program.",
+        "It stores text, displays it, counts its characters and finds the first one."
+      ],
+      "code": "text = \"to be\"\nprint(text)\nprint(len(text))\nprint(text[0])",
+      "output": "to be\n5\nt"
+    },
+    {
+      "tag": "QUESTION 6",
+      "text": [
+        "Predict the output, in order."
+      ],
+      "code": "text = \"dog\"\nprint(text[0])\nprint(len(text))",
+      "choices": [
+        "d then 3",
+        "g then 3",
+        "d then 2",
+        "dog then 3"
+      ],
+      "correct": 0,
+      "why": "Index 0 is d, and dog contains three characters.",
+      "skill": "python.indexing"
+    },
+    {
+      "tag": "WHERE IS THIS IN THE REAL PROJECT?",
+      "text": [
+        "The project needs far more than \"to be\". It uses a file containing Shakespeare's text.",
+        "The real script <code>data/shakespeare_char/prepare.py</code> reads that text before preparing it for the model."
+      ],
+      "type": "source",
+      "source": {
+        "path": "data/shakespeare_char/prepare.py",
+        "start": 19,
+        "end": 21
+      },
+      "sourceDepth": "preview"
+    },
+    {
+      "tag": "ONE REAL LINE",
+      "text": [
+        "The repository contains this exact line. It stores the text read from a file in a variable named <code>data</code>.",
+        "We haven't learned <code>with</code>, <code>open</code>, or file reading yet. We'll return to those details later."
+      ],
+      "code": "data = f.read()",
+      "type": "source",
+      "source": {
+        "path": "data/shakespeare_char/prepare.py",
+        "start": 20,
+        "end": 20
+      },
+      "sourceDepth": "preview"
+    },
+    {
+      "tag": "PRINT THE REAL LENGTH",
+      "text": [
+        "The next real line prints the length of the dataset.",
+        "You already know part of this: <code>len(data)</code> counts the characters stored in data."
+      ],
+      "code": "print(f\"length of dataset in characters: {len(data):,}\")",
+      "type": "source",
+      "source": {
+        "path": "data/shakespeare_char/prepare.py",
+        "start": 21,
+        "end": 21
+      },
+      "sourceDepth": "walkthrough"
+    },
+    {
+      "tag": "WHAT IS AN f-STRING?",
+      "text": [
+        "An <b>f-string</b> lets Python insert a calculated value into text.",
+        "The part inside <code>{...}</code> is evaluated and inserted into the message."
+      ],
+      "code": "text = \"to be\"\nprint(f\"Characters: {len(text)}\")",
+      "output": "Characters: 5"
+    },
+    {
+      "tag": "QUESTION 7",
+      "text": [
+        "What does this print?"
+      ],
+      "code": "text = \"hello\"\nprint(f\"Length: {len(text)}\")",
+      "choices": [
+        "Length: text",
+        "Length: 5",
+        "Length: 6",
+        "Nothing"
+      ],
+      "correct": 1,
+      "why": "The string hello has five characters, so the f-string inserts 5.",
+      "skill": "python.f_strings"
+    },
+    {
+      "tag": "WHY THE COMMA?",
+      "text": [
+        "In the real source, <code>:,</code> asks Python to put commas between thousands.",
+        "It changes how the number looks, not what the number means."
+      ],
+      "code": "n = 12345\nprint(f\"{n:,}\")",
+      "output": "12,345"
+    },
+    {
+      "tag": "NOW READ THE WHOLE LINE",
+      "text": [
+        "<code>print</code> displays text, <code>f</code> inserts a value, <code>len(data)</code> counts characters, and <code>:,</code> formats the number.",
+        "This is the real project's data-length output."
+      ],
+      "code": "print(f\"length of dataset in characters: {len(data):,}\")",
+      "type": "source",
+      "source": {
+        "path": "data/shakespeare_char/prepare.py",
+        "start": 21,
+        "end": 21
+      },
+      "sourceDepth": "walkthrough"
+    },
+    {
+      "tag": "QUESTION 8",
+      "text": [
+        "Why does the original script use len(data)?"
+      ],
+      "choices": [
+        "To download text",
+        "To count characters",
+        "To train the model",
+        "To delete words"
+      ],
+      "correct": 1,
+      "why": "len(data) counts how many characters were loaded.",
+      "skill": "project.data_prep"
+    },
+    {
+      "tag": "A PEEK AHEAD",
+      "text": [
+        "Next the script will find which unique characters exist in the book.",
+        "Here is the real next-stage expression. Don't memorize <code>set</code>, <code>list</code> or <code>sorted</code> yet. They belong in Chapter 2."
+      ],
+      "code": "chars = sorted(list(set(data)))",
+      "type": "source",
+      "source": {
+        "path": "data/shakespeare_char/prepare.py",
+        "start": 24,
+        "end": 24
+      },
+      "sourceDepth": "future_preview"
+    },
+    {
+      "tag": "THE FILES FORM ONE SYSTEM",
+      "text": [
+        "<code>prepare.py</code> prepares the text. <code>train.py</code> uses it to train a GPT defined in <code>model.py</code>.",
+        "<code>sample.py</code> then uses the trained model to generate new text."
+      ],
+      "type": "flow"
+    },
+    {
+      "tag": "THE COMMIT HISTORY STILL MATTERS",
+      "text": [
+        "The reconstructed Git history begins with a model header, imports, and LayerNorm code.",
+        "We are deliberately learning text and Python first, because understanding the eventual model requires these foundations.",
+        "We'll return to those early model commits when you know enough to understand them."
+      ],
+      "type": "history"
+    },
+    {
+      "tag": "QUESTION 9",
+      "text": [
+        "Which file is responsible for preparing the small character-level Shakespeare dataset?"
+      ],
+      "choices": [
+        "model.py",
+        "sample.py",
+        "data/shakespeare_char/prepare.py",
+        "bench.py"
+      ],
+      "correct": 2,
+      "why": "The Shakespeare character-level preparation script loads text and prepares it for training.",
+      "skill": "project.data_to_model_flow"
+    },
+    {
+      "tag": "FIND THE BUG",
+      "text": [
+        "What happens when this code tries to access index 3?"
+      ],
+      "code": "text = \"dog\"\nprint(text[3])",
+      "choices": [
+        "It prints g",
+        "It prints a space",
+        "It raises IndexError",
+        "It prints dog"
+      ],
+      "correct": 2,
+      "why": "The only valid nonnegative indices are 0, 1 and 2.",
+      "skill": "python.indexing"
+    },
+    {
+      "tag": "TRY WRITING CODE YOURSELF",
+      "text": [
+        "Write a tiny Python program that stores <code>\"hello\"</code> in a variable named <code>text</code>.",
+        "Then print its length and its first character.",
+        "The in-page checker only inspects your text. Run it in Python and share the output if you want independent verification."
+      ],
+      "type": "lab"
+    },
+    {
+      "tag": "LESSON COMPLETE",
+      "text": [
+        "You can now recognize a Python string, variable, print(), len(), indexing and a simple f-string.",
+        "You also understand what the dataset-length line does in the real project. We have <b>not</b> claimed mastery of file reading, tokenization or PyTorch."
+      ],
+      "type": "end",
+      "title": "First milestone: reading Python text"
+    }
+  ],
+  "lab": {
+    "description": "text = \"hello\"; print(len(text)); print(text[0])",
+    "expected_output": "5\nh",
+    "execution": "human verification needed"
+  }
+}
