@@ -95,3 +95,16 @@ This is a **viewer-interface change only**; the 15 historical nanoGPT source com
 - The previously accepted palette, sticky controls, filename → STM → code order, in-place category updates, scroll virtualization and the untouched old prototype remain intact.
 
 **Latest implementation QA boundary:** 35 controlled assertions plus mocked DOM identity/scroll preservation checks passed. No independent Android/browser screenshot or published Pages visit was verified.
+
+## Latest accepted UI — compact STM-only chips (Prompts 063–064)
+
+The color-coded source chip now shows **only** `STM-NNN`. Color conveys Class, Method, Block, Nested Block, Lines, Comments, Module, Directory or File; do not repeat category names, scope IDs, code text or commit markers inside visible chips. The previously accepted extra first-row labels are superseded.
+
+Rows still show **neutral filename → colored STM number → original source code** with preserved indentation. Full historical STM IDs and scope provenance stay in source JSON, row attributes and accessible labels; changing category recolors existing mounted rows without redrawing or changing their heights. The second chip-metadata line and its reserved vertical space were removed.
+
+- [Renderer implementation](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/e514141bb688f04fcb03f8de0a3363926aa3b02b)
+- [Compact CSS implementation](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/edcbc56f818dc87c13bdfcad64c1b968abf2fc81)
+- [Focused QA — 24 controlled passing checks](QA-UI-COMPACT-STM-CHIPS.md)
+- [Original prompt 063](../AI-CODE-VIEWER-HANDOVER/prompts/063.md) and [approval 064](../AI-CODE-VIEWER-HANDOVER/prompts/064.md)
+
+The 60-commit source manifest and all 366 original source-line IDs were untouched. Live browser visual testing and GitHub Pages deployment remain unverified.
