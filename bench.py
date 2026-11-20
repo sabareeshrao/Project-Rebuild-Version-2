@@ -69,3 +69,15 @@ if profile:
     # - api https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile
     wait, warmup, active = 5, 5, 5
     num_steps = wait + warmup + active
+    with torch.profiler.profile(
+        activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA],
+        schedule=torch.profiler.schedule(wait=wait, warmup=warmup, active=active, repeat=1),
+        on_trace_ready=torch.profiler.tensorboard_trace_handler('./bench_log'),
+        record_shapes=False,
+        profile_memory=False,
+        with_stack=False, # incurs an additional overhead, disable if not needed
+        with_flops=True,
+        with_modules=False, # only for torchscript models atm
+    ) as prof:
+
+        X, Y = get_batch('train')
