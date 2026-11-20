@@ -39,8 +39,12 @@ function display() {
   $('file-name').textContent=file.path+' · '+file.id;
   $('file-meta').textContent='Batch 01 · '+data.history.completedThrough+' / '+data.history.totalNanoGPTCommits+
     ' source commits indexed · '+file.lineCount+' lines at batch end';
-  $('mode-group').querySelectorAll('button').forEach(b=>
-    b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));
+  const allIndexed=state.mode==='full'&&state.commit===data.commits.length&&!state.selection;
+  $('mode-group').querySelectorAll('button').forEach(b=>{
+    const on=b.dataset.action==='all'?allIndexed:
+      (b.dataset.mode===state.mode&&!(b.dataset.mode==='full'&&allIndexed));
+    b.setAttribute('aria-pressed',String(on));
+  });
   $('categories').querySelectorAll('button').forEach(b=>
     b.setAttribute('aria-pressed',String(b.dataset.kind===state.category)));
   message(bounds.description+' · '+bounds.length+' source lines in '+file.path+'.',false);
@@ -56,7 +60,17 @@ function display() {
     package:'Directory chips alternate Brown/Silver across directories.'
   };
   $('hint').textContent=(notes[state.category]||'')+
-    ' Thin green lines appear in the code area only where adjacent sibling groups of the selected category touch. No synthetic code rows.';
+    ' A thin green code-area line only separates adjacent sibling groups.';
+}
+
+// One click always leaves a single/range filter and restores the cumulative
+// source through the LAST currently indexed nanoGPT commit (15 in Batch 01).
+function showAllIndexedCommits() {
+  state.commit=store.manifest.commits.length;
+  state.mode='full';state.selection=null;
+  $('jump-input').value='';
+  $('jump-input').removeAttribute('aria-invalid');
+  display();
 }
 
 function selectCommit(number) {
@@ -70,16 +84,22 @@ function attachControls() {
   $('previous').addEventListener('click',()=>selectCommit(state.commit-1));
   $('next').addEventListener('click',()=>selectCommit(state.commit+1));
   $('mode-group').addEventListener('click',event=>{
-    const selected=event.target.closest('button[data-mode]');
-    if(!selected)return;
-    state.mode=selected.dataset.mode;
+    const button=event.target.closest('button');
+    if(!button)return;
+    if(button.dataset.action==='all'){showAllIndexedCommits();return;}
+    if(!button.dataset.mode)return;
+    state.mode=button.dataset.mode;
     if(state.mode==='selected'&&!state.selection)state.selection={start:state.commit,end:state.commit};
+    if(state.mode==='full')state.selection=null;
     display();
   });
   $('categories').addEventListener('click',event=>{
     const selected=event.target.closest('button[data-kind]');
     if(!selected)return;
+    if(state.category===selected.dataset.kind)return;
     state.category=selected.dataset.kind;
+    // Same source range: virtualizer recolors mounted rows IN PLACE, preserving
+    // row measurements, DOM identity and current page scroll position.
     display();
   });
   $('jump-form').addEventListener('submit',event=>{

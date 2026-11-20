@@ -19,42 +19,46 @@
     <a class="source-link" href="https://github.com/sabareeshrao/Project-Rebuild-Version-2" target="_blank" rel="noopener noreferrer">GitHub repository</a>
   </header>
 
-  <section class="control-bar" aria-label="Source controls">
-    <div class="control-row">
-      <span class="small-label">View</span>
-      <div id="mode-group" class="mode-group" role="group" aria-label="Code view">
-        <button type="button" class="mode" data-mode="full" aria-pressed="true">Full file</button>
+  <!-- Only these compact controls stay visible while the title and statistics scroll away. -->
+  <section class="control-bar" id="sticky-tools" aria-label="Sticky commit and category controls">
+    <div class="toolbar-main">
+      <div class="commit-tools">
+        <span class="small-label">Commit</span>
+        <div class="stepper" role="group" aria-label="Previous or next source commit">
+          <button id="previous" class="step" type="button" aria-label="Previous source commit">−</button>
+          <output id="commit-indicator" aria-live="polite">15</output>
+          <button id="next" class="step" type="button" aria-label="Next source commit">+</button>
+        </div>
+        <form id="jump-form" class="jump">
+          <label class="small-label" for="jump-input">Jump</label>
+          <input id="jump-input" type="text" inputmode="text" autocomplete="off" placeholder="5 or 5-10" aria-label="Source commit number or inclusive range">
+          <button class="apply" type="submit">Go</button>
+        </form>
+      </div>
+      <div id="mode-group" class="mode-group" role="group" aria-label="Source view and history reset">
+        <button type="button" class="mode" data-mode="full" aria-pressed="false">Full file</button>
         <button type="button" class="mode" data-mode="added" aria-pressed="false">Added only</button>
-        <button type="button" class="mode" data-mode="selected" aria-pressed="false">Selected commits</button>
+        <button type="button" class="mode" data-mode="selected" aria-pressed="false">Selected</button>
+        <button type="button" class="mode all-commits" id="all-commits" data-action="all" aria-pressed="true">All commits</button>
       </div>
-    </div>
-    <div class="control-row">
-      <span class="small-label">Commit</span>
-      <div class="stepper" role="group" aria-label="Previous or next commit">
-        <button id="previous" class="step" type="button" aria-label="Previous source commit">−</button>
-        <output id="commit-indicator" aria-live="polite">15</output>
-        <button id="next" class="step" type="button" aria-label="Next source commit">+</button>
-      </div>
-      <form id="jump-form" class="jump">
-        <label class="small-label" for="jump-input">Jump</label>
-        <input id="jump-input" type="text" inputmode="text" autocomplete="off" placeholder="5 or 5-10" aria-label="Source commit number or inclusive range">
-        <button class="apply" type="submit">Go</button>
-      </form>
       <label class="file-picker" for="file-select">
         <span class="small-label">File</span>
         <select id="file-select" aria-label="Source file"></select>
       </label>
     </div>
-    <div id="categories" class="categories" role="group" aria-label="Color code source by hierarchy category">
-      <button type="button" class="category" data-kind="line" aria-pressed="true">Lines</button>
-      <button type="button" class="category" data-kind="comment" aria-pressed="false">Comments</button>
-      <button type="button" class="category" data-kind="module" aria-pressed="false">Module</button>
-      <button type="button" class="category" data-kind="package" aria-pressed="false">Directory</button>
-      <button type="button" class="category" data-kind="file" aria-pressed="false">File</button>
-      <button type="button" class="category" data-kind="class" aria-pressed="false">Class</button>
-      <button type="button" class="category" data-kind="method" aria-pressed="false">Method</button>
-      <button type="button" class="category" data-kind="block" aria-pressed="false">Code Block</button>
-      <button type="button" class="category" data-kind="nested" aria-pressed="false">Nested Block</button>
+    <!-- A single row of always-filled colors, swipeable on narrow screens without horizontal CODE scroll. -->
+    <div class="categories-scroller">
+      <div id="categories" class="categories" role="group" aria-label="Color code source by hierarchy category">
+        <button type="button" class="category" data-kind="module" aria-pressed="false">Module</button>
+        <button type="button" class="category" data-kind="package" aria-pressed="false">Directory</button>
+        <button type="button" class="category" data-kind="file" aria-pressed="false">File</button>
+        <button type="button" class="category" data-kind="class" aria-pressed="false">Class</button>
+        <button type="button" class="category" data-kind="method" aria-pressed="false">Method</button>
+        <button type="button" class="category" data-kind="block" aria-pressed="false">Code Block</button>
+        <button type="button" class="category" data-kind="nested" aria-pressed="false">Nested Block</button>
+        <button type="button" class="category" data-kind="line" aria-pressed="true">Lines</button>
+        <button type="button" class="category" data-kind="comment" aria-pressed="false">Comments</button>
+      </div>
     </div>
   </section>
 

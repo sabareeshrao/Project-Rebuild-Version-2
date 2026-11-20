@@ -103,37 +103,64 @@ function syntaxHTML(s, sourceKind) {
   return marked+(split>=0?'<span class="comment-syntax">'+escapeHTML(s.slice(split))+'</span>':'');
 }
 
-export function makeRow(line, previous, index, context) {
-  const {category,manifest,fileId,mode} = context;
-  const color=chipColor(line,category,manifest,fileId);
-  const row=document.createElement('div');
-  row.className='code-row';row.dataset.rowIndex=String(index);
-  row.dataset.sourceLine=String(line.n);
-  row.dataset.stmId=line.id;
-  row.setAttribute('aria-label',line.id);
-  const left=document.createElement('div');left.className='chip-cell';
-  const chip=document.createElement('div');chip.className='line-chip';
-  chip.style.setProperty('--chip-bg',color.background);
-  chip.style.setProperty('--chip-ink',color.ink);
-  if(mode==='selected'){
-    const commit=line.firstCommit;
-    const previousCommit=manifest.commits[commit-2];
-    const previousTotal=previousCommit?.fileTotals?.[fileId] || 0;
-    if(line.n===previousTotal+1){
-      const marker=document.createElement('div');marker.className='commit-marker';
-      marker.textContent='COMMIT '+commit+' · +'+(manifest.commits[commit-1].fileAdded?.[fileId]||0);
-      chip.appendChild(marker);
+// Group labels and commit markers occupy one fixed-size metadata slot.
+// Recoloring a row changes text/colors only; it never appends or removes nodes.
+function metadataFor(line,color,context) {
+  const notes=[];
+  if(context.mode==='selected') {
+    const previousCommit=context.manifest.commits[line.firstCommit-2];
+    const previousTotal=previousCommit?.fileTotals?.[context.fileId] || 0;
+    if(line.n===previousTotal+1) {
+      const added=context.manifest.commits[line.firstCommit-1]?.fileAdded?.[context.fileId] || 0;
+      notes.push('COMMIT '+line.firstCommit+' · +'+added);
     }
   }
-  if(color.label){
-    const name=document.createElement('div');name.className='group-label';
-    name.textContent=color.label;chip.appendChild(name);
-  }
+  if(color.label)notes.push(color.label);
+  return notes.join(' · ');
+}
+
+// Used by both freshly mounted virtual rows and IN-PLACE category changes.
+// Never reset heights or replace source/code DOM simply to switch categories.
+export function applyRowCategory(row,line,previous,context) {
+  const color=chipColor(line,context.category,context.manifest,context.fileId);
+  const chip=row.querySelector('.line-chip');
+  const info=row.querySelector('.chip-meta');
+  const code=row.querySelector('.code-cell');
+  if(!chip||!info||!code)throw new Error('Missing source row elements');
+  chip.style.setProperty('--chip-bg',color.background);
+  chip.style.setProperty('--chip-ink',color.ink);
+  const text=metadataFor(line,color,context);
+  info.textContent=text;
+  info.setAttribute('aria-label',text || 'No new source group at this line');
+  chip.setAttribute('aria-label','Original source '+line.id+(text?' · '+text:''));
+  code.classList.toggle('category-divider',
+    needsDivider(previous,line,context.category,context.manifest,context.fileId));
+}
+
+export function makeRow(line,previous,index,context) {
+  const file=context.manifest.files.find(f=>f.id===context.fileId);
+  if(!file)throw new Error('Missing file metadata for '+context.fileId);
+  const row=document.createElement('div');
+  row.className='code-row';
+  row.dataset.rowIndex=String(index);
+  row.dataset.sourceLine=String(line.n);
+  row.dataset.stmId=line.id; // Full ORIGINAL ID, unchanged.
+  row.setAttribute('aria-label',line.id+' · '+file.path);
+
+  const left=document.createElement('div');left.className='chip-cell';
+  const chip=document.createElement('div');chip.className='line-chip';
+  const meta=document.createElement('div');meta.className='chip-meta'; // fixed reserved slot
   const id=document.createElement('div');id.className='line-id';
-  id.textContent=line.id;chip.appendChild(id);left.appendChild(chip);
+  id.textContent=(line.id.match(/^STM-\d+/)||[line.id])[0];
+  chip.appendChild(meta);chip.appendChild(id);left.appendChild(chip);
+
+  const filename=document.createElement('div');
+  filename.className='filename-chip';
+  filename.textContent=file.path.split('/').pop() || file.path;
+  filename.setAttribute('aria-label','File '+file.path);
+  left.appendChild(filename);
 
   const code=document.createElement('div');code.className='code-cell';
-  if(needsDivider(previous,line,category,manifest,fileId))code.classList.add('category-divider');
   const leading=(line.text.match(/^[ \t]*/)||[''])[0];
   const indent=document.createElement('span');indent.className='code-indent';
   indent.style.width='min('+leading.replace(/\t/g,'    ').length+'ch, 38%)';
@@ -141,6 +168,8 @@ export function makeRow(line, previous, index, context) {
   const content=document.createElement('span');content.className='code-content';
   content.innerHTML=syntaxHTML(line.text.slice(leading.length),line.kind);
   code.appendChild(indent);code.appendChild(content);
+
   row.appendChild(left);row.appendChild(code);
+  applyRowCategory(row,line,previous,context);
   return row;
 }

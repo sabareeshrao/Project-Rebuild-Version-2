@@ -1,4 +1,4 @@
-import {makeRow} from './view.js';
+import {makeRow,applyRowCategory} from './view.js';
 
 // Window-based virtual list: the browser scrolls the PAGE, never a fixed-height
 // code box. Only rows near the viewport enter the DOM. Source chunks load lazily.
@@ -10,7 +10,9 @@ export class WindowedRows {
     this.estimate=47;this.count=0;this.bit=new Float64Array(1);
     this.measured=new Map();
     this.context=null;this.range=null;this.rendered=null;
+    this.visibleSource=null;this.visibleSourceFirstIndex=0;
     this.requestId=0;this.frame=0;this.version=0;
+    this.lastViewportWidth=window.innerWidth;
     this.observer=new ResizeObserver(entries=>{
       let changed=false;
       for(const entry of entries){
@@ -24,18 +26,48 @@ export class WindowedRows {
     });
     window.addEventListener('scroll',()=>this.schedule(),{passive:true});
     window.addEventListener('resize',()=>{
-      this.measured.clear();this.bit=new Float64Array(this.count+1);
-      this.rendered=null;this.schedule(true);
+      // Mobile browser URL bars frequently change viewport HEIGHT during scrolling.
+      // Rebuilding measurements on height-only changes causes visible page shaking.
+      const newWidth=window.innerWidth;
+      if(Math.abs(newWidth-this.lastViewportWidth)>1){
+        this.lastViewportWidth=newWidth;
+        this.measured.clear();this.bit=new Float64Array(this.count+1);
+        this.rendered=null;this.visibleSource=null;
+        this.schedule(true);
+      }else this.schedule();
     },{passive:true});
   }
 
   configure(context) {
+    // Use a snapshot, not the shared mutable app-state object.
+    const next={...context,selection:context.selection?{...context.selection}:null};
+    const previous=this.context;
+    const sameSourceRange=!!previous&&previous.fileId===next.fileId
+      &&previous.mode===next.mode&&previous.commit===next.commit
+      &&(previous.selection?.start??null)===(next.selection?.start??null)
+      &&(previous.selection?.end??null)===(next.selection?.end??null);
+    if(sameSourceRange){
+      // Category-only update: keep scroll position, DOM nodes, row heights,
+      // source-chunk cache, virtual spacers and source-line anchors unchanged.
+      this.context=next;
+      if(previous.category!==next.category&&this.rendered&&this.visibleSource){
+        for(let index=this.rendered.start;index<this.rendered.end;index++){
+          const line=this.visibleSource[index-this.visibleSourceFirstIndex];
+          const preceding=index>0?this.visibleSource[index-this.visibleSourceFirstIndex-1]:null;
+          const row=this.rows.children[index-this.rendered.start];
+          if(row&&line)applyRowCategory(row,line,preceding,
+            {...this.context,manifest:this.store.manifest});
+        }
+      }
+      return this.range;
+    }
     this.version++;this.requestId++;
-    this.context=context;
-    this.range=this.store.visibleRange(context.fileId,context.mode,context.commit,context.selection);
+    this.context=next;
+    this.range=this.store.visibleRange(next.fileId,next.mode,next.commit,next.selection);
     this.count=this.range.length;
     this.bit=new Float64Array(this.count+1);
     this.measured.clear();this.rendered=null;
+    this.visibleSource=null;this.visibleSourceFirstIndex=0;
     this.observer.disconnect();this.rows.replaceChildren();
     this.positionSpacers();
     if(this.count===0){this.onReady?.(this.range);return this.range;}
@@ -128,6 +160,7 @@ export class WindowedRows {
       }
       this.observer.disconnect();
       this.rows.replaceChildren(fragment);
+      this.visibleSource=source;this.visibleSourceFirstIndex=firstIndex;
       this.rendered=wanted;
       this.positionSpacers();
       for(const row of this.rows.children)this.observer.observe(row);
