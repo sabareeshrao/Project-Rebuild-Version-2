@@ -19,7 +19,7 @@ export class OriginalHistory {
     this.manifest=manifest;
     this.loader=loader;
     this.chunks=new Map();
-    this.snapshots=new Map([[0,{files:new Map(),changes:[],warnings:[],fileStats:[]}]]);
+    this.snapshots=new Map([[0,{files:new Map(),changes:[],warnings:[],fileStats:[],unavailableTextFiles:new Set()}]]);
     this.built=0;this.nextIdentity=1;
   }
   async chunkFor(n) {
@@ -49,6 +49,7 @@ export class OriginalHistory {
     const before=this.snapshots.get(step-1);
     const files=new Map(before.files);
     const changes=[],warnings=[],fileStats=[];
+    const unavailableTextFiles=new Set(before.unavailableTextFiles);
     for(const entry of commit.files){
       const path=entry.path;
       const previousPath=entry.previousPath||path;
@@ -59,14 +60,16 @@ export class OriginalHistory {
       // Binary files and any diff GitHub did not provide are explicitly flagged.
       if(entry.patch===null){
         warnings.push(path+': GitHub omitted its patch (binary or oversized). Source lines unavailable for this file change.');
+        if(!/\.(png|jpe?g|gif|webp|ico|bin|pkl|pt|pth)$/i.test(path))unavailableTextFiles.add(path);
         // Reserve missing introductions, so subsequent visible identities are not silently reused.
         this.nextIdentity+=entry.added||0;
-        if(entry.status==='removed')files.delete(previousPath);
+        if(entry.status==='removed'){files.delete(previousPath);unavailableTextFiles.delete(previousPath);}
         continue;
       }
       const hunks=parseHunks(entry.patch);
       if(!hunks.length&&(entry.added||entry.deleted)){
         warnings.push(path+': no machine-readable hunk for a nonempty change.');
+        unavailableTextFiles.add(path);
         this.nextIdentity+=entry.added||0;
         continue;
       }
@@ -96,6 +99,7 @@ export class OriginalHistory {
       if(invalid){
         // Do not invent a patch application when existing line positions mismatch.
         warnings.push(path+': original diff did not align with previous recorded snapshot; this file change was not applied.');
+        unavailableTextFiles.add(path);
         this.nextIdentity+=Math.max(0,(entry.added||0)-counted.added);
         // Roll back any invalid file-specific diff records.
         for(let i=changes.length-1;i>=0;i--)if(changes[i].path===path)changes.splice(i,1);
@@ -106,13 +110,14 @@ export class OriginalHistory {
         warnings.push(path+': GitHub hunk line count does not match its change totals (+'+counted.added+'/-'+counted.deleted+
           ' vs +'+entry.added+'/-'+entry.deleted+'). Source view may be incomplete.');
       }
-      if(entry.status==='removed')files.delete(previousPath);
+      if(entry.status==='removed'){files.delete(previousPath);unavailableTextFiles.delete(previousPath);}
       else{
-        if(previousPath!==path)files.delete(previousPath);
+        if(previousPath!==path){files.delete(previousPath);unavailableTextFiles.delete(previousPath);}
         files.set(path,updated);
+        if(entry.status==='added')unavailableTextFiles.delete(path);
       }
     }
-    this.snapshots.set(step,{files,changes,warnings,fileStats});
+    this.snapshots.set(step,{files,changes,warnings,fileStats,unavailableTextFiles});
     this.built=step;
   }
   async get(n){return this.to(n);}
