@@ -36,3 +36,17 @@ The HTML shell contains no original source lines. Four JavaScript modules and on
 ## Verification limits
 
 Data parity and JavaScript syntax were checked during authoring. A further runtime/browser visual smoke test and public GitHub Pages availability check are separate tasks; this document does **not** claim those have passed. Current historical data is append-only; later edits/renames require explicit provenance-aware handling rather than assuming all history is append-only.
+
+## Post-publication implementation tests — PASS
+
+- Re-fetched all **11 created files** from GitHub; every file was readable and the versioned HTML contained no original source JSON.
+- All four JavaScript modules parsed successfully after removing ESM import/export statements for a controlled syntax check.
+- Manifest indexes exactly **15 source commits**, 76 physical model.py rows and 13 beginning structural scopes; all 76 STM IDs match the original numbered registry.
+- Commit window checks: Full commit 15 → 76 lines; Added commit 5 → 3; Only commit 5 → 3; Selected commits 5–10 → 26; Selected commits 1–15 → 76; Added commit 15 → 5.
+- Lazy SourceStore test loaded two non-overlapping windows but fetched the underlying JSON chunk only **once**, reusing cached data.
+- 15 selected-chip cases (including blanks and documentation) and 10 same-category-divider cases passed in a controlled renderer test.
+- A lightweight mocked DOM test executed the actual virtual-renderer class: it mounted **31 nearby rows out of 76**, maintained a positive lower spacer for the other rows, attached observers, and passed a variable-height Fenwick update/search check.
+- The original 30-commit HTML remains at ../commit-id-demo/index.html; it was not changed by the modular viewer commit.
+- Modular implementation GitHub commit: https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/b9873f09edf42c197a6002d42a3bf943c7ac3ac3
+
+**Still unverified:** true rendering/scroll performance in Android Chrome or desktop Chromium, live Pages deployment, and behavior with 100,000+ indexed lines. A mocked DOM unit test is not a substitute for a real browser test.
