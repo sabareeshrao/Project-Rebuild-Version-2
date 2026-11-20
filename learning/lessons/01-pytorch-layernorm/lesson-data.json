@@ -1,0 +1,571 @@
+{
+  "schema_version": 2,
+  "lesson_id": "01",
+  "slug": "01-pytorch-layernorm",
+  "title": "Build nanoGPT: PyTorch Tensors and the First Transformer Component",
+  "level": "Python-college-background, PyTorch/ML foundations",
+  "assumptions": {
+    "self_reported": "Python studied at college; basic Python syntax is familiar.",
+    "not_assumed": "No demonstrated expertise in tensor shapes, autograd, normalization or transformer internals."
+  },
+  "source_revision": "97e264126419dd66e9cd70d7e31f4e1dd1c5fdc3",
+  "source_commits": [
+    {
+      "sha": "cac2c626c0",
+      "change": "Model module header"
+    },
+    {
+      "sha": "1b0b2d2298",
+      "change": "Torch imports"
+    },
+    {
+      "sha": "7515b19bf9",
+      "change": "LayerNorm class declaration"
+    },
+    {
+      "sha": "ac18d04456",
+      "change": "Trainable LayerNorm weight and optional bias"
+    },
+    {
+      "sha": "feb101a3c8",
+      "change": "LayerNorm forward call"
+    }
+  ],
+  "roadmap_note": "Original reconstructed commit chronology is preserved as context. One lesson groups related commits; no commit count is used as a pedagogical quota.",
+  "slides": [
+    {
+      "tag": "PROJECT MILESTONE",
+      "text": [
+        "You know Python from college. We will skip variables, loops and basic functions.",
+        "This chapter starts where the real <b>nanoGPT</b> project starts to get interesting: PyTorch tensors and its first reusable neural-network component.",
+        "We will group related Git commits, then connect their code to the final model and training pipeline."
+      ],
+      "title": "Build nanoGPT · Your First Model Component"
+    },
+    {
+      "tag": "THE REAL GOAL",
+      "text": [
+        "nanoGPT is a neural network that predicts the next token from earlier tokens.",
+        "It is built from <b>data preparation → token embeddings → transformer blocks → predictions → training → generation</b>.",
+        "Our goal today is to understand and test one component that later sits inside every transformer block."
+      ],
+      "type": "flow"
+    },
+    {
+      "tag": "WHY START HERE?",
+      "text": [
+        "The repository's earliest reconstructed commits assemble <code>model.py</code>: imports, a custom <code>LayerNorm</code>, then attention and other transformer components.",
+        "Instead of one commit per lesson, we will combine the first <b>five related commits</b> to build a single tested component.",
+        "Later lessons will reuse the same component instead of starting from scratch."
+      ],
+      "type": "history"
+    },
+    {
+      "tag": "WHERE DOES A MODEL RECEIVE DATA?",
+      "text": [
+        "The dataset script converts Shakespeare characters to integer IDs and saves them. Training reads those IDs into batches.",
+        "This is why data preparation and neural-network code depend on each other."
+      ],
+      "code": "train_ids = encode(train_data)\ntrain_ids = np.array(train_ids, dtype=np.uint16)",
+      "type": "source",
+      "source": {
+        "path": "data/shakespeare_char/prepare.py",
+        "start": 42,
+        "end": 49
+      },
+      "sourceDepth": "architecture_preview"
+    },
+    {
+      "tag": "TOKEN ID BATCHES",
+      "text": [
+        "The real training code creates <code>x</code> and <code>y</code>: input tokens and next-token targets.",
+        "If the input is <code>[3, 1, 4]</code>, the target for the same window might be <code>[1, 4, 2]</code>.",
+        "These are numbers, not yet vectors of learned features."
+      ],
+      "code": "x = torch.tensor([[3, 1, 4]])\ny = torch.tensor([[1, 4, 2]])\nprint(x.shape)",
+      "output": "torch.Size([1, 3])",
+      "source": {
+        "path": "train.py",
+        "start": 123,
+        "end": 125
+      },
+      "sourceDepth": "architecture_preview"
+    },
+    {
+      "tag": "FIRST PYTORCH TENSOR",
+      "text": [
+        "A PyTorch <b>tensor</b> is a multidimensional container of numbers. Think of an array with a shape and a datatype.",
+        "We will work with <code>torch.Tensor</code> rather than re-teaching Python lists."
+      ],
+      "code": "import torch\nx = torch.tensor([[3, 1, 4],\n                  [2, 0, 1]])\nprint(x.shape)",
+      "output": "torch.Size([2, 3])"
+    },
+    {
+      "tag": "CHECK 1 · BATCH SHAPE",
+      "text": [
+        "What does the shape <code>[2, 3]</code> tell us?"
+      ],
+      "choices": [
+        "2 tokens, each with 3 classes",
+        "2 sequences, each containing 3 tokens",
+        "3 sequences, each containing 2 tokens",
+        "The tensor has exactly 6 dimensions"
+      ],
+      "correct": 1,
+      "why": "The first axis is the number of sequences (batch size); the second is tokens per sequence.",
+      "skill": "pytorch.tensor_shape"
+    },
+    {
+      "tag": "FROM TOKEN IDs TO FEATURES",
+      "text": [
+        "The model cannot do useful attention on arbitrary integer token IDs.",
+        "An <b>embedding</b> learns a numerical vector for each token. The real code uses <code>nn.Embedding</code>."
+      ],
+      "code": "self.transformer.wte = nn.Embedding(\n    vocab_size, n_embd\n)",
+      "note": "Teaching simplification; the repository builds this embedding inside an nn.ModuleDict.",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 126,
+        "end": 129
+      },
+      "sourceDepth": "architecture_preview"
+    },
+    {
+      "tag": "TRY A SMALL EMBEDDING",
+      "text": [
+        "We'll use a toy vocabulary of 10 IDs, each mapped to 8 learned features.",
+        "The integer inputs have shape <code>[2,4]</code>; the embedding output adds a feature dimension."
+      ],
+      "code": "import torch\nfrom torch import nn\nembed = nn.Embedding(10, 8)\nids = torch.tensor([[1, 2, 3, 4],\n                    [4, 3, 2, 1]])\nx = embed(ids)\nprint(x.shape)",
+      "output": "torch.Size([2, 4, 8])"
+    },
+    {
+      "tag": "CHECK 2 · EMBEDDING OUTPUT",
+      "text": [
+        "Why does the embedding output have 3 dimensions?"
+      ],
+      "choices": [
+        "Each token gets an 8-number feature vector",
+        "The model automatically creates 3 layers",
+        "8 tokens are missing",
+        "PyTorch makes all tensors three-dimensional"
+      ],
+      "correct": 0,
+      "why": "The embedding looks up one feature vector for every token ID. So [B,T] becomes [B,T,C].",
+      "skill": "pytorch.embedding_shape"
+    },
+    {
+      "tag": "LEARN THE SHAPE LANGUAGE",
+      "text": [
+        "The repository labels hidden-state dimensions as <code>B, T, C</code>.",
+        "<b>B</b> = batch size, <b>T</b> = sequence length, <b>C</b> = embedding or feature channels (<code>n_embd</code>).",
+        "In the toy example, B=2, T=4, C=8."
+      ],
+      "code": "B, T, C = x.shape\nprint(B, T, C)",
+      "output": "2 4 8"
+    },
+    {
+      "tag": "CHECK 3 · CHANNEL DIMENSION",
+      "text": [
+        "If a hidden-state tensor has shape <code>[2,4,8]</code>, which is <code>n_embd</code>?"
+      ],
+      "choices": [
+        "2",
+        "4",
+        "8",
+        "2 × 4"
+      ],
+      "correct": 2,
+      "why": "n_embd is the number of learned features per token, the last axis C=8.",
+      "skill": "pytorch.embedding_shape"
+    },
+    {
+      "tag": "WHY NORMALIZE FEATURES?",
+      "text": [
+        "Each token now has a vector of feature values. Their scale can vary while passing through many layers.",
+        "Layer normalization makes the features at each token more consistently scaled, helping the network optimize.",
+        "It preserves the number of tokens and channels."
+      ],
+      "code": "x.shape  # [B, T, C]\n# LayerNorm normalizes along C"
+    },
+    {
+      "tag": "FIRST FIVE COMMITS",
+      "text": [
+        "The early commit sequence introduces the Python module, imports, the <code>LayerNorm</code> class, its learnable parameters, and the forward computation.",
+        "These changes form one component, so we will study them together."
+      ],
+      "type": "history"
+    },
+    {
+      "tag": "REAL SOURCE · IMPORTS",
+      "text": [
+        "The original file imports <code>torch</code>, <code>torch.nn</code> and the functional API <code>F</code>.",
+        "<code>nn</code> contains modules and learnable parameters. <code>F</code> provides operations such as <code>layer_norm</code>."
+      ],
+      "code": "import torch\nimport torch.nn as nn\nfrom torch.nn import functional as F",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 14,
+        "end": 16
+      },
+      "sourceDepth": "line_walkthrough"
+    },
+    {
+      "tag": "REAL SOURCE · CLASS",
+      "text": [
+        "The project defines <code>LayerNorm</code> as an <code>nn.Module</code> subclass.",
+        "A module can own trainable parameters and define a <code>forward()</code> computation."
+      ],
+      "code": "class LayerNorm(nn.Module):\n    def __init__(self, ndim, bias):\n        super().__init__()",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 18,
+        "end": 22
+      },
+      "sourceDepth": "line_walkthrough"
+    },
+    {
+      "tag": "REAL SOURCE · WEIGHT",
+      "text": [
+        "<code>weight</code> starts as ones. It is an <code>nn.Parameter</code>, so PyTorch registers it for learning.",
+        "Each channel has its own learnable scale value."
+      ],
+      "code": "self.weight = nn.Parameter(\n    torch.ones(ndim)\n)",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 21,
+        "end": 24
+      },
+      "sourceDepth": "line_walkthrough"
+    },
+    {
+      "tag": "CHECK 4 · PARAMETER",
+      "text": [
+        "Why use <code>nn.Parameter(...)</code> for the scale?"
+      ],
+      "choices": [
+        "To mark the tensor as trainable module state",
+        "To turn Python into CUDA",
+        "To prevent gradients",
+        "To save every input batch"
+      ],
+      "correct": 0,
+      "why": "Registered nn.Parameters are visible to module.parameters() and can be updated by an optimizer.",
+      "skill": "pytorch.parameters"
+    },
+    {
+      "tag": "REAL SOURCE · OPTIONAL BIAS",
+      "text": [
+        "The original implementation allows a learnable bias vector to be turned on or off.",
+        "When <code>bias=False</code>, <code>self.bias</code> is <code>None</code>. It is not a vector of zeros that the optimizer still trains."
+      ],
+      "code": "self.bias = nn.Parameter(\n    torch.zeros(ndim)\n) if bias else None",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 23,
+        "end": 24
+      },
+      "sourceDepth": "line_walkthrough"
+    },
+    {
+      "tag": "CHECK 5 · NO BIAS",
+      "text": [
+        "What is stored in <code>self.bias</code> when the constructor receives <code>bias=False</code>?"
+      ],
+      "choices": [
+        "An 8-element trainable zero vector",
+        "None",
+        "An integer 0",
+        "An empty Python list"
+      ],
+      "correct": 1,
+      "why": "The conditional expression chooses None when bias=False, so no bias Parameter is registered.",
+      "skill": "pytorch.parameters"
+    },
+    {
+      "tag": "REAL SOURCE · FORWARD",
+      "text": [
+        "The <code>forward()</code> method calls <code>F.layer_norm</code>.",
+        "The second argument, <code>self.weight.shape</code>, identifies the feature dimension(s) to normalize.",
+        "The small epsilon protects against division by zero."
+      ],
+      "code": "def forward(self, input):\n    return F.layer_norm(\n        input,\n        self.weight.shape,\n        self.weight,\n        self.bias,\n        1e-5\n    )",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 26,
+        "end": 27
+      },
+      "sourceDepth": "line_walkthrough"
+    },
+    {
+      "tag": "A NUMERIC EXAMPLE",
+      "text": [
+        "For a token feature vector <code>[1,2,3,4]</code>, the mean is 2.5.",
+        "LayerNorm subtracts the mean and divides by the standard deviation (with epsilon for stability). With initial scale=1 and bias=0, the result is approximately:"
+      ],
+      "code": "x = torch.tensor([[[1., 2., 3., 4.]]])\ny = F.layer_norm(x, (4,))\nprint(y.flatten().tolist())",
+      "output": "[-1.3416, -0.4472, 0.4472, 1.3416]",
+      "note": "Rounded values; actual print includes more decimal places."
+    },
+    {
+      "tag": "CHECK 6 · WHAT GETS NORMALIZED?",
+      "text": [
+        "Given <code>[B,T,C]=[2,4,8]</code> and LayerNorm(8), which values are normalized together?"
+      ],
+      "choices": [
+        "All 64 numbers in the batch at once",
+        "The 8 channels for each token independently",
+        "Only the first token of each sequence",
+        "Only the batch dimension"
+      ],
+      "correct": 1,
+      "why": "LayerNorm(8) normalizes each length-8 feature vector independently across the final dimension.",
+      "skill": "pytorch.layernorm_axes"
+    },
+    {
+      "tag": "CHECK 7 · OUTPUT SHAPE",
+      "text": [
+        "What is the output shape after <code>LayerNorm(8)</code> receives <code>torch.randn(2,4,8)</code>?"
+      ],
+      "choices": [
+        "[8]",
+        "[2,4]",
+        "[2,4,8]",
+        "[2,8,4]"
+      ],
+      "correct": 2,
+      "why": "Layer normalization changes numeric values, not the dimensions of its input tensor.",
+      "skill": "pytorch.tensor_shape"
+    },
+    {
+      "tag": "PUT THE CLASS TOGETHER",
+      "text": [
+        "Here is the core component assembled from those five commits. The excerpt is the repository's real implementation with its explanatory comment removed.",
+        "We can now instantiate it and test it independently."
+      ],
+      "code": "class LayerNorm(nn.Module):\n    def __init__(self, ndim, bias):\n        super().__init__()\n        self.weight = nn.Parameter(torch.ones(ndim))\n        self.bias = nn.Parameter(torch.zeros(ndim)) if bias else None\n\n    def forward(self, input):\n        return F.layer_norm(input, self.weight.shape,\n                            self.weight, self.bias, 1e-5)",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 18,
+        "end": 27
+      },
+      "sourceDepth": "line_walkthrough"
+    },
+    {
+      "tag": "TEST THE REAL CLASS",
+      "text": [
+        "The practice script will import <code>LayerNorm</code> from the repository's actual <code>model.py</code>.",
+        "We generate a batch of toy hidden states, run the layer, and assert that the shape is preserved."
+      ],
+      "code": "from model import LayerNorm\nx = torch.randn(2, 4, 8)\nln = LayerNorm(ndim=8, bias=False)\ny = ln(x)\nassert y.shape == x.shape\nassert ln.bias is None",
+      "note": "The downloadable practice script handles the Python import path from its learning/ folder."
+    },
+    {
+      "tag": "CHECK 8 · TRAINABLE TENSORS",
+      "text": [
+        "What should you find in <code>dict(ln.named_parameters())</code> when <code>ln = LayerNorm(8, False)</code>?"
+      ],
+      "choices": [
+        "weight only",
+        "bias only",
+        "weight and bias",
+        "No parameters"
+      ],
+      "correct": 0,
+      "why": "weight is an nn.Parameter. bias is None, so the module has no trainable bias parameter.",
+      "skill": "pytorch.parameters"
+    },
+    {
+      "tag": "WHERE DOES IT GO NEXT?",
+      "text": [
+        "LayerNorm is not the entire language model. It is inserted into every transformer <code>Block</code>.",
+        "The repository uses <code>ln_1</code> before attention and <code>ln_2</code> before the feed-forward MLP."
+      ],
+      "code": "self.ln_1 = LayerNorm(config.n_embd, bias=config.bias)\nself.attn = CausalSelfAttention(config)\nself.ln_2 = LayerNorm(config.n_embd, bias=config.bias)\nself.mlp = MLP(config)",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 94,
+        "end": 101
+      },
+      "sourceDepth": "architecture_preview"
+    },
+    {
+      "tag": "REAL EXECUTION PATH",
+      "text": [
+        "The block's forward method combines normalized inputs with attention and then an MLP.",
+        "The additions are <b>residual connections</b>: they combine an input with the output of a sub-layer.",
+        "We will implement attention and MLP in upcoming chapters; for now recognize where your LayerNorm executes."
+      ],
+      "code": "def forward(self, x):\n    x = x + self.attn(self.ln_1(x))\n    x = x + self.mlp(self.ln_2(x))\n    return x",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 103,
+        "end": 106
+      },
+      "sourceDepth": "architecture_preview"
+    },
+    {
+      "tag": "CHECK 9 · CONNECTION",
+      "text": [
+        "Which call runs immediately before attention in the real <code>Block.forward</code>?"
+      ],
+      "choices": [
+        "self.mlp(x)",
+        "self.ln_1(x)",
+        "self.lm_head(x)",
+        "self.wte(x)"
+      ],
+      "correct": 1,
+      "why": "The source calls self.attn(self.ln_1(x)): first normalize, then run attention.",
+      "skill": "project.block_flow"
+    },
+    {
+      "tag": "FROM ONE BLOCK TO GPT",
+      "text": [
+        "The <code>GPT</code> model creates token and position embeddings, a list of transformer blocks, and a final LayerNorm.",
+        "Your small layer is reused many times. The full model is connected rather than a collection of isolated snippets."
+      ],
+      "code": "wte = nn.Embedding(config.vocab_size, config.n_embd)\nwpe = nn.Embedding(config.block_size, config.n_embd)\nh = nn.ModuleList([Block(config) for _ in range(config.n_layer)])\nln_f = LayerNorm(config.n_embd, bias=config.bias)",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 126,
+        "end": 132
+      },
+      "sourceDepth": "architecture_preview"
+    },
+    {
+      "tag": "THE MODEL FORWARD",
+      "text": [
+        "The real model converts token IDs to vectors, adds position vectors, runs transformer blocks, then normalizes again.",
+        "Your LayerNorm eventually operates on <code>x</code> in this path."
+      ],
+      "code": "tok_emb = self.transformer.wte(idx)\npos_emb = self.transformer.wpe(pos)\nx = self.transformer.drop(tok_emb + pos_emb)\nfor block in self.transformer.h:\n    x = block(x)\nx = self.transformer.ln_f(x)",
+      "type": "source",
+      "source": {
+        "path": "model.py",
+        "start": 170,
+        "end": 182
+      },
+      "sourceDepth": "architecture_preview"
+    },
+    {
+      "tag": "THE TRAINING CONNECTION",
+      "text": [
+        "The training script constructs the GPT configuration and model using the parameters read from its config.",
+        "That is where <code>n_embd</code> and <code>bias</code> reach the LayerNorm constructor. Data batches flow into this model in a later stage."
+      ],
+      "code": "model_args = dict(n_layer=n_layer, n_head=n_head,\n                  n_embd=n_embd, block_size=block_size,\n                  bias=bias, vocab_size=None, dropout=dropout)\ngptconf = GPTConfig(**model_args)\nmodel = GPT(gptconf)",
+      "type": "source",
+      "source": {
+        "path": "train.py",
+        "start": 146,
+        "end": 157
+      },
+      "sourceDepth": "architecture_preview"
+    },
+    {
+      "tag": "CHECK 10 · PROJECT FLOW",
+      "text": [
+        "Where does the <code>config.n_embd</code> used by LayerNorm ultimately come from in a training run?"
+      ],
+      "choices": [
+        "The number of Python variables",
+        "The model configuration used to construct GPT",
+        "The source file name model.py",
+        "The size of README.md"
+      ],
+      "correct": 1,
+      "why": "Training builds GPTConfig from model_args. GPT passes config to Blocks and LayerNorm.",
+      "skill": "project.config_to_module"
+    },
+    {
+      "tag": "FIND THE BUG",
+      "text": [
+        "A hidden-state tensor is shaped <code>[2,4,8]</code>, but a developer accidentally writes <code>LayerNorm(4, True)</code>.",
+        "What is the mismatch?"
+      ],
+      "code": "x = torch.randn(2, 4, 8)\nln = LayerNorm(4, True)\ny = ln(x)",
+      "choices": [
+        "The normalized_shape should match the final 8 features",
+        "LayerNorm needs a String input",
+        "A batch cannot have 2 sequences",
+        "The layer only works on a GPU"
+      ],
+      "correct": 0,
+      "why": "LayerNorm normalizes the final C dimension; here C=8 but the module was configured for 4.",
+      "skill": "pytorch.layernorm_axes"
+    },
+    {
+      "tag": "FIX THE SHAPE",
+      "text": [
+        "Configure the layer with <code>ndim=8</code> to match the last dimension.",
+        "This kind of shape reasoning will matter throughout queries, keys, values and the full transformer."
+      ],
+      "code": "x = torch.randn(2, 4, 8)\nln = LayerNorm(8, True)\ny = ln(x)\nprint(tuple(y.shape))",
+      "output": "(2, 4, 8)"
+    },
+    {
+      "tag": "EXPERIMENT WITH THE COMPONENT",
+      "text": [
+        "The exercise file in this lesson uses the actual <code>model.LayerNorm</code>.",
+        "Run it, switch <code>bias=False</code> to <code>True</code>, and inspect <code>named_parameters()</code>.",
+        "The answer matters because every Block constructs its LayerNorm from the configuration's bias flag."
+      ],
+      "type": "lab"
+    },
+    {
+      "tag": "CHECK 11 · LEARNED OR FIXED?",
+      "text": [
+        "The layer starts with weight=1 and bias=0 (if enabled). What can happen during model training?"
+      ],
+      "choices": [
+        "The scale and optional bias can be updated by the optimizer",
+        "The parameters are permanent constants",
+        "LayerNorm cannot receive gradients",
+        "The tensor must change its shape"
+      ],
+      "correct": 0,
+      "why": "Because weight and optional bias are registered nn.Parameters, training can update them.",
+      "skill": "pytorch.parameters"
+    },
+    {
+      "tag": "GIT HISTORY AS ONE MILESTONE",
+      "text": [
+        "The first five related commits created the module and a reusable LayerNorm implementation.",
+        "We studied those commits as one feature, then traced it into later code in the same project.",
+        "Next we will use the same tensor shapes to build causal attention—not repeat Python basics."
+      ],
+      "type": "history"
+    },
+    {
+      "tag": "LESSON COMPLETE",
+      "text": [
+        "You've connected real source lines across <code>data/shakespeare_char/prepare.py</code>, <code>train.py</code> and <code>model.py</code>.",
+        "You can now explain tensor shapes, embeddings, registered parameters, LayerNorm's math and where this class runs in GPT.",
+        "Your GitHub tracker will keep a separate record of which lines were explained and which you demonstrated independently."
+      ],
+      "type": "end",
+      "title": "First real GPT component"
+    }
+  ],
+  "lab": {
+    "path": "learning/lessons/01-pytorch-layernorm/practice.py",
+    "steps": [
+      "Run from repository root with Python and torch installed.",
+      "Check model.LayerNorm shape preservation and normalized per-token mean/variance.",
+      "Toggle bias=True/False and inspect registered parameters.",
+      "Create a wrong LayerNorm dimension to observe the mismatch."
+    ],
+    "expected": "Shape (2,4,8), normalized features near zero mean, bias registered only when enabled."
+  }
+}
