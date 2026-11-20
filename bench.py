@@ -62,3 +62,10 @@ optimizer = model.configure_optimizers(weight_decay=1e-2, learning_rate=1e-4, be
 if compile:
     print("Compiling model...")
     model = torch.compile(model) # pytorch 2.0
+
+if profile:
+    # useful docs on pytorch profiler:
+    # - tutorial https://pytorch.org/tutorials/intermediate/tensorboard_profiler_tutorial.html
+    # - api https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile
+    wait, warmup, active = 5, 5, 5
+    num_steps = wait + warmup + active
