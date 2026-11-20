@@ -15,3 +15,9 @@ num_proc = 8
 # best number might be different from num_proc above as it also depends on NW speed.
 # it is better than 1 usually though
 num_proc_load_dataset = num_proc
+
+enc = tiktoken.get_encoding("gpt2")
+
+if __name__ == '__main__':
+    # takes 54GB in huggingface .cache dir, about 8M documents (8,013,769)
+    dataset = load_dataset("openwebtext", num_proc=num_proc_load_dataset)
