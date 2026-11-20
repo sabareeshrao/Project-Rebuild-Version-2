@@ -223,3 +223,6 @@ def estimate_loss():
             with ctx:
                 logits, loss = model(X, Y)
             losses[k] = loss.item()
+        out[split] = losses.mean()
+    model.train()
+    return out
