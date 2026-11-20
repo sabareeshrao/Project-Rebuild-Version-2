@@ -108,3 +108,15 @@ Rows still show **neutral filename → colored STM number → original source co
 - [Original prompt 063](../AI-CODE-VIEWER-HANDOVER/prompts/063.md) and [approval 064](../AI-CODE-VIEWER-HANDOVER/prompts/064.md)
 
 The 60-commit source manifest and all 366 original source-line IDs were untouched. Live browser visual testing and GitHub Pages deployment remain unverified.
+
+## Independent Comments overlay — latest accepted UI (Prompt 065)
+
+**Comments is now an ON/OFF overlay, independent of the selected hierarchy.** Select Class, Method, Code Block, Nested Block, Lines, File, Directory or Module, then tap the pink **Comments** button. Both buttons can be active simultaneously. Genuine standalone `#` comments and Python docstring rows within the currently selected group become pink `#DB2777`; the remaining member lines retain their original category color. Comments **outside** the selected Class/Method/Block/Nested scopes remain neutral, not pink. Lines + Comments highlights documented rows across the active file.
+
+Toggling Comments OFF restores the selected category's colors; changing the selected hierarchy keeps the Comments toggle state. The source STM IDs, two-chip filename-first ordering, single-line STM visible text, original source code/indentation, conditional sibling dividers and in-place virtual row recoloring are preserved.
+
+- [Implementation record (Prompt 065)](../AI-CODE-VIEWER-HANDOVER/prompts/065.md)
+- [Controlled 41-check QA report](QA-UI-COMMENTS-OVERLAY.md)
+- Primary implementation commits: [viewer coloring](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/c31bed795239800888ec3f47104caeda080fc7ac), [independent control state](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/c1b0f00c1b94d5b194a09478b5a8c88dfba9fbd8), [virtual scroll preservation](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/6a20111cb2cfbb12962436be3b8e8628fae2c429).
+
+Source history remains **60 of 235** reconstructed nanoGPT commits / **366 physical lines** across **four original files**. No Android Chrome/desktop screenshot audit or verified GitHub Pages launch was performed during this change.
