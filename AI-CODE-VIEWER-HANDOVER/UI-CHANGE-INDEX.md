@@ -2,7 +2,7 @@
 
 This is the **UI-specific view** of the larger [chronological full prompt record](PROMPT-INDEX.md). It includes original design requests, bug reports, rejected visual experiments, and implementation approvals. Non-UI conversation prompts (such as source batch counting, architecture plans, and status questions) remain available in the full archive and are **not** listed here.
 
-**37 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
+**38 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
 
 | Prompt | UI request or issue | Record |
 |---:|---|---|
@@ -43,6 +43,7 @@ This is the **UI-specific view** of the larger [chronological full prompt record
 | 073 | Report original-history UI corruption: changed-only default, lost source styling | [View prompt](prompts/073.md) |
 | 074 | Restore original UI and default complete 159-commit history source view | [View prompt](prompts/074.md) |
 | 075 | Fix deployed restored viewer appearing as unstyled HTML due to wrong CSS path | [View prompt](prompts/075.md) |
+| 076 | Preserve all viewing modes/filters on navigation and activate File + Comments together | [View prompt](prompts/076.md) |
 
 For **latest accepted design**, do not use old rejected prompts as specifications. Read [DESIGN-SPEC.md](DESIGN-SPEC.md), [the modular viewer](../nanogpt-modular-viewer/index.html), and [its verified UI QA](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md). For implementation before/after evidence, inspect [GIT-PROVENANCE.md](GIT-PROVENANCE.md). The original screenshots that were only present in ChatGPT were not saved as verifiable files.
 
@@ -55,3 +56,5 @@ For **latest accepted design**, do not use old rejected prompts as specification
 **Accepted original-history correction — Prompts 073–074:** Keep the established modular viewer UI unchanged in appearance even when reading Andrej Karpathy's separate real Git source history. Restore its black theme, compact sticky controls, filename-first green STM chip, and Python syntax-highlighted code. **All commits is the default and displays every verified original source-line event** across 159 real first-parent commits (2,729 additions + 804 struck-through deletions) in a continuous native-page scroll. Don't revert to GitHub-style +/− diff rows or changed-only view. The full original-history snapshot remains accessible through Full file. Source data/IDs and legacy viewer remain unchanged. [QA and screenshots caveat](../nanogpt-original-history/QA-RESTORED-UI-ALL-LINES.md).
 
 **Mobile styling fix — Prompt 075:** A real Android Chrome screenshot showed the restored history viewer HTML without CSS. The HTML linked `./assets/viewer.css`, but its actual stylesheet is `./assets/style.css`. Corrected the link without redesigning the page or changing source history. [Fix details](prompts/075.md).
+
+**Accepted persistent-state/UI correction — Prompt 076:** No implicit mode reset on a numeric Jump, commit stepper, range, All commits, or file/category changes. Keep the selected mode, file filter, category and independent Comments overlay; persist them across reload via localStorage. File now actively colors its own original historical source lines sky-blue; Comments can be ON simultaneously with File or Lines, coloring standalone Python # comments and multiline docstrings pink, even on struck-through historical deletions. Recolor mounted source rows in place, preserving scroll/geometry and STM IDs. [Historical source and interaction QA](../nanogpt-original-history/QA-STATE-PERSISTENCE-OVERLAY.md).
