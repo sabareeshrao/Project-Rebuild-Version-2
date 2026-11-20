@@ -1,0 +1,81 @@
+:root{color-scheme:dark;--bg:#080b10;--surface:#11161e;--surface2:#171d27;--border:#303845;--text:#ecf1f7;--muted:#9ca9b8;--green:#238636;--green2:#2ea043;--deleted:#fb818b}
+*{box-sizing:border-box}
+html{overflow-x:clip;scrollbar-color:#364152 #0d1117}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;overflow-x:clip}
+a{color:#80bdff;text-decoration:none}a:hover{text-decoration:underline}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #8cc7ff;outline-offset:2px}
+button:disabled{opacity:.35;cursor:not-allowed}
+.shell{max-width:1800px;margin:auto;padding:13px clamp(10px,2vw,25px) 55px}
+.masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:0 0 12px}
+.eyebrow{color:#8fcaaa;font-size:10px;font-weight:750;letter-spacing:.09em;text-transform:uppercase;margin:0 0 2px}
+h1{font-size:clamp(18px,3.2vw,24px);letter-spacing:-.04em;margin:0}
+.subtitle{font-size:11px;color:var(--muted);margin:2px 0 0;max-width:850px}
+.repo-link{font-size:11px;white-space:nowrap;margin-top:5px}
+.toolbar{position:sticky;top:0;z-index:30;border:1px solid #394353;border-radius:9px;background:rgba(19,24,33,.97);box-shadow:0 7px 24px #0009;padding:7px;display:flex;align-items:center;gap:7px 12px;flex-wrap:wrap;backdrop-filter:blur(10px)}
+.control-set{display:flex;align-items:center;gap:4px;min-width:0}
+.control-name{font-size:10px;color:#c3cdd8;font-weight:750;white-space:nowrap;margin-right:2px}
+.small-button,.seg-button,.go{background:#222b37;color:#e8edf4;border:1px solid #3c4858;border-radius:6px;font-weight:750;font-size:11px;line-height:1.2;min-height:30px;padding:6px 9px}
+.small-button{font-size:17px;min-width:30px;padding:3px 7px}
+.counter{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;min-width:72px;text-align:center;white-space:nowrap}
+.jump{width:80px;max-width:15vw;border:1px solid #495567;border-radius:6px;background:#090c11;color:var(--text);padding:5px 7px;min-height:30px;font-size:12px}
+.go{background:#214765;color:#e8f5ff}
+.segments{display:flex;align-items:center;gap:3px}
+.seg-button[aria-pressed=true]{background:#dce5ef;color:#0f1925;border-color:#dce5ef}
+.file-chooser{display:flex;align-items:center;gap:5px;min-width:0;margin-left:auto}
+.file-chooser select{background:#0d121a;color:#e7eefa;border:1px solid #435065;border-radius:6px;max-width:230px;min-width:85px;padding:6px;font-size:11px;height:30px}
+.lines-pill{background:var(--green);color:white;border:1px solid #4dbb69;border-radius:6px;min-height:30px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;letter-spacing:.02em;padding:5px 11px}
+.commit-info{padding:13px 0 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.commit-info h2{font-size:15px;letter-spacing:-.012em;line-height:1.35;margin:0 0 5px}
+.commit-meta{font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.commit-meta code{font:700 11px/1.5 Consolas,Menlo,monospace;color:#acdaff}
+.commit-stat{display:flex;gap:6px;align-items:center;font-size:11px;white-space:nowrap;flex-wrap:wrap}
+.stat{padding:4px 8px;background:#1b2430;border:1px solid #303c4c;border-radius:6px}
+.plus{color:#8ee4a1}.minus{color:#ffa6aa}
+.notice{padding:9px 11px;background:#141b23;color:#b9c7d5;border:1px solid #303b47;border-radius:7px;font-size:11px;line-height:1.55;margin:5px 0 7px}
+.notice[hidden]{display:none}
+.notice.warning{border-color:#84572d;background:#2c2117;color:#fcd3a1}
+.notice.error{border-color:#854453;background:#2c171c;color:#fecaca}
+.hint{font-size:11px;color:var(--muted);margin:9px 0 7px}
+#rows{min-width:0}
+.file-section{margin:11px 0 15px;border:1px solid #2e3949;border-radius:8px;overflow:hidden;background:#0c1119}
+.file-head{background:#17202b;border-bottom:1px solid #334153;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.file-head-name{font:750 11px/1.6 Consolas,Menlo,monospace;color:#e7edf4;overflow-wrap:anywhere}
+.file-head-count{color:#aebac8;font-size:10px;white-space:nowrap}
+.code-row{display:grid;grid-template-columns:minmax(0,37%) minmax(0,63%);min-height:37px;border-bottom:1px solid #ffffff0d}
+.code-row:last-child{border-bottom:none}
+.labels{display:flex;gap:5px;align-items:stretch;padding:3px 6px 3px 7px;min-width:0}
+.filename-chip{min-width:0;flex:0 1 53%;max-width:170px;background:#242d38;border:1px solid #435065;color:#e0e8f1;border-radius:5px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:3px 4px;text-align:center;overflow-wrap:anywhere}
+.stm-chip{flex:1;min-width:75px;max-width:150px;border:1px solid #45b765;background:var(--green);color:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;font:800 10px/1.35 Consolas,monospace;padding:5px 3px;white-space:nowrap}
+.source-cell{min-width:0;display:flex;align-items:flex-start;gap:8px;padding:6px 7px;overflow-wrap:anywhere}
+.change-sign{flex:none;width:12px;text-align:center;font:800 13px/1.6 Consolas,monospace;color:#8493a4}
+.source-cell .source{min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;font:12px/1.75 "JetBrains Mono","Fira Code",Consolas,Menlo,monospace;color:#e5eaf1;tab-size:4;flex:1}
+.code-row.added .change-sign{color:#79d995}
+.code-row.deleted .change-sign{color:#fa8f99}
+.code-row.deleted .source{color:#d2969e;text-decoration:line-through;text-decoration-color:#f09ba5;text-decoration-thickness:1.2px;opacity:.83}
+.code-row.deleted{background:#6e283216}
+.code-row.added{background:#1a5c2c10}
+.code-row.context{opacity:.95}
+.empty{padding:20px 15px;color:var(--muted);font-size:12px;border:1px dashed #465162;border-radius:8px;margin-top:14px}
+.footer{border-top:1px solid #283341;margin-top:20px;padding-top:15px;color:#97a6b8;font-size:11px;line-height:1.8}
+.footer a{font-weight:600}
+@media(max-width:700px){
+.shell{padding:9px 8px 30px}.toolbar{gap:5px;padding:6px;top:0}.control-set{gap:3px}
+.control-name{font-size:9px}
+.counter{min-width:59px;font-size:11px}
+.small-button,.seg-button,.go{min-height:28px;padding:5px 6px;font-size:10px}
+.small-button{min-width:26px;font-size:15px}
+.jump{min-height:28px;width:63px;max-width:19vw;font-size:11px}
+.file-chooser{margin-left:0;flex:1 1 100%}
+.file-chooser select{flex:1;max-width:none;min-width:0}
+.lines-pill{min-height:27px;padding:3px 7px}
+.code-row{grid-template-columns:minmax(0,41%) minmax(0,59%);min-height:34px}
+.labels{gap:3px;padding:3px 3px 3px 4px}
+.filename-chip{font-size:8px;padding:2px 3px;max-width:55%;flex-basis:55%}
+.stm-chip{font-size:8.5px;min-width:0;max-width:none;padding:3px 2px}
+.source-cell{gap:4px;padding:5px 4px}
+.source-cell .source{font-size:10.7px;line-height:1.65}
+.change-sign{width:9px;font-size:11px}
+.commit-info h2{font-size:13px}
+}
