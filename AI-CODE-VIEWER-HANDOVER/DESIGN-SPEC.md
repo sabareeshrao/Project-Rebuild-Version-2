@@ -1,5 +1,13 @@
 # Accepted UI and ID Contract
 
+## Latest accepted visual override — Prompts 063–064
+
+**In the modular viewer, the source-line chip displays only the short `STM-NNN` ID.** Color already identifies Class / Method / Block / Nested / File / Directory / Module / Lines / Comments. Remove every *visible* group title, scope ID, code snippet and commit marker from the colored chip: no `NESTED · NBL-001 · if not self.flash`, `CLASS · CLS-001 · ...` or reserve-height text line. The old "first group chip names its scope" rule below is **superseded for the modular viewer**.
+
+The row order remains **neutral filename chip → colored `STM-NNN` chip → original source code**. Full permanent `STM-NNN-FIL-NNN-filename`, structural IDs, commit provenance and scope names stay stored in manifest/source registry, DOM data/accessible labels, not written visibly inside chips. One category change must recolor the same mounted chip without DOM replacement, row-height change or scroll movement. Source-line wrapping/indentation, all category palettes, sticky toolbar and natural page scrolling remain as before.
+
+Actual implementation: [renderer commit `e514141`](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/e514141bb688f04fcb03f8de0a3363926aa3b02b), [CSS commit `edcbc56`](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/edcbc56f818dc87c13bdfcad64c1b968abf2fc81), [QA](../nanogpt-modular-viewer/QA-UI-COMPACT-STM-CHIPS.md).
+
 ## Hierarchy (top to bottom)
 1. Project (PRJ)
 2. Module (MOD)
