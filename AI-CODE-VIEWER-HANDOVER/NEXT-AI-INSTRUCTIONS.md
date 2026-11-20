@@ -1,5 +1,11 @@
 # Instructions to the Next AI — Read Before Coding
 
+## Most recent accepted UI rule — Prompt 065
+
+The Comments button is an **independent pink toggle**, not a replacement for the selected hierarchy category. Class + Comments, Method + Comments, Nested + Comments, etc. can be active concurrently. Only standalone `#` comments and actual docstring physical lines *inside* the current category's members turn pink; all other members keep their base category color, and comments outside class/method/block/nested scopes stay neutral. Switching the primary hierarchy keeps Comments ON/OFF; toggling Comments OFF restores the category color without changing scroll position or row elements. Lines + Comments highlights comments throughout the selected file. Preserve the prior Prompt 063–064 **STM-only chip text** rule, full IDs, natural scrolling, filename-first order and conditional code-only green sibling dividers.
+
+[Prompt 065](prompts/065.md) · [Current viewer](../nanogpt-modular-viewer/index.html) · [41 controlled QA checks](../nanogpt-modular-viewer/QA-UI-COMMENTS-OVERLAY.md). No independent browser screenshot/Pages verification was performed. Next historical batch remains 061–075; current coverage is 60 / 235 commits.
+
 ## Critical latest rule — Prompts 063–064 (supersedes earlier first-chip scope label)
 
 In the modular nanoGPT viewer, every colored source chip visibly contains **only its short STM number**, e.g. `STM-046`. The selected **color** identifies the hierarchy. **Never** add a second label row (`NESTED · NBL-001 · if not self.flash`, class/method names, or `COMMIT · +N` markers) inside the chip. Keep complete STM and structural identity/provenance in the registry, DOM attributes and accessible labels.
