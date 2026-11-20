@@ -30,9 +30,9 @@ This is the implementation plan for other projects; it is **not a claim** that t
 5. Use a language-aware AST (not naive regex alone) to map class/method/blocks to full source spans; incomplete early-commit files should be displayed as historical partial sources, not repaired with imagined syntax.
 6. Serialize source snapshots, per-line provenance, scopes, and commit statistics as independently loadable data files or compressed chunks. Keep the viewer reusable: the new repo changes the data, not the UI shape.
 7. Render only visible rows for large codebases; preserve natural page scrolling and stable top controls. Avoid rendering hundreds of thousands of elements at once.
-8. Compute chip color independently from syntax highlight. The precedence is **blank always green; standalone comment pink only in Comments mode; selected-scope color for matching executable/nonblank lines; otherwise green**.
+8. Compute chip color independently from syntax highlight. The precedence is **new synthetic scope-start boundary sky blue; original source blank inherits selected enclosing scope color (green by default); standalone `#` comments and triple-quoted documentation pink only in Comments mode; selected executable scope color otherwise; green fallback**.
 9. Alternate module/package/file A/B colors by **consecutive visible runs**. If A, B, A appear as three consecutive groups, show Color1, Color2, Color1 regardless of file name uniqueness.
-10. Add a display-only green spacer when contiguous groups change without a source blank. It has a display flag but NO physical line ID. Do not use fake STM numbers.
+10. At the start of each actual file/class/method/code-block/nested-block group, insert a distinct sky-blue `#38BDF8` display-only boundary row. It carries a display flag but NO physical STM line ID. Preserve genuine blank source lines and color their chips by the selected enclosing hierarchy. Never add green fake separators or fake STM IDs.
 11. Filter source IDs by commit history: Full file = cumulative snapshot through selected commit; Added only = additions of selected commit; Selected = union of additions in inclusive N..M. Clarify what to show for edited/deleted lines in new projects and test that policy. Never pretend a source snippet from a deleted file is present in the final snapshot.
 12. Run the independent exhaustive audit and responsive-browser tests. Only then push.
 
@@ -63,3 +63,6 @@ Avoid changing original code to attach IDs. Preserve whitespace, tabs, Unicode, 
 
 ## Incremental improvement rule
 When user requests a change: capture the prompt verbatim, link implementation SHA, show before/after code, test previous rules on all relevant snapshots, add new regression tests, and commit the new artifact.
+## Python documentation classification
+
+A triple-quoted standalone Python literal, such as a module header or method docstring (`"""..."""` or `'''...'''`), is technically a string literal. Users want these included as comment-like documentation in the viewer's Comments selector. Scan multi-line quote state and maintain per-physical-line membership. Do not classify `my_query = """..."""` or `call("""...""")` as a comment. Language-aware tokenization/AST parsing is preferable to simple regex for complex cases. Preserve IDs, exact text and internal boundaries.

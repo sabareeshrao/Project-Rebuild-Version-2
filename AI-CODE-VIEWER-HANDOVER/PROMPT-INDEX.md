@@ -1,8 +1,8 @@
-# Chronological Prompt Index — 42 User Turns
+# Chronological Prompt Index — 45 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (a summary, not verbatim chat export), the accepted or rejected design decision, and when possible a verified GitHub implementation link. These **42 files were each committed separately** to document improvement history; actual UI implementation commits precede these retrospective documentation commits.
+Each file below has the **user's prompt**, the assistant's observable outcome (a summary, not verbatim chat export), the accepted or rejected design decision, and when possible a verified GitHub implementation link. These **45 files were each committed separately** to document improvement history; actual UI implementation commits precede these retrospective documentation commits.
 
-**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 42 records.
+**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 45 records.
 
 | # | Prompt focus | Historical record |
 |---:|---|---|
@@ -48,6 +48,9 @@ Each file below has the **user's prompt**, the assistant's observable outcome (a
 | 040 | Include actual HTML/CSS/JS and diffs | [Prompt 040](prompts/040.md) |
 | 041 | Continuous improvement principle | [Prompt 041](prompts/041.md) |
 | 042 | Create this reusable handover folder for new project | [Prompt 042](prompts/042.md) |
+| 043 | Screenshot: green blank lines obscure new class boundaries | [Prompt 043](prompts/043.md) |
+| 044 | Final correction: hierarchy-colored blanks and sky-blue scope-start rows | [Prompt 044](prompts/044.md) |
+| 045 | Detect Python triple-quoted documentation in Comments mode | [Prompt 045](prompts/045.md) |
 
 ## Milestones to inspect while replaying
 
@@ -60,6 +63,8 @@ Each file below has the **user's prompt**, the assistant's observable outcome (a
 - **032–035:** comment bug, exhaustive audit, green blank lines, no horizontal scroll, hanging indentation.
 - **036–037:** single/inclusive-range commit filtering and HTML link.
 - **038–042:** preserve the conversation and code revisions as a self-explaining Git handover to a new AI.
+- **043–044:** separate new-scope sky-blue boundaries from genuine blank lines and inherit the selected hierarchy color on original blanks.
+- **045:** recognize standalone Python triple-quoted documentation blocks as comment-like in Comments mode without painting ordinary assigned triple strings pink.
 
 ## Verification and limitations
 
