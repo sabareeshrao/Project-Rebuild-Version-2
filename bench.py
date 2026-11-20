@@ -90,3 +90,5 @@ if profile:
             optimizer.step()
             lossf = loss.item()
             print(f"{k}/{num_steps} loss: {lossf:.4f}")
+
+            prof.step() # notify the profiler at end of each step
