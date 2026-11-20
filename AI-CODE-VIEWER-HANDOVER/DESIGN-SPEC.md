@@ -21,9 +21,9 @@ Scope IDs are separate, e.g. `CLS-001-FIL-001-model.py`, `MTH-001-FIL-001-model.
 - Left: one chip per actual source line, vertically centered and as tall as that line's wrapped code.
 - Right: ORIGINAL source text; use monospace, syntax highlighting, and preserved leading indentation. Wrapped continuation stays under the code's indentation, not flush left. No horizontal scrolling. Full page flows vertically; no internal fixed-height scrollbar. Handle deeply indented long lines without clipping.
 - Category selection is via compact top buttons. Rather than nesting layout boxes, change chip background across the selected category's whole range. The first colored chip shows `CLASS · CLS-001 · ClassName` or analogous group name; every line retains its original STM ID.
-- At each **actual start of a file, class, method, code block, or nested block**, insert a separate **sky-blue `#38BDF8` visual-only boundary row** with dark foreground `#082F49`, labeling the new scope. It has **no STM ID** and is not a physical source line; group multiple simultaneous starts into a single boundary row.
-- Every actual empty source line remains visible with its real STM ID. In a selected hierarchy (Class/Method/Block/Nested/File/Package/Module), its chip **inherits the enclosing scope color**. In default Lines or Comments mode the blank-line chip stays green unless it is itself content within a recognized documentation block. Blank lines outside a selected scope stay green.
-- Sky blue is reserved for actual new-scope boundaries, not original empty lines. Do not add generic green separator rows or hide original blank lines.
+- **Never use sky-blue boundary chips.** User rejected them in Prompt 046 and asked to revert.
+- Every original empty source line stays visible with its true STM ID and a **green `#15803D` chip in every view**, even if it belongs to a selected class/method/block/file.
+- At a group transition with no actual source blank, the viewer can add an unobtrusive, **unlabeled green display-only gap** without an STM ID. These are not source lines.
 - Default screen is **Lines**, so ALL physical source lines start green including comments.
 - **Comments mode** turns standalone `#` comment lines and standalone Python triple-quoted documentation blocks (`"""` or `'''`) pink, including multiline documentation content. An executable statement with an inline `#` stays green. Ordinary triple-quoted values assigned to variables or passed as arguments remain code, not documentation. A Python docstring is technically a string literal, but the UI groups it with comment-like documentation. Comments and docstrings stay green in default Lines mode. Syntax coloring is independent of chip colors.
 
@@ -41,8 +41,8 @@ Scope IDs are separate, e.g. `CLS-001-FIL-001-model.py`, `MTH-001-FIL-001-model.
 | Code Block | Orange `#EA580C` |
 | Nested Block | Yellow `#FACC15`, dark foreground |
 | Lines (default, including original blank lines) | Green `#15803D` |
-| Blank lines in selected hierarchy | Inherit selected scope chip color |
-| Structural boundary (synthetic, no STM) | Sky blue `#38BDF8` with dark text `#082F49` |
+| Original blank lines in any mode | Green `#15803D` |
+| Synthetic unlabeled group-transition gap (no STM ID) | Green `#15803D` |
 | Comments (only when selected) | Pink `#DB2777` |
 | File A/B | Cream `#EAD7B7` / Cyan `#06B6D4` |
 | Package or directory A/B | Brown `#78350F` / Silver `#94A3B8` |
@@ -67,3 +67,7 @@ For modest demos, one HTML page with embedded data can work. For 100k+ lines, co
 
 ## Evidence and language awareness
 The accepted demo used nanoGPT `model.py` with 30 append-only commits and 168 physical lines. Rebuild other repositories from REAL history, without copying the nanoGPT data. Use robust language parsing for classes/methods and source-aware comment detection; regexes for Python sample are not a reliable multi-language parser.
+
+## Rejected history
+
+Sky-blue structural separators and scope-colored original blank lines were attempted in Prompts 043–044. They are **not accepted rules** after Prompt 046's explicit revert. Retain previous errors in prompt history, but use the current green-gap HTML. Python docstring recognition (Prompt 045) remains accepted.
