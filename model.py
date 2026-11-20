@@ -246,3 +246,9 @@ class GPT(nn.Module):
         # basically the openai checkpoints use a "Conv1D" module, but we only want to use a vanilla Linear
         # this means that we have to transpose these weights when we import them
         assert len(sd_keys_hf) == len(sd_keys), f"mismatched keys: {len(sd_keys_hf)} != {len(sd_keys)}"
+        for k in sd_keys_hf:
+            if any(k.endswith(w) for w in transposed):
+                # special treatment for the Conv1D weights we need to transpose
+                assert sd_hf[k].shape[::-1] == sd[k].shape
+                with torch.no_grad():
+                    sd[k].copy_(sd_hf[k].t())
