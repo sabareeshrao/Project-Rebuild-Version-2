@@ -91,6 +91,8 @@ function commentStart(s) {
 
 function syntaxHTML(s, sourceKind) {
   if(!s.trim())return '&nbsp;';
+  // Render LICENSE and other non-program text verbatim; do not color legal words as Python.
+  if(sourceKind==='text')return escapeHTML(s);
   if(sourceKind==='comment'||sourceKind==='docstring')return '<span class="comment-syntax">'+escapeHTML(s)+'</span>';
   const split=commentStart(s),expression=split<0?s:s.slice(0,split);
   const parts=expression.split(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g);
