@@ -1,8 +1,8 @@
-# Chronological Prompt Index — 75 User Turns
+# Chronological Prompt Index — 76 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **75 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
+Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **76 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
 
-**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 75 records.
+**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 76 records.
 
 | # | Prompt focus | Historical record |
 |---:|---|---|
@@ -81,6 +81,7 @@ Each file below has the **user's prompt**, the assistant's observable outcome (c
 | 073 | Complaint: original-history viewer destroyed familiar UI and showed partial changed lines | [Prompt 073](prompts/073.md) |
 | 074 | Restore original viewer design and show all source events continuously by default | [Prompt 074](prompts/074.md) |
 | 075 | Mobile screenshot: diagnose and repair unstyled viewer caused by nonexistent CSS path | [Prompt 075](prompts/075.md) |
+| 076 | Persist view modes/filters across commits and make File + Comments work simultaneously | [Prompt 076](prompts/076.md) |
 
 The full archive covers **more than UI tweaks**: source-code identity, architecture, commit archaeology, batch planning, tests, review feedback and communication. For a UI-only curated list, use [UI-CHANGE-INDEX.md](UI-CHANGE-INDEX.md). For verified counts and important fidelity limits, use [PROMPT-COVERAGE-AUDIT.md](PROMPT-COVERAGE-AUDIT.md).
 
@@ -138,3 +139,5 @@ If a new AI finds a conflict between an earlier and a later prompt, the later ex
 - **074:** restored original modular viewer HTML/CSS/code-row styling under the separate original-history viewer, including syntax highlighting, no Git diff prefixes, filename → green STM → code, and default **All commits** with **3,533 historical source line events** across 159 original commits, including **804 struck-through deletions**. Full file remains a cumulative snapshot and single-number Jump selects full source. Original 235 teaching commits and prototype untouched. [Restoration QA](../nanogpt-original-history/QA-RESTORED-UI-ALL-LINES.md) · [Prompt 074](prompts/074.md).
 
 - **075:** user screenshot revealed the restored original-history viewer was completely unstyled even though original Git/STM data loaded. Root cause: copied HTML incorrectly referenced `./assets/viewer.css` (missing) instead of actual `./assets/style.css`. Fixed **one href only**, verified 10/10 repository contract checks, and left original UI styles/data/code unchanged. [Prompt 075](prompts/075.md) · [Fix commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/d6414deef32f63c4b3f1c1e8becb1e48dfaaea4f). Pages live revalidation remains unconfirmed.
+
+- **076:** restored **persistent viewing state** in the original Git-history viewer. Changing commit via stepper/Jump no longer resets Added only, Selected, Full file or All commits; File dropdown and active categories persist across navigation and browser reload via safe localStorage. Enabled original sky-blue **File** category + independent pink **Comments** overlay (both pressed simultaneously); source-row category recolors in place, including historically deleted standalone comments/docstrings, leaving green/blue chips and deletion-only code strikethrough intact. [Implementation record](prompts/076.md) · [21 interaction + 12 replay + 12 static checks](../nanogpt-original-history/QA-STATE-PERSISTENCE-OVERLAY.md). Original source patches and 235 teaching commits untouched.
