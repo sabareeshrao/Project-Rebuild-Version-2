@@ -1,8 +1,8 @@
-# Chronological Prompt Index — 58 User Turns
+# Chronological Prompt Index — 60 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (a summary, not verbatim chat export), the accepted or rejected design decision, and when possible a verified GitHub implementation link. These **58 files were each committed separately** to document improvement history; actual UI implementation commits precede these retrospective documentation commits.
+Each file below has the **user's prompt**, the assistant's observable outcome (a summary, not verbatim chat export), the accepted or rejected design decision, and when possible a verified GitHub implementation link. These **60 files were each committed separately** to document improvement history; actual UI implementation commits precede these retrospective documentation commits.
 
-**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 58 records.
+**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 60 records.
 
 | # | Prompt focus | Historical record |
 |---:|---|---|
@@ -64,6 +64,8 @@ Each file below has the **user's prompt**, the assistant's observable outcome (a
 | 056 | User requests compact sticky header, filled colors, All commits, filename chip | [Prompt 056](prompts/056.md) |
 | 057 | Implement and verify the modular viewer UI improvements | [Prompt 057](prompts/057.md) |
 | 058 | Distinguish full prompt history from UI-only change records | [Prompt 058](prompts/058.md) |
+| 059 | Swap filename and STM chip order | [Prompt 059](prompts/059.md) |
+| 060 | Verify filename-first code rows are working | [Prompt 060](prompts/060.md) |
 
 The full archive covers **more than UI tweaks**: source-code identity, architecture, commit archaeology, batch planning, tests, review feedback and communication. For a UI-only curated list, use [UI-CHANGE-INDEX.md](UI-CHANGE-INDEX.md). For verified counts and important fidelity limits, use [PROMPT-COVERAGE-AUDIT.md](PROMPT-COVERAGE-AUDIT.md).
 
@@ -94,3 +96,5 @@ If a new AI finds a conflict between an earlier and a later prompt, the later ex
 - **056–057:** sticky compact controls, always-filled category buttons, source-stable in-place recoloring, a Full file vs All commits distinction, and separate STM/filename chips. [UI QA](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md).
 
 - **058:** clarify the difference between the full all-prompts archive and a UI-specific view, without claiming verbatim assistant exports or inventing unseen chat messages.
+
+- **059–060:** filename chip moved before the STM chip in each modular viewer source row; controlled DOM verification confirms File → STM ID → code ordering while preserving full historical STM IDs. [Implementation commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/6762679193fbba5ce160669fca427454f1ee6e35).

@@ -7,7 +7,7 @@
 1. [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) — nonnegotiable contract.
 2. [DESIGN-SPEC.md](DESIGN-SPEC.md) — UI, IDs, colors and behavior.
 3. [GIT-PROVENANCE.md](GIT-PROVENANCE.md) — original implementation commits and precise evidence.
-4. [PROMPT-INDEX.md](PROMPT-INDEX.md) — all **58 numbered user prompts** in this project's recorded sequence, including the newest exclusive category colors and conditional green code dividers.
+4. [PROMPT-INDEX.md](PROMPT-INDEX.md) — all **60 numbered user prompts** in this project's recorded sequence, including the newest exclusive category colors and conditional green code dividers.
 5. [prompts/](prompts/) — one historical user prompt plus assistant-outcome notes per numbered file; **one Git documentation commit per prompt**, preserving continuous improvement.
 6. [reference/](reference/) — real, complete historical HTML snapshots, with the latest demo to copy and modify.
 7. [QUALITY-GATES.md](QUALITY-GATES.md) — audit checklist before shipping to the user.
@@ -62,3 +62,7 @@ The separate [modular nanoGPT viewer](../nanogpt-modular-viewer/index.html) now 
 [**Complete chronological prompt index**](PROMPT-INDEX.md) is the default: it includes architecture, source-commit history, code implementation, batch planning, visual feedback, audits, status questions, and handover discussions—not only UI changes. [**UI-specific prompts**](UI-CHANGE-INDEX.md) provide a filtered view of the visual work. [**Coverage audit**](PROMPT-COVERAGE-AUDIT.md) shows the categories and limits of what the archive actually preserves.
 
 **Critical limitation:** the user prompt text is preserved where it was available, but assistant outputs are usually **summaries**, not word-for-word ChatGPT conversation exports. Every available project turn was intended for documentation, but sequential filenames alone cannot establish that no branch conversation or inaccessible earlier message was missed. Actual GitHub HTML/code history is linked independently in [GIT-PROVENANCE.md](GIT-PROVENANCE.md).
+
+## Latest source row chip order (Prompts 059–060)
+
+The **filename is now the first chip**, then the category-colored short STM ID chip, then source code. This ordering is implemented in [the modular row renderer](../nanogpt-modular-viewer/assets/view.js), with the full original STM ID unchanged in source records and DOM data. [Implementation](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/6762679193fbba5ce160669fca427454f1ee6e35) · [Prompt 059](prompts/059.md) · [Prompt 060](prompts/060.md).

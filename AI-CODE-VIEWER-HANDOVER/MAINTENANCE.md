@@ -2,7 +2,7 @@
 
 This handover represents the user's iterative design process, not a generic ChatGPT template.
 
-- **Original prompts:** `prompts/001.md` ... `prompts/058.md`.
+- **Original prompts:** `prompts/001.md` ... `prompts/060.md`.
 - **Narrated outcomes:** in each prompt record. These are faithfully written summaries, **not full verbatim assistant response exports**.
 - **Actual code:** `reference/*.html` exact GitHub-sourced revisions; canonical `../commit-id-demo/index.html`.
 - **Actual implementation history:** `GIT-PROVENANCE.md` with SHA links.
@@ -11,7 +11,7 @@ This handover represents the user's iterative design process, not a generic Chat
 - **Quality rules:** `QUALITY-GATES.md`.
 
 ## How new learning is added
-1. Append the user's exact prompt (one new `prompts/059.md` etc.).
+1. Append the user's exact prompt (one new `prompts/061.md` etc.).
 2. Document assistant output as verbatim **only if actually captured**, otherwise label it as a summary.
 3. Link the actual code commit and include real code before/after revisions when saved.
 4. Capture what failed, how it was fixed, and the regressions that were tested.
@@ -45,3 +45,7 @@ The accepted static demo at [../commit-id-demo/index.html](../commit-id-demo/ind
 ## Recording scope clarification (Prompt 058)
 
 Maintain **two independent views of the same evidence**: (1) all chronological user prompts, including conceptual ideas, architecture, verification, nanoGPT source batches, questions, status and UI feedback; (2) a narrower UI-specific filtered index. Do not imply every prompt is a UI feature request or that every prompt produced a code change. Label assistant responses as summaries unless actual verbatim output is available. Never invent text/code/screenshot evidence. The [coverage audit](PROMPT-COVERAGE-AUDIT.md) and [UI-only subset](UI-CHANGE-INDEX.md) let the next AI choose the relevant perspective without losing history.
+
+## Prompts 059–060 — chip order refinement
+
+The accepted modular viewer displays **Filename chip → STM ID chip → source code**. The underlying full STM-NNN-FIL-NNN-filename ID remains intact in the source data and DOM. [Implementation commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/6762679193fbba5ce160669fca427454f1ee6e35) changes only `nanogpt-modular-viewer/assets/view.js`. Prompt 060 verifies order in controlled DOM tests while keeping the 15 source commits and 76 lines unchanged; real browser rendering remains unverified.

@@ -2,7 +2,7 @@
 
 This is the **UI-specific view** of the larger [chronological full prompt record](PROMPT-INDEX.md). It includes original design requests, bug reports, rejected visual experiments, and implementation approvals. Non-UI conversation prompts (such as source batch counting, architecture plans, and status questions) remain available in the full archive and are **not** listed here.
 
-**29 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
+**30 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
 
 | Prompt | UI request or issue | Record |
 |---:|---|---|
@@ -35,5 +35,6 @@ This is the **UI-specific view** of the larger [chronological full prompt record
 | 050 | Scope-colored original blanks | [View prompt](prompts/050.md) |
 | 056 | Compact sticky header design feedback | [View prompt](prompts/056.md) |
 | 057 | Implement compact header and two-chip row | [View prompt](prompts/057.md) |
+| 059 | Swap source row chip columns: File first, STM second | [View prompt](prompts/059.md) |
 
 For **latest accepted design**, do not use old rejected prompts as specifications. Read [DESIGN-SPEC.md](DESIGN-SPEC.md), [the modular viewer](../nanogpt-modular-viewer/index.html), and [its verified UI QA](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md). For implementation before/after evidence, inspect [GIT-PROVENANCE.md](GIT-PROVENANCE.md). The original screenshots that were only present in ChatGPT were not saved as verifiable files.
