@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "batch": "046-060",
+  "fromCommit": 60,
+  "toCommit": 60,
+  "fromLine": 1,
+  "toLine": 3,
+  "fileId": "FIL-004",
+  "file": ".gitattributes",
+  "lines": [
+    {
+      "n": 1,
+      "id": "STM-364-FIL-004-.gitattributes",
+      "text": "# Override jupyter in Github language stats for more accurate estimate of repo code languages",
+      "firstCommit": 60,
+      "kind": "comment"
+    },
+    {
+      "n": 2,
+      "id": "STM-365-FIL-004-.gitattributes",
+      "text": "# reference: https://github.com/github/linguist/blob/master/docs/overrides.md#generated-code",
+      "firstCommit": 60,
+      "kind": "comment"
+    },
+    {
+      "n": 3,
+      "id": "STM-366-FIL-004-.gitattributes",
+      "text": "*.ipynb linguist-generated",
+      "firstCommit": 60,
+      "kind": "code"
+    }
+  ]
+}
