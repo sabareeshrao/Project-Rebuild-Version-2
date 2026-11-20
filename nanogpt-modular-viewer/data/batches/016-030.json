@@ -1,0 +1,656 @@
+{
+  "schemaVersion": 1,
+  "batch": "016-030",
+  "fromCommit": 16,
+  "toCommit": 30,
+  "fromLine": 77,
+  "toLine": 168,
+  "fileId": "FIL-001",
+  "file": "model.py",
+  "lines": [
+    {
+      "n": 77,
+      "id": "STM-077-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 16,
+      "kind": "blank"
+    },
+    {
+      "n": 78,
+      "id": "STM-078-FIL-001-model.py",
+      "text": "class MLP(nn.Module):",
+      "firstCommit": 16,
+      "kind": "code"
+    },
+    {
+      "n": 79,
+      "id": "STM-079-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 16,
+      "kind": "blank"
+    },
+    {
+      "n": 80,
+      "id": "STM-080-FIL-001-model.py",
+      "text": "    def __init__(self, config):",
+      "firstCommit": 16,
+      "kind": "code"
+    },
+    {
+      "n": 81,
+      "id": "STM-081-FIL-001-model.py",
+      "text": "        super().__init__()",
+      "firstCommit": 16,
+      "kind": "code"
+    },
+    {
+      "n": 82,
+      "id": "STM-082-FIL-001-model.py",
+      "text": "        self.c_fc    = nn.Linear(config.n_embd, 4 * config.n_embd, bias=config.bias)",
+      "firstCommit": 16,
+      "kind": "code"
+    },
+    {
+      "n": 83,
+      "id": "STM-083-FIL-001-model.py",
+      "text": "        self.gelu    = nn.GELU()",
+      "firstCommit": 17,
+      "kind": "code"
+    },
+    {
+      "n": 84,
+      "id": "STM-084-FIL-001-model.py",
+      "text": "        self.c_proj  = nn.Linear(4 * config.n_embd, config.n_embd, bias=config.bias)",
+      "firstCommit": 17,
+      "kind": "code"
+    },
+    {
+      "n": 85,
+      "id": "STM-085-FIL-001-model.py",
+      "text": "        self.dropout = nn.Dropout(config.dropout)",
+      "firstCommit": 17,
+      "kind": "code"
+    },
+    {
+      "n": 86,
+      "id": "STM-086-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 18,
+      "kind": "blank"
+    },
+    {
+      "n": 87,
+      "id": "STM-087-FIL-001-model.py",
+      "text": "    def forward(self, x):",
+      "firstCommit": 18,
+      "kind": "code"
+    },
+    {
+      "n": 88,
+      "id": "STM-088-FIL-001-model.py",
+      "text": "        x = self.c_fc(x)",
+      "firstCommit": 18,
+      "kind": "code"
+    },
+    {
+      "n": 89,
+      "id": "STM-089-FIL-001-model.py",
+      "text": "        x = self.gelu(x)",
+      "firstCommit": 18,
+      "kind": "code"
+    },
+    {
+      "n": 90,
+      "id": "STM-090-FIL-001-model.py",
+      "text": "        x = self.c_proj(x)",
+      "firstCommit": 18,
+      "kind": "code"
+    },
+    {
+      "n": 91,
+      "id": "STM-091-FIL-001-model.py",
+      "text": "        x = self.dropout(x)",
+      "firstCommit": 18,
+      "kind": "code"
+    },
+    {
+      "n": 92,
+      "id": "STM-092-FIL-001-model.py",
+      "text": "        return x",
+      "firstCommit": 18,
+      "kind": "code"
+    },
+    {
+      "n": 93,
+      "id": "STM-093-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 19,
+      "kind": "blank"
+    },
+    {
+      "n": 94,
+      "id": "STM-094-FIL-001-model.py",
+      "text": "class Block(nn.Module):",
+      "firstCommit": 19,
+      "kind": "code"
+    },
+    {
+      "n": 95,
+      "id": "STM-095-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 19,
+      "kind": "blank"
+    },
+    {
+      "n": 96,
+      "id": "STM-096-FIL-001-model.py",
+      "text": "    def __init__(self, config):",
+      "firstCommit": 19,
+      "kind": "code"
+    },
+    {
+      "n": 97,
+      "id": "STM-097-FIL-001-model.py",
+      "text": "        super().__init__()",
+      "firstCommit": 19,
+      "kind": "code"
+    },
+    {
+      "n": 98,
+      "id": "STM-098-FIL-001-model.py",
+      "text": "        self.ln_1 = LayerNorm(config.n_embd, bias=config.bias)",
+      "firstCommit": 19,
+      "kind": "code"
+    },
+    {
+      "n": 99,
+      "id": "STM-099-FIL-001-model.py",
+      "text": "        self.attn = CausalSelfAttention(config)",
+      "firstCommit": 19,
+      "kind": "code"
+    },
+    {
+      "n": 100,
+      "id": "STM-100-FIL-001-model.py",
+      "text": "        self.ln_2 = LayerNorm(config.n_embd, bias=config.bias)",
+      "firstCommit": 20,
+      "kind": "code"
+    },
+    {
+      "n": 101,
+      "id": "STM-101-FIL-001-model.py",
+      "text": "        self.mlp = MLP(config)",
+      "firstCommit": 20,
+      "kind": "code"
+    },
+    {
+      "n": 102,
+      "id": "STM-102-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 20,
+      "kind": "blank"
+    },
+    {
+      "n": 103,
+      "id": "STM-103-FIL-001-model.py",
+      "text": "    def forward(self, x):",
+      "firstCommit": 20,
+      "kind": "code"
+    },
+    {
+      "n": 104,
+      "id": "STM-104-FIL-001-model.py",
+      "text": "        x = x + self.attn(self.ln_1(x))",
+      "firstCommit": 20,
+      "kind": "code"
+    },
+    {
+      "n": 105,
+      "id": "STM-105-FIL-001-model.py",
+      "text": "        x = x + self.mlp(self.ln_2(x))",
+      "firstCommit": 20,
+      "kind": "code"
+    },
+    {
+      "n": 106,
+      "id": "STM-106-FIL-001-model.py",
+      "text": "        return x",
+      "firstCommit": 20,
+      "kind": "code"
+    },
+    {
+      "n": 107,
+      "id": "STM-107-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 21,
+      "kind": "blank"
+    },
+    {
+      "n": 108,
+      "id": "STM-108-FIL-001-model.py",
+      "text": "@dataclass",
+      "firstCommit": 21,
+      "kind": "code"
+    },
+    {
+      "n": 109,
+      "id": "STM-109-FIL-001-model.py",
+      "text": "class GPTConfig:",
+      "firstCommit": 21,
+      "kind": "code"
+    },
+    {
+      "n": 110,
+      "id": "STM-110-FIL-001-model.py",
+      "text": "    block_size: int = 1024",
+      "firstCommit": 21,
+      "kind": "code"
+    },
+    {
+      "n": 111,
+      "id": "STM-111-FIL-001-model.py",
+      "text": "    vocab_size: int = 50304 # GPT-2 vocab_size of 50257, padded up to nearest multiple of 64 for efficiency",
+      "firstCommit": 21,
+      "kind": "code"
+    },
+    {
+      "n": 112,
+      "id": "STM-112-FIL-001-model.py",
+      "text": "    n_layer: int = 12",
+      "firstCommit": 21,
+      "kind": "code"
+    },
+    {
+      "n": 113,
+      "id": "STM-113-FIL-001-model.py",
+      "text": "    n_head: int = 12",
+      "firstCommit": 21,
+      "kind": "code"
+    },
+    {
+      "n": 114,
+      "id": "STM-114-FIL-001-model.py",
+      "text": "    n_embd: int = 768",
+      "firstCommit": 21,
+      "kind": "code"
+    },
+    {
+      "n": 115,
+      "id": "STM-115-FIL-001-model.py",
+      "text": "    dropout: float = 0.0",
+      "firstCommit": 21,
+      "kind": "code"
+    },
+    {
+      "n": 116,
+      "id": "STM-116-FIL-001-model.py",
+      "text": "    bias: bool = True # True: bias in Linears and LayerNorms, like GPT-2. False: a bit better and faster",
+      "firstCommit": 21,
+      "kind": "code"
+    },
+    {
+      "n": 117,
+      "id": "STM-117-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 22,
+      "kind": "blank"
+    },
+    {
+      "n": 118,
+      "id": "STM-118-FIL-001-model.py",
+      "text": "class GPT(nn.Module):",
+      "firstCommit": 22,
+      "kind": "code"
+    },
+    {
+      "n": 119,
+      "id": "STM-119-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 22,
+      "kind": "blank"
+    },
+    {
+      "n": 120,
+      "id": "STM-120-FIL-001-model.py",
+      "text": "    def __init__(self, config):",
+      "firstCommit": 22,
+      "kind": "code"
+    },
+    {
+      "n": 121,
+      "id": "STM-121-FIL-001-model.py",
+      "text": "        super().__init__()",
+      "firstCommit": 22,
+      "kind": "code"
+    },
+    {
+      "n": 122,
+      "id": "STM-122-FIL-001-model.py",
+      "text": "        assert config.vocab_size is not None",
+      "firstCommit": 22,
+      "kind": "code"
+    },
+    {
+      "n": 123,
+      "id": "STM-123-FIL-001-model.py",
+      "text": "        assert config.block_size is not None",
+      "firstCommit": 22,
+      "kind": "code"
+    },
+    {
+      "n": 124,
+      "id": "STM-124-FIL-001-model.py",
+      "text": "        self.config = config",
+      "firstCommit": 22,
+      "kind": "code"
+    },
+    {
+      "n": 125,
+      "id": "STM-125-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 23,
+      "kind": "blank"
+    },
+    {
+      "n": 126,
+      "id": "STM-126-FIL-001-model.py",
+      "text": "        self.transformer = nn.ModuleDict(dict(",
+      "firstCommit": 23,
+      "kind": "code"
+    },
+    {
+      "n": 127,
+      "id": "STM-127-FIL-001-model.py",
+      "text": "            wte = nn.Embedding(config.vocab_size, config.n_embd),",
+      "firstCommit": 23,
+      "kind": "code"
+    },
+    {
+      "n": 128,
+      "id": "STM-128-FIL-001-model.py",
+      "text": "            wpe = nn.Embedding(config.block_size, config.n_embd),",
+      "firstCommit": 23,
+      "kind": "code"
+    },
+    {
+      "n": 129,
+      "id": "STM-129-FIL-001-model.py",
+      "text": "            drop = nn.Dropout(config.dropout),",
+      "firstCommit": 23,
+      "kind": "code"
+    },
+    {
+      "n": 130,
+      "id": "STM-130-FIL-001-model.py",
+      "text": "            h = nn.ModuleList([Block(config) for _ in range(config.n_layer)]),",
+      "firstCommit": 23,
+      "kind": "code"
+    },
+    {
+      "n": 131,
+      "id": "STM-131-FIL-001-model.py",
+      "text": "            ln_f = LayerNorm(config.n_embd, bias=config.bias),",
+      "firstCommit": 23,
+      "kind": "code"
+    },
+    {
+      "n": 132,
+      "id": "STM-132-FIL-001-model.py",
+      "text": "        ))",
+      "firstCommit": 23,
+      "kind": "code"
+    },
+    {
+      "n": 133,
+      "id": "STM-133-FIL-001-model.py",
+      "text": "        self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)",
+      "firstCommit": 24,
+      "kind": "code"
+    },
+    {
+      "n": 134,
+      "id": "STM-134-FIL-001-model.py",
+      "text": "        # with weight tying when using torch.compile() some warnings get generated:",
+      "firstCommit": 24,
+      "kind": "comment"
+    },
+    {
+      "n": 135,
+      "id": "STM-135-FIL-001-model.py",
+      "text": "        # \"UserWarning: functional_call was passed multiple values for tied weights.",
+      "firstCommit": 24,
+      "kind": "comment"
+    },
+    {
+      "n": 136,
+      "id": "STM-136-FIL-001-model.py",
+      "text": "        # This behavior is deprecated and will be an error in future versions\"",
+      "firstCommit": 24,
+      "kind": "comment"
+    },
+    {
+      "n": 137,
+      "id": "STM-137-FIL-001-model.py",
+      "text": "        # not 100% sure what this is, so far seems to be harmless. TODO investigate",
+      "firstCommit": 24,
+      "kind": "comment"
+    },
+    {
+      "n": 138,
+      "id": "STM-138-FIL-001-model.py",
+      "text": "        self.transformer.wte.weight = self.lm_head.weight # https://paperswithcode.com/method/weight-tying",
+      "firstCommit": 24,
+      "kind": "code"
+    },
+    {
+      "n": 139,
+      "id": "STM-139-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 25,
+      "kind": "blank"
+    },
+    {
+      "n": 140,
+      "id": "STM-140-FIL-001-model.py",
+      "text": "        # init all weights",
+      "firstCommit": 25,
+      "kind": "comment"
+    },
+    {
+      "n": 141,
+      "id": "STM-141-FIL-001-model.py",
+      "text": "        self.apply(self._init_weights)",
+      "firstCommit": 25,
+      "kind": "code"
+    },
+    {
+      "n": 142,
+      "id": "STM-142-FIL-001-model.py",
+      "text": "        # apply special scaled init to the residual projections, per GPT-2 paper",
+      "firstCommit": 25,
+      "kind": "comment"
+    },
+    {
+      "n": 143,
+      "id": "STM-143-FIL-001-model.py",
+      "text": "        for pn, p in self.named_parameters():",
+      "firstCommit": 25,
+      "kind": "code"
+    },
+    {
+      "n": 144,
+      "id": "STM-144-FIL-001-model.py",
+      "text": "            if pn.endswith('c_proj.weight'):",
+      "firstCommit": 25,
+      "kind": "code"
+    },
+    {
+      "n": 145,
+      "id": "STM-145-FIL-001-model.py",
+      "text": "                torch.nn.init.normal_(p, mean=0.0, std=0.02/math.sqrt(2 * config.n_layer))",
+      "firstCommit": 25,
+      "kind": "code"
+    },
+    {
+      "n": 146,
+      "id": "STM-146-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 26,
+      "kind": "blank"
+    },
+    {
+      "n": 147,
+      "id": "STM-147-FIL-001-model.py",
+      "text": "        # report number of parameters",
+      "firstCommit": 26,
+      "kind": "comment"
+    },
+    {
+      "n": 148,
+      "id": "STM-148-FIL-001-model.py",
+      "text": "        print(\"number of parameters: %.2fM\" % (self.get_num_params()/1e6,))",
+      "firstCommit": 26,
+      "kind": "code"
+    },
+    {
+      "n": 149,
+      "id": "STM-149-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 27,
+      "kind": "blank"
+    },
+    {
+      "n": 150,
+      "id": "STM-150-FIL-001-model.py",
+      "text": "    def get_num_params(self, non_embedding=True):",
+      "firstCommit": 27,
+      "kind": "code"
+    },
+    {
+      "n": 151,
+      "id": "STM-151-FIL-001-model.py",
+      "text": "        \"\"\"",
+      "firstCommit": 27,
+      "kind": "docstring"
+    },
+    {
+      "n": 152,
+      "id": "STM-152-FIL-001-model.py",
+      "text": "        Return the number of parameters in the model.",
+      "firstCommit": 27,
+      "kind": "docstring"
+    },
+    {
+      "n": 153,
+      "id": "STM-153-FIL-001-model.py",
+      "text": "        For non-embedding count (default), the position embeddings get subtracted.",
+      "firstCommit": 27,
+      "kind": "docstring"
+    },
+    {
+      "n": 154,
+      "id": "STM-154-FIL-001-model.py",
+      "text": "        The token embeddings would too, except due to the parameter sharing these",
+      "firstCommit": 27,
+      "kind": "docstring"
+    },
+    {
+      "n": 155,
+      "id": "STM-155-FIL-001-model.py",
+      "text": "        params are actually used as weights in the final layer, so we include them.",
+      "firstCommit": 27,
+      "kind": "docstring"
+    },
+    {
+      "n": 156,
+      "id": "STM-156-FIL-001-model.py",
+      "text": "        \"\"\"",
+      "firstCommit": 27,
+      "kind": "docstring"
+    },
+    {
+      "n": 157,
+      "id": "STM-157-FIL-001-model.py",
+      "text": "        n_params = sum(p.numel() for p in self.parameters())",
+      "firstCommit": 28,
+      "kind": "code"
+    },
+    {
+      "n": 158,
+      "id": "STM-158-FIL-001-model.py",
+      "text": "        if non_embedding:",
+      "firstCommit": 28,
+      "kind": "code"
+    },
+    {
+      "n": 159,
+      "id": "STM-159-FIL-001-model.py",
+      "text": "            n_params -= self.transformer.wpe.weight.numel()",
+      "firstCommit": 28,
+      "kind": "code"
+    },
+    {
+      "n": 160,
+      "id": "STM-160-FIL-001-model.py",
+      "text": "        return n_params",
+      "firstCommit": 28,
+      "kind": "code"
+    },
+    {
+      "n": 161,
+      "id": "STM-161-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 29,
+      "kind": "blank"
+    },
+    {
+      "n": 162,
+      "id": "STM-162-FIL-001-model.py",
+      "text": "    def _init_weights(self, module):",
+      "firstCommit": 29,
+      "kind": "code"
+    },
+    {
+      "n": 163,
+      "id": "STM-163-FIL-001-model.py",
+      "text": "        if isinstance(module, nn.Linear):",
+      "firstCommit": 29,
+      "kind": "code"
+    },
+    {
+      "n": 164,
+      "id": "STM-164-FIL-001-model.py",
+      "text": "            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)",
+      "firstCommit": 29,
+      "kind": "code"
+    },
+    {
+      "n": 165,
+      "id": "STM-165-FIL-001-model.py",
+      "text": "            if module.bias is not None:",
+      "firstCommit": 29,
+      "kind": "code"
+    },
+    {
+      "n": 166,
+      "id": "STM-166-FIL-001-model.py",
+      "text": "                torch.nn.init.zeros_(module.bias)",
+      "firstCommit": 29,
+      "kind": "code"
+    },
+    {
+      "n": 167,
+      "id": "STM-167-FIL-001-model.py",
+      "text": "        elif isinstance(module, nn.Embedding):",
+      "firstCommit": 30,
+      "kind": "code"
+    },
+    {
+      "n": 168,
+      "id": "STM-168-FIL-001-model.py",
+      "text": "            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)",
+      "firstCommit": 30,
+      "kind": "code"
+    }
+  ]
+}
