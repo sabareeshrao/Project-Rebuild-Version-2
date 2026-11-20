@@ -13,7 +13,7 @@ The first prototype of this original-history viewer had a redesigned blue-gray G
 
 There are **no + / − prefixes** beside code and no Git diff file cards. Deleted source lines are struck through **in the code column only**; their green STM chips and original filename labels stay visible.
 
-Only the **green Lines** hierarchy is implemented in this phase. The familiar color-category buttons are visually retained for familiarity but are disabled until the original historical source is categorized. No synthetic code lines or categories are inserted.
+**Lines** (green), **File** (alternating sky blue), and independent pink **Comments** are implemented. The remaining hierarchy categories remain disabled until original historical classification is added. No synthetic code lines or categories are inserted.
 
 ## All lines in one go — default
 
@@ -28,11 +28,23 @@ The entire historical timeline is one continuous document scroll, with no per-co
 | **Added only** | Only additions in the selected original commit. |
 | **Selected** | Additions and struck-through deletions of the selected commit or selected inclusive range. |
 | **Previous / Next** | Move to adjacent real Git commits. |
-| **Jump** | One number shows that commit's **complete surviving source**; a range (e.g. `5-10`) shows those commits' actual changes. |
+| **Jump** | One number or range changes the focused commit(s) **without changing the selected viewing mode**. In Full file, show the surviving snapshot at the selected final commit; in Added only, show only additions; in Selected, show adds/deletions; in All commits, keep the full timeline and scroll to the requested commit. |
 | **File** | Optional filter; **All files** is default. |
 | **Lines** | Green STM chip color. Other hierarchy colors will be classified later. |
 
 The original historical source rows use stable `STM-NNNNN` IDs. Each addition receives a permanent identifier; when later removed, the deleted source line uses the same green STM chip with a strike through on its original code. Switching modes never reassigns STM IDs.
+
+## Persistent view settings and File + Comments overlay
+
+The viewer now **preserves the selected viewing mode** (`Full file`, `Added only`, `Selected`, or `All commits`) when using Previous / Next or entering another number/range and pressing Go. For example, **Added only + Jump 5** stays in Added only and shows only real additions at original commit 5. If a range is entered in Added only, additions across that range are shown. **All commits** remains All commits on a numeric jump and scrolls to the chosen original commit in the continuous history.
+
+The file dropdown stays selected across mode/commit changes. The `All commits` button no longer silently clears it; choose `All files` explicitly to clear the filter.
+
+`Lines` (green) and `File` (two sky-blue shades for original source files) are both working structural color modes. **Comments** is an **independent pink overlay** that can be ON alongside Lines or File; it highlights genuine standalone Python `#` comments and triple-quoted documentation lines, including historically deleted lines shown in strikethrough. Non-comment code keeps its green/sky-blue hierarchy chip. Other structural categories remain future work.
+
+The current mode, commit, selected range, file filter, structural color, and independent Comments toggle are stored in browser localStorage and restored on reload when available. Category-only toggling recolors mounted rows in place, without rebuilding the source window or resetting scroll measurements.
+
+[Verified persistence and File+Comments QA](QA-STATE-PERSISTENCE-OVERLAY.md): **21 mode/interaction checks**, **12 full-history replay checks**, **12 static contract checks**, all passed in controlled tests. No live Android visual test was performed.
 
 ## Authentic historical scope
 
