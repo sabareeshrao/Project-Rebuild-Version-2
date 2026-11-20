@@ -65,4 +65,4 @@ The source-line tracker is pinned to the original project source revision `97e26
 
 The interactive HTML saves local answers only in the learner's browser. Use its **EXPORT** button after studying and send the resulting JSON alongside the Python lab output for review. ChatGPT can then update `progress.json` and per-line learner evidence in GitHub. Merely viewing a lesson, passing a quiz or having prior coursework is never treated as independent coding mastery.
 
-The previous `lessons/01-first-python/` absolute-zero draft remains in Git history for reference, but is **superseded** and is not the active Lesson 01.
+The previous `lessons/01-first-python/` absolute-zero draft remains in the repository for reference, but is **superseded** and is not the active Lesson 01.
