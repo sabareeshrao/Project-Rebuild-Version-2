@@ -62,3 +62,11 @@ And cowards it be strawn to my bed,
 And thrust the gates of my threats,
 Because he that ale away, and hang'd
 An one with him.
+
+DUKE VINCENTIO:
+I thank your eyes against it.
+
+DUKE VINCENTIO:
+Then will answer him to save the malm:
+And what have you tyrannous shall do this?
+
