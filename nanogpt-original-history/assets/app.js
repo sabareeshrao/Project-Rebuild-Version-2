@@ -350,8 +350,10 @@ function display(){
 function selectCommit(n){
   if(!Number.isInteger(n)||n<1||n>manifest.dataAvailableThrough)return;
   state.commit=n;
-  if(state.mode==='selected'||state.mode==='added')
-    state.selection={start:n,end:n};
+  // A step changes the focused commit in *every* mode. Keep the chosen mode,
+  // category, overlay, and file filter; synchronize the saved range to this
+  // single step so switching modes later doesn't resurrect an unrelated range.
+  state.selection={start:n,end:n};
   $('jump-input').value=String(n);
   saveState();display();
   if(state.mode==='all')windowRows.scrollToCommit(n);
