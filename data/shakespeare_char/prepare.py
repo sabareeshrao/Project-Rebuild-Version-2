@@ -38,3 +38,9 @@ def decode(l):
 n = len(data)
 train_data = data[:int(n*0.9)]
 val_data = data[int(n*0.9):]
+
+# encode both to integers
+train_ids = encode(train_data)
+val_ids = encode(val_data)
+print(f"train has {len(train_ids):,} tokens")
+print(f"val has {len(val_ids):,} tokens")
