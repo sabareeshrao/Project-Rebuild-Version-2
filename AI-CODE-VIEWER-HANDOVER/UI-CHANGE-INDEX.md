@@ -1,0 +1,39 @@
+# UI Change Prompts — Curated Index
+
+This is the **UI-specific view** of the larger [chronological full prompt record](PROMPT-INDEX.md). It includes original design requests, bug reports, rejected visual experiments, and implementation approvals. Non-UI conversation prompts (such as source batch counting, architecture plans, and status questions) remain available in the full archive and are **not** listed here.
+
+**29 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
+
+| Prompt | UI request or issue | Record |
+|---:|---|---|
+| 011 | Green STM chip | [View prompt](prompts/011.md) |
+| 012 | Ten source ID chips | [View prompt](prompts/012.md) |
+| 013 | Nested blocks yellow | [View prompt](prompts/013.md) |
+| 014 | Outer block early color | [View prompt](prompts/014.md) |
+| 015 | Restore missing green line chips | [View prompt](prompts/015.md) |
+| 017 | Method-level color | [View prompt](prompts/017.md) |
+| 018 | Class red, Method blue, Block orange | [View prompt](prompts/018.md) |
+| 019 | Full source code lines | [View prompt](prompts/019.md) |
+| 020 | Screenshot: broken missing-code UI | [View prompt](prompts/020.md) |
+| 023 | Dark background and fonts | [View prompt](prompts/023.md) |
+| 025 | Centered chips and natural page | [View prompt](prompts/025.md) |
+| 026 | Two colors per high-level group | [View prompt](prompts/026.md) |
+| 027 | Reject similar file/module colors | [View prompt](prompts/027.md) |
+| 028 | Reject amber near orange | [View prompt](prompts/028.md) |
+| 029 | Reject purple/lime | [View prompt](prompts/029.md) |
+| 030 | Compact commit stepper proposal | [View prompt](prompts/030.md) |
+| 032 | Comment vs executable line bug | [View prompt](prompts/032.md) |
+| 034 | Blank and comment chip behavior | [View prompt](prompts/034.md) |
+| 035 | Code wrap and line-chip height | [View prompt](prompts/035.md) |
+| 036 | Commit range UI filter | [View prompt](prompts/036.md) |
+| 043 | Confusing green blanks screenshot | [View prompt](prompts/043.md) |
+| 044 | Sky-blue boundary proposal | [View prompt](prompts/044.md) |
+| 045 | Triple-quote docstring highlighting | [View prompt](prompts/045.md) |
+| 046 | Revert rejected sky-blue chips | [View prompt](prompts/046.md) |
+| 048 | Scope colors and code-only green sibling divider | [View prompt](prompts/048.md) |
+| 049 | Saturated sky-blue File category | [View prompt](prompts/049.md) |
+| 050 | Scope-colored original blanks | [View prompt](prompts/050.md) |
+| 056 | Compact sticky header design feedback | [View prompt](prompts/056.md) |
+| 057 | Implement compact header and two-chip row | [View prompt](prompts/057.md) |
+
+For **latest accepted design**, do not use old rejected prompts as specifications. Read [DESIGN-SPEC.md](DESIGN-SPEC.md), [the modular viewer](../nanogpt-modular-viewer/index.html), and [its verified UI QA](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md). For implementation before/after evidence, inspect [GIT-PROVENANCE.md](GIT-PROVENANCE.md). The original screenshots that were only present in ChatGPT were not saved as verifiable files.
