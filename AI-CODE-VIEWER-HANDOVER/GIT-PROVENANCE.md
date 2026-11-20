@@ -49,3 +49,11 @@ For source-data generation, the first 30 nanoGPT build commits (starting SHA `ca
 - Total scoped source history: **235 nanoGPT commits**, divided into **16 batches** (15 commits per batch, final 10). See [batch tracker](../nanogpt-modular-viewer/BATCH_TRACKER.md).
 - [Actual data manifest](../nanogpt-modular-viewer/data/manifest.json) and [Batch 01 source chunk](../nanogpt-modular-viewer/data/batches/001-015.json) are authoritative machine-readable artifacts for continued work.
 - The modular viewer's runtime source window has passed source-store/range/color/divider checks and mocked DOM virtualization checks; **real-browser rendering and live GitHub Pages deployment were not independently verified**.
+
+## Prompt 057 — stable sticky modular UI
+
+- [UI implementation commit 8b12df7e](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/8b12df7ed3c438438896f09ce0cb52a66d15dee4) changes only modular viewer HTML, CSS, app, source-row UI and virtualized renderer.
+- Top controls are compact and CSS sticky; category buttons are filled with distinct colors even when inactive. Class/Method/etc. switching recolors existing mounted source rows with fixed metadata heights and no DOM rebuild or scroll-index reset.
+- All commits resets from single/range selections to the cumulative **latest indexed** source (15 of planned 235), unlike Full file which shows cumulative source through the selected commit.
+- The visible STM chip is shortened (e.g. STM-029) and an adjacent neutral chip displays model.py. The complete original STM-029-FIL-001-model.py remains in source data and DOM metadata.
+- [QA report](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md) includes JavaScript/static and controlled mocked-DOM checks. Real Android/Chrome rendering and deployed GitHub Pages were not independently verified.
