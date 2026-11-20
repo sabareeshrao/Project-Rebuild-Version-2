@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "learner_profile": {
+    "assumed_starting_level": "absolute_beginner",
+    "language": "Python",
+    "project": "nanoGPT",
+    "evidence_policy": "Do not assume a learner knows a concept merely because it appears in a lesson."
+  },
+  "current_lesson": "01",
+  "lesson_attempts": {
+    "01": {
+      "status": "not_started",
+      "started_at": null,
+      "completed_at": null,
+      "quiz_answers": {},
+      "challenge_submitted": false,
+      "verified_by_assistant": false
+    }
+  },
+  "knowledge": {
+    "python.program_structure": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "python.print": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "python.strings": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "python.variables": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "python.len": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "python.indexing": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "python.f_strings": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "project.data_to_model_flow": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "python.files": {
+      "status": "not_taught",
+      "evidence": []
+    },
+    "python.collections": {
+      "status": "not_taught",
+      "evidence": []
+    },
+    "pytorch.tensors": {
+      "status": "not_taught",
+      "evidence": []
+    }
+  },
+  "source_line_evidence": [],
+  "rules": [
+    "Quiz results are useful but not proof of independent coding mastery.",
+    "Viewing a source line changes no GitHub state automatically.",
+    "After the learner exports an attempt, check the evidence and update this file and source-lines.json deliberately.",
+    "Future lessons should build on demonstrated concepts and use brief revision only where needed.",
+    "Keep the original project code unchanged by placing learning materials under learning/."
+  ],
+  "sync_instructions": "Open learning/lessons/01-first-python/index.html, complete the lesson, download the attempt JSON, and share the file with ChatGPT. It can then record your demonstrated learning in GitHub."
+}
