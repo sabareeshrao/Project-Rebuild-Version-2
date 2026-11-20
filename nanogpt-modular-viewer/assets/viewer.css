@@ -56,13 +56,13 @@ h1{font-size:19px;letter-spacing:-.03em;margin:0 0 3px}
 #line-window{width:100%;min-width:0}
 .code-row{
   display:grid;grid-template-columns:minmax(0,min(330px,41%)) minmax(0,1fr);
-  min-height:44px;align-items:stretch;min-width:0;
+  min-height:40px;align-items:stretch;min-width:0;
   border-bottom:1px solid rgba(255,255,255,.055);
 }
 .chip-cell{min-width:0;display:flex;padding:3px 7px 3px 0}
 .line-chip{
-  width:100%;min-width:0;align-self:stretch;min-height:36px;border-radius:7px;
-  padding:5px;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  width:100%;min-width:0;align-self:stretch;min-height:30px;border-radius:7px;
+  padding:5px;display:flex;flex-direction:row;justify-content:center;align-items:center;
   gap:2px;text-align:center;background:var(--chip-bg,#15803d);color:var(--chip-ink,#fff);
 }
 .line-chip .line-id{font:700 10px/1.32 Roboto,Arial,system-ui,sans-serif;overflow-wrap:anywhere}
@@ -90,7 +90,7 @@ h1{font-size:19px;letter-spacing:-.03em;margin:0 0 3px}
   .file-picker{margin-left:0}.mode,.step,.apply,.category{font-size:10px;padding:6px 7px;min-height:31px}
   .jump input{width:88px;min-height:31px}
   .code-row{grid-template-columns:minmax(0,42%) minmax(0,58%)}
-  .line-chip{min-height:32px;padding:5px 3px}
+  .line-chip{min-height:30px;padding:4px 3px}
   .line-chip .line-id{font-size:9.1px}.line-chip .group-label,.line-chip .commit-marker{font-size:8.5px}
   .chip-cell{padding:3px 6px 3px 0}
   .code-cell{font-size:11.6px;line-height:1.65;padding:8px 5px}
@@ -147,18 +147,14 @@ html,body{overflow-x:clip}
 .category:focus-visible{outline:2px solid #f8fafc;outline-offset:2px}
 .summary{min-height:36px}
 
-/* Two chips: short STM identity and separate filename. Full STM ID is retained
-   in the DOM dataset and historical source JSON. All rows reserve one meta line
-   so category switching does not change chip height. */
+/* Filename-first neutral chip + single-line colored STM chip, then original code.
+   The full STM identity and group metadata remain in data/DOM accessibility labels.
+   No second visible label/commit marker: color already identifies the hierarchy. */
 .chip-cell{display:flex;align-self:stretch;gap:4px;min-width:0;padding:3px 7px 3px 0}
 .line-chip{
   width:auto;min-width:0;flex:1 1 auto;
-  min-height:37px;padding:4px 3px;gap:1px;justify-content:center;
-}
-.line-chip .chip-meta{
-  display:block;flex:0 0 auto;width:100%;height:12px;min-height:12px;
-  font:800 8.6px/12px Roboto,Arial,system-ui,sans-serif;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;
+  min-height:30px;padding:3px;gap:0;justify-content:center;
+  align-items:center;
 }
 .line-chip .line-id{
   display:block;width:100%;min-width:0;
@@ -194,8 +190,7 @@ html,body{overflow-x:clip}
  .categories{gap:3px;padding:1px 2px 3px}
  .category,.category[aria-pressed="false"]{min-height:27px;padding:5px 7px;font-size:10px}
  .chip-cell{gap:3px;padding:3px 4px 3px 0}
- .line-chip{min-height:36px;padding:3px 2px}
- .line-chip .chip-meta{font-size:7.7px;height:11px;line-height:11px;min-height:11px}
+ .line-chip{min-height:30px;padding:3px 2px}
  .line-chip .line-id{font-size:9px}
  .filename-chip{max-width:38%;font-size:8px;padding:3px 2px;border-radius:6px}
 }
