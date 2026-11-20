@@ -18,7 +18,7 @@ h1{font-size:clamp(23px,3.6vw,33px);letter-spacing:-.03em;margin:2px 0 3px}
 .stepper{display:flex;gap:9px;align-items:center}
 .section-label{text-transform:uppercase;color:#a3a3a3;font-size:10px;letter-spacing:.09em;font-weight:800}
 .stepper-body{display:flex;align-items:center;background:#171717;border:1px solid #414141;border-radius:9px;overflow:hidden}
-.commit-number{min-width:75px;text-align:center;font-weight:800;font-size:24px;font-variant-numeric:tabular-nums;line-height:1;padding:10px}
+.commit-number{min-width:75px;white-space:nowrap;text-align:center;font-weight:800;font-size:24px;font-variant-numeric:tabular-nums;line-height:1;padding:10px}
 .stepper-buttons{display:flex;flex-direction:column;border-left:1px solid #414141}
 button{font:650 12px/1.2 Roboto,Arial,system-ui,sans-serif;background:#303030;color:#fff;border:1px solid #454545;border-radius:8px;padding:9px 12px;min-height:35px;cursor:pointer}
 button:hover:not(:disabled){filter:brightness(1.23)}
@@ -28,7 +28,7 @@ button:disabled{opacity:.3;cursor:not-allowed}
 .stepper-buttons button+button{border-top:1px solid #454545}
 .jump{display:flex;align-items:end;gap:8px;flex-wrap:wrap}
 .jump-input-wrap{display:flex;flex-direction:column;gap:4px}
-.jump input{width:120px;background:#171717;border:1px solid #454545;color:#fff;border-radius:8px;padding:9px 11px;font:600 13px ui-monospace,SFMono-Regular,Consolas,monospace;min-height:35px}
+.jump input{width:146px;background:#171717;border:1px solid #454545;color:#fff;border-radius:8px;padding:9px 11px;font:600 13px ui-monospace,SFMono-Regular,Consolas,monospace;min-height:35px}
 .nav-modes{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
 .mode[aria-pressed="true"]{background:#fff;color:#000;border-color:#fff}
 .context{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;margin-top:13px}
@@ -49,7 +49,7 @@ button:disabled{opacity:.3;cursor:not-allowed}
 .code-row:hover .chip-cell{background:#101010}
 .chip{background:var(--chip-bg,#15803D);color:var(--chip-fg,#fff);border-radius:7px;min-height:35px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;padding:7px 6px;width:100%;max-width:none}
 .chip .id{font:700 10px/1.35 Roboto,Arial,system-ui,sans-serif;white-space:normal;overflow-wrap:anywhere;word-break:normal}
-.chip .label{font:800 9.5px/1.3 Roboto,Arial,system-ui,sans-serif;overflow-wrap:anywhere;max-width:100%;letter-spacing:.01em}
+.chip .commit-marker{font:800 10px/1.3 Roboto,Arial,system-ui,sans-serif;letter-spacing:.01em}.chip .label{font:800 9.5px/1.3 Roboto,Arial,system-ui,sans-serif;overflow-wrap:anywhere;max-width:100%;letter-spacing:.01em}
 .source-code{display:flex;align-items:flex-start;min-width:0;padding:9px 9px;font:12.5px/1.75 'JetBrains Mono','Fira Code',Consolas,'Liberation Mono',monospace;color:#e6e6e6}
 .code-indent{display:block;flex:none;min-width:0;max-width:38%}
 .code-body{display:block;flex:1;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;tab-size:4}
@@ -58,23 +58,23 @@ button:disabled{opacity:.3;cursor:not-allowed}
 @media(max-width:720px){
 .page{padding:12px 10px 35px}.stat{min-width:78px}.nav-modes{margin-left:0}
 .code-grid{min-width:0}.code-row{grid-template-columns:minmax(0,43%) minmax(0,57%)}
-.chip{max-width:none}.chip .id{font-size:9px}.chip .label{font-size:9px}.source-code{font-size:11.5px;padding:9px 5px}.code-indent{max-width:34%}.jump input{width:104px}
+.chip{max-width:none}.chip .id{font-size:9px}.chip .label{font-size:9px}.source-code{font-size:11.5px;padding:9px 5px}.code-indent{max-width:34%}.jump input{width:138px}
 }</style></head>
 <body><main class="page">
 <header class="head"><div><div class="eyebrow">Actual Git history · Chronological source ID viewer</div>
 <h1>nanoGPT · Code ID Explorer</h1>
 <p class="subtitle"><a href="https://github.com/sabareeshrao/Project-Rebuild-Version-2" target="_blank" rel="noopener">Project-Rebuild-Version-2</a> · First 30 historical commits · Original <code>model.py</code></p></div>
-<div class="stats"><div class="stat"><b id="total">168</b><span>Lines at commit</span></div><div class="stat"><b id="added-stat">2</b><span>New lines</span></div><div class="stat"><b>30</b><span>Commits indexed</span></div></div></header>
+<div class="stats"><div class="stat"><b id="total">168</b><span>Lines displayed</span></div><div class="stat"><b id="added-stat">2</b><span id="added-label">Added in commit</span></div><div class="stat"><b>30</b><span>Commits indexed</span></div></div></header>
 <section class="navbar" aria-label="Commit and hierarchy navigation">
 <div class="nav-top">
 <div class="stepper"><span class="section-label">Commit</span><div class="stepper-body">
 <div id="commit-number" class="commit-number" aria-live="polite">30</div>
 <div class="stepper-buttons"><button id="up" aria-label="Next commit" title="Next commit">▲</button><button id="down" aria-label="Previous commit" title="Previous commit">▼</button></div>
 </div><span class="section-label">/ 30</span></div>
-<form id="jump-form" class="jump"><div class="jump-input-wrap"><label for="jump-input" class="section-label">Jump to commit</label>
-<input id="jump-input" type="number" min="1" max="30" step="1" placeholder="1–30" inputmode="numeric" required></div>
-<button type="submit">Go</button></form>
-<div class="nav-modes"><button class="mode" id="full" aria-pressed="true">Full file</button><button class="mode" id="added" aria-pressed="false">Added only</button></div>
+<form id="jump-form" class="jump"><div class="jump-input-wrap"><label for="jump-input" class="section-label">Show commit or range</label>
+<input id="jump-input" type="text" placeholder="5 or 5-10" inputmode="text" autocomplete="off" spellcheck="false" aria-describedby="jump-help" required></div>
+<button type="submit">Show</button><span id="jump-help" class="section-label" style="text-transform:none;letter-spacing:0;font-weight:500">Examples: 5 · 5-10</span></form>
+<div class="nav-modes"><button class="mode" id="full" aria-pressed="true">Full file</button><button class="mode" id="added" aria-pressed="false">Added only</button><button class="mode" id="selected" aria-pressed="false">Selected commits</button></div>
 </div>
 <div class="context"><span class="commit-title" id="commit-title"></span><a id="commit-sha" class="hash" target="_blank" rel="noopener"></a></div>
 <div class="section-label" style="margin-top:15px">CHIP COLOR BY HIERARCHY</div>
@@ -101,7 +101,7 @@ button:disabled{opacity:.3;cursor:not-allowed}
 'use strict';
 var data=JSON.parse(document.getElementById('historical-source').textContent);
 var N=data.commits.length;
-var commit=30,kind='line',addedOnly=false;
+var commit=30,kind='line',viewMode='full',selection=null;
 var colors={class:'#DC2626',method:'#2563EB',block:'#EA580C',nested:'#FACC15',line:'#15803D',comment:'#DB2777'};
 var pairs={
 file:[{bg:'#EAD7B7',fg:'#171717'},{bg:'#06B6D4',fg:'#111827'}],
@@ -224,26 +224,52 @@ function appendVisualGap(fragment){
  appendCodeContent(right,'');
  row.appendChild(left);row.appendChild(right);fragment.appendChild(row);
 }
+// Input "5" means Commit 5 only; "5-10" means additions from commits 5 through 10, inclusive.
+function parseCommitSelection(input){
+ var match=String(input).trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+ if(!match)return null;
+ var first=Number(match[1]),last=match[2]===undefined?first:Number(match[2]);
+ if(!Number.isSafeInteger(first)||!Number.isSafeInteger(last)||first<1||last>N||first>last)return null;
+ return {start:first,end:last};
+}
+function getVisibleLines(){
+ if(viewMode==='full')return data.lines.filter(function(l){return l.firstCommit<=commit});
+ if(viewMode==='added')return data.lines.filter(function(l){return l.firstCommit===commit});
+ var range=selection||{start:commit,end:commit};
+ return data.lines.filter(function(l){return l.firstCommit>=range.start&&l.firstCommit<=range.end});
+}
 function render(){
- var c=data.commits[commit-1],list=data.lines.filter(function(l){return l.firstCommit<=commit&&(!addedOnly||l.firstCommit===commit)});
- $('commit-number').textContent=String(commit);$('total').textContent=String(c.total);$('added-stat').textContent=String(c.added);
+ var c=data.commits[commit-1],range=viewMode==='selection'?(selection||{start:commit,end:commit}):null;
+ var list=getVisibleLines();
+ var addedInSelection=range?data.commits.slice(range.start-1,range.end).reduce(function(sum,item){return sum+item.added},0):c.added;
+ var rangeText=range?(range.start===range.end?'Commit '+range.start:'Commits '+range.start+'–'+range.end):'';
+ $('commit-number').textContent=range&&range.start!==range.end?range.start+'–'+range.end:String(commit);
+ $('total').textContent=String(list.length);$('added-stat').textContent=String(addedInSelection);
+ $('added-label').textContent=range?'Added in selection':'Added in commit';
  $('up').disabled=commit===N;$('down').disabled=commit===1;
- $('commit-title').textContent=c.message;
- $('commit-sha').textContent=c.sha.slice(0,10)+' · Original GitHub commit';
+ $('commit-title').textContent=range&&range.start!==range.end?rangeText+' · '+(range.end-range.start+1)+' commits · '+addedInSelection+' added lines':c.message;
+ $('commit-sha').textContent=(range&&range.start!==range.end?'Ending commit ':'')+c.sha.slice(0,10)+' · Original GitHub commit';
  $('commit-sha').href=c.url;
- $('source-status').textContent=(addedOnly?'Added in commit '+commit:'File through commit '+commit)+' · '+list.length+' lines shown';
- $('full').setAttribute('aria-pressed',String(!addedOnly));$('added').setAttribute('aria-pressed',String(addedOnly));
+ $('source-status').textContent=(range?rangeText+' only':viewMode==='added'?'Added in commit '+commit:'Full file through commit '+commit)+' · '+list.length+' source lines';
+ $('full').setAttribute('aria-pressed',String(viewMode==='full'));
+ $('added').setAttribute('aria-pressed',String(viewMode==='added'));
+ $('selected').setAttribute('aria-pressed',String(viewMode==='selection'));
  document.querySelectorAll('.level').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.kind===kind))});
  var counts={file:new Map(),module:new Map(),package:new Map()},labels=new Set();
  var fragment=document.createDocumentFragment();
- var prior=null,gapCount=0;
+ var prior=null,gapCount=0,seenCommitLabels=new Set();
  list.forEach(function(line){
   if(shouldInsertDisplayGap(prior,line)){appendVisualGap(fragment);gapCount++;}
   var clr=colorForLine(line,counts,labels);
-  var row=document.createElement('div');row.className='code-row'+(line.firstCommit===commit?' changed':'');
+  var row=document.createElement('div');row.className='code-row'+(viewMode==='selection'||line.firstCommit===commit?' changed':'');
   var cell=document.createElement('div');cell.className='chip-cell';
   var chip=document.createElement('div');chip.className='chip';chip.style.setProperty('--chip-bg',clr.bg);chip.style.setProperty('--chip-fg',clr.fg);
   chip.title=line.id+' · introduced in commit '+line.firstCommit;
+  if(viewMode==='selection'&&line.text.trim()&&!seenCommitLabels.has(line.firstCommit)){
+   var marker=document.createElement('div');marker.className='commit-marker';
+   marker.textContent='COMMIT '+line.firstCommit+' · +'+data.commits[line.firstCommit-1].added+' lines';
+   chip.appendChild(marker);seenCommitLabels.add(line.firstCommit);
+  }
   if(clr.label){var label=document.createElement('div');label.className='label';label.textContent=clr.label;chip.appendChild(label);}
   var id=document.createElement('div');id.className='id';id.textContent=line.id;chip.appendChild(id);cell.appendChild(chip);
   var code=document.createElement('div');code.className='source-code';appendCodeContent(code,line.text);row.appendChild(cell);row.appendChild(code);
@@ -257,28 +283,37 @@ function render(){
  kind==='file'?'File view: Cream → Cyan → Cream on consecutive file changes. Only model.py appears through commit 30.':
  kind==='module'?'Python-module view: Burgundy → Graphite → Burgundy on consecutive module changes.':
  'Selected '+kind+' scope colors only its member lines. First chip names the scope; individual STM IDs remain unchanged.';
- $('hint').textContent=explanation+' Visual separators added: '+gapCount+' (not counted as source or STM IDs). Page height grows naturally.';
+ $('hint').textContent=(range?'Showing only '+rangeText.toLowerCase()+'. ':'')+explanation+' Visual separators added: '+gapCount+' (not counted as source or STM IDs). Page height grows naturally.';
 }
 function setCommit(n){
  if(!Number.isInteger(n)||n<1||n>N)return false;
- commit=n;render();return true;
+ commit=n;
+ if(viewMode==='selection')selection={start:n,end:n};
+ render();return true;
 }
 $('up').addEventListener('click',function(){setCommit(commit+1)});
 $('down').addEventListener('click',function(){setCommit(commit-1)});
 $('jump-form').addEventListener('submit',function(event){
  event.preventDefault();
- var v=Number($('jump-input').value);
- if(!setCommit(v)){ $('jump-input').setCustomValidity('Enter a whole commit number from 1 to '+N);$('jump-input').reportValidity(); }
- else { $('jump-input').setCustomValidity(''); $('jump-input').value=''; }
+ var parsed=parseCommitSelection($('jump-input').value);
+ if(!parsed){
+  $('jump-input').setCustomValidity('Enter 1–'+N+' or a valid ascending range such as 5-10');
+  $('jump-input').reportValidity();return;
+ }
+ $('jump-input').setCustomValidity('');
+ selection=parsed;
+ commit=parsed.end;
+ viewMode='selection';
+ render();
 });
 $('jump-input').addEventListener('input',function(){this.setCustomValidity('')});
-$('full').addEventListener('click',function(){addedOnly=false;render()});
-$('added').addEventListener('click',function(){addedOnly=true;render()});
-document.querySelectorAll('.level').forEach(function(b){b.addEventListener('click',function(){kind=b.dataset.kind;render()})});
-document.addEventListener('keydown',function(e){
- if(e.target.closest('input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;
- if(e.key==='ArrowUp'){if(setCommit(commit+1))e.preventDefault();}
- else if(e.key==='ArrowDown'){if(setCommit(commit-1))e.preventDefault();}
+$('full').addEventListener('click',function(){viewMode='full';render()});
+$('added').addEventListener('click',function(){viewMode='added';render()});
+$('selected').addEventListener('click',function(){
+ if(!selection)selection={start:commit,end:commit};
+ commit=selection.end;viewMode='selection';render();
 });
+document.querySelectorAll('.level').forEach(function(b){b.addEventListener('click',function(){kind=b.dataset.kind;render()})});
+// Keep native ArrowUp/ArrowDown page scrolling; use the explicit navigator for commit changes.
 render();
 })();</script></body></html>
