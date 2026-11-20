@@ -9,6 +9,7 @@
 - [Batch 01 source lines](data/batches/001-015.json)
 - [Full batch tracker](BATCH_TRACKER.md)
 - [Batch 01 QA](QA-BATCH-001.md)
+- [Compact sticky-toolbar / stable-scroll QA](QA-UI-REFINEMENT.md)
 - [Prior viewer design handover](../AI-CODE-VIEWER-HANDOVER/README.md)
 
 Expected GitHub Pages address (depends on repository Pages configuration): https://sabareeshrao.github.io/Project-Rebuild-Version-2/nanogpt-modular-viewer/
@@ -61,3 +62,20 @@ For a local checkout: change directory to nanogpt-modular-viewer, run **python3 
 ## Limitations
 
 The first 15 reconstructed commits are verified as append-only in model.py. If later commits edit/delete/rename older lines, the data model must be expanded to versioned line events; do not silently treat them as append-only. Multiple files need new stable file IDs and independently verified per-file cumulative line totals. Very large repositories may need paged scope metadata and browser scroll-height segmentation in addition to windowed DOM rendering. No claim of Android visual testing or completed GitHub Pages deployment is made in this document.
+
+
+## UI refinement after the initial Batch 01 — latest accepted version
+
+This is a **viewer-interface change only**; the 15 historical nanoGPT source commits, 76 exact model.py source lines, original STM IDs, JSON data chunks and old single-file prototype remain untouched.
+
+- Compact dark **sticky toolbar** keeps commit navigation, jump input, four view controls and category selection available while scrolling to the bottom of a long file. The title/statistics scroll away.
+- Category buttons are always **filled with their identity colors** (red Class, blue Method, orange Code Block, yellow Nested, green Lines, pink Comments, sky-blue File, etc.), regardless of selection. The active category has a white outline, not a different size.
+- Narrow screens can swipe the **category strip horizontally**; the CODE area still wraps without a horizontal scrollbar.
+- The explicit **All commits** control clears a selected commit/range and shows the cumulative file through the **latest indexed commit** (15 at Batch 01, eventually 235). **Full file** instead means the cumulative file through the currently selected commit.
+- The source ID column now has two adjacent chips: short visual ID such as **STM-029**, and the actual filename **model.py**. The original complete ID (STM-029-FIL-001-model.py) remains unchanged in JSON, the row DOM data attribute and accessibility text. The filename is a neutral chip so the selected hierarchy remains the only active category color.
+- On changing **only the hierarchy category**, the viewer recolors the existing DOM rows **in place**, without replacing rows, resetting measured heights or jumping page position. A fixed-height line of chip metadata, fixed-height source status/hints, and width-only remeasurement further reduce layout jitter.
+- The conditional green divider remains a thin CSS line in the code area only when consecutive, nonoverlapping sibling groups of the same selected category meet.
+
+[Implementation commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/8b12df7ed3c438438896f09ce0cb52a66d15dee4) · [Focused tests and limitations](QA-UI-REFINEMENT.md).
+
+**Verification boundary:** The source-control and DOM behavior passed static and mocked-DOM tests; actual Android/desktop browser visual rendering and live Pages deployment remain separate checks, not verified in this test report.

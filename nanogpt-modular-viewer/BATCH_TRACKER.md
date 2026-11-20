@@ -32,3 +32,11 @@
 ## Definition of Done for future batches
 
 Archive original SHAs and source file list; verify every new file/line across all 15 snapshots, including whitespace and blank lines; assign new stable file and STM IDs only for truly introduced source lines; append metadata/chunks; audit category colors and green same-category dividers; test inclusive range and single-commit navigation; update QA and tracker before marking complete.
+
+
+## Viewer-only UI refinement (no source batch advanced)
+
+After Batch 01, the modular viewer received a compact sticky toolbar, persistent colored hierarchy buttons, Full/Added/Selected/**All commits** controls, short STM plus separate filename chips, and DOM-in-place category recoloring to avoid page shaking. The first-batch source data and old prototype are unchanged; **Batch 02 (nanoGPT 016–030) is still planned**.
+
+- [Implementation commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/8b12df7ed3c438438896f09ce0cb52a66d15dee4)
+- [UI QA report](QA-UI-REFINEMENT.md)
