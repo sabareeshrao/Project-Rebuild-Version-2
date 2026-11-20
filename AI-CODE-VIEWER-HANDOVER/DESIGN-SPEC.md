@@ -1,5 +1,13 @@
 # Accepted UI and ID Contract
 
+## Latest accepted category override — Prompt 065
+
+**Comments is a pink ON/OFF overlay, not an exclusive category mode.** A selected hierarchy category (Class, Method, Code Block, Nested Block, Lines, File, Directory or Module) stays selected when Comments is turned ON. Only standalone `#` comments and recognized Python docstrings **within that category's selected-colored member lines** become pink `#DB2777`. Ordinary member code and blank lines retain the hierarchy's original color, and lines **outside a Class/Method/Block/Nested selection remain neutral** even if they are comment/docstring lines. For Lines, File, Directory and Module every corresponding displayed file row belongs to the base category, so Comments may recolor matching documented lines across that selection.
+
+Both the primary category button and Comments toggle simultaneously show their active outline without changing dimensions. Clicking Comments again restores base-category color without resetting hierarchy or scroll; switching primary categories keeps the user's Comments ON/OFF state. Inline trailing `#` comments on executable code are *not* standalone comment lines, and regular assigned triple-quoted strings are not docstrings. Keep full permanent STM IDs, comment kinds, group/commit provenance, source text and small single-line `STM-NNN` chips unchanged. Conditional code-area green dividers are based on base hierarchy, **never** comment-overlay transitions. Category/overlay updates repaint mounted virtual rows in place.
+
+This new override supersedes older instructions below treating Comments as an exclusive primary category. [Prompt 065](prompts/065.md) · [Implementation QA](../nanogpt-modular-viewer/QA-UI-COMMENTS-OVERLAY.md).
+
 ## Latest accepted visual override — Prompts 063–064
 
 **In the modular viewer, the source-line chip displays only the short `STM-NNN` ID.** Color already identifies Class / Method / Block / Nested / File / Directory / Module / Lines / Comments. Remove every *visible* group title, scope ID, code snippet and commit marker from the colored chip: no `NESTED · NBL-001 · if not self.flash`, `CLASS · CLS-001 · ...` or reserve-height text line. The old "first group chip names its scope" rule below is **superseded for the modular viewer**.
