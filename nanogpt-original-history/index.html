@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b10">
+<title>nanoGPT — Original Git History · Green STM Viewer</title>
+<meta name="description" content="Explore authentic nanoGPT Git commits with original cross-file changes, permanent green STM IDs and struck-through historical deletions.">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+<main class="shell">
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">Original source history · karpathy/nanoGPT · first-parent mainline</p>
+      <h1>nanoGPT / Real Commit Explorer</h1>
+      <p class="subtitle">Andrej Karpathy's actual source evolution — files switch with each real commit. Green STM chips first; hierarchy categories can come later.</p>
+    </div>
+    <a class="repo-link" href="https://github.com/karpathy/nanoGPT/commits/master/" target="_blank" rel="noopener noreferrer">Original Git history ↗</a>
+  </header>
+
+  <nav class="toolbar" aria-label="Historical commit navigation and code view">
+    <div class="control-set">
+      <span class="control-name">Commit</span>
+      <button id="previous" class="small-button" type="button" aria-label="Previous original commit">−</button>
+      <output class="counter" id="commit-counter" aria-live="polite">— / —</output>
+      <button id="next" class="small-button" type="button" aria-label="Next original commit">+</button>
+    </div>
+    <form id="jump-form" class="control-set">
+      <label class="control-name" for="jump">Jump</label>
+      <input id="jump" class="jump" inputmode="numeric" type="number" min="1" step="1" placeholder="#" aria-label="Original first-parent Git commit number">
+      <button class="go" type="submit">Go</button>
+    </form>
+    <div class="control-set" role="group" aria-label="Source display mode">
+      <button id="changes-mode" class="seg-button" type="button" aria-pressed="true">Changes</button>
+      <button id="snapshot-mode" class="seg-button" type="button" aria-pressed="false">Snapshot</button>
+    </div>
+    <div class="file-chooser">
+      <label class="control-name" for="file-filter">File</label>
+      <select id="file-filter" aria-label="Filter original source files"><option value="">All files</option></select>
+    </div>
+    <div class="lines-pill" aria-label="Green Lines category is active">Lines</div>
+  </nav>
+
+  <section class="commit-info" aria-label="Selected original Git commit">
+    <div>
+      <h2 id="commit-title">Loading original history…</h2>
+      <div class="commit-meta">
+        <span id="author">Source repository: karpathy/nanoGPT</span>
+        <span>·</span>
+        <time id="commit-date"></time>
+        <span>·</span>
+        <a id="commit-link" href="https://github.com/karpathy/nanoGPT/commits/master/" target="_blank" rel="noopener noreferrer"><code id="commit-sha">Original Git SHA</code></a>
+      </div>
+    </div>
+    <div class="commit-stat">
+      <span class="stat plus" id="add-count">+0 lines</span>
+      <span class="stat minus" id="delete-count">−0 lines</span>
+      <span class="stat" id="file-count">0 files changed</span>
+    </div>
+  </section>
+
+  <div id="notice" class="notice" role="status" aria-live="polite">Loading verified original commit data…</div>
+  <p class="hint" id="view-hint">Changes: new original source lines appear normally; removed source lines remain green-tagged but their code is struck through.</p>
+  <section id="rows" aria-label="Original source with permanent STM identifiers"></section>
+  <footer class="footer">
+    Historical source: <a href="https://github.com/karpathy/nanoGPT" target="_blank" rel="noopener noreferrer">karpathy/nanoGPT</a>.
+    This independent learning viewer follows the real Git mainline (first-parent) and assigns its own permanent STM identifiers.
+    Historical deleted lines are visible only in Changes mode; Snapshot mode reconstructs currently present source lines where GitHub provided complete text patches.
+    Binary/oversized changes are disclosed instead of invented. Your separate 235-commit teaching project and its STM registry were not altered.
+    <span id="coverage">Checking static data coverage…</span>
+  </footer>
+</main>
+<script type="module" src="./assets/app.js"></script>
+</body>
+</html>
