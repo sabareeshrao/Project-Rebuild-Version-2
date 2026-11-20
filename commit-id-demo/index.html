@@ -109,25 +109,40 @@ module:[{bg:'#881337',fg:'#FFFFFF'},{bg:'#52525B',fg:'#FFFFFF'}]
 function $(id){return document.getElementById(id)}
 function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function isComment(s){
- var single=false,double=false,esc=false;
+ return /^\s*#/.test(s);
+}
+function commentIndex(s){
+ var quote=null,triple=false,esc=false;
  for(var i=0;i<s.length;i++){
-  var c=s[i];if(esc){esc=false;continue;}
-  if(c==='\\'&&(single||double)){esc=true;continue;}
-  if(c==="'"&&!double){single=!single;continue;}
-  if(c==='"'&&!single){double=!double;continue;}
-  if(c==='#'&&!single&&!double)return true;
+  var c=s[i],run=s.slice(i,i+3);
+  if(esc){esc=false;continue;}
+  if(quote){
+   if(c==='\\'){esc=true;continue;}
+   if(triple&&run===quote+quote+quote){quote=null;triple=false;i+=2;continue;}
+   if(!triple&&c===quote){quote=null;continue;}
+   continue;
+  }
+  if(c==='#')return i;
+  if(c==='"'||c==="'"){
+    quote=c;
+    if(run===c+c+c){triple=true;i+=2;}
+    else triple=false;
+  }
  }
- return false;
+ return -1;
 }
 function renderSyntax(s){
  if(!s.trim())return '&nbsp;';
- if(s.trimStart().startsWith('#'))return '<span class="comment-text">'+escapeHtml(s)+'</span>';
- var parts=s.split(/(".*?"|'.*?')/g);
- return parts.map(function(p,i){
+ if(isComment(s))return '<span class="comment-text">'+escapeHtml(s)+'</span>';
+ var commentStart=commentIndex(s);
+ var executable=commentStart>=0?s.slice(0,commentStart):s;
+ var parts=executable.split(/(".*?"|'.*?')/g);
+ var code=parts.map(function(p,i){
   if(i%2===1)return '<span class="string">'+escapeHtml(p)+'</span>';
   return escapeHtml(p).replace(/\b(class|def|if|not|else|elif|for|while|import|from|as|assert|return|None|True|False|pass|with|in)\b/g,'<span class="keyword">$1</span>')
   .replace(/\b(super|print|hasattr|isinstance|int|bool|float)\b/g,'<span class="builtin">$1</span>');
  }).join('');
+ return code+(commentStart>=0?'<span class="comment-text">'+escapeHtml(s.slice(commentStart))+'</span>':'');
 }
 function colorForLine(line,counts,labels){
  if(kind==='line'||kind==='comment'){
@@ -176,8 +191,8 @@ function render(){
   fragment.appendChild(row);
  });
  $('code-grid').replaceChildren(fragment);
- var explanation=kind==='line'?'Green STM chips for individual lines; source comments appear pink.':
- kind==='comment'?'Pink highlights source comment lines (including inline comments). Other lines remain green.':
+ var explanation=kind==='line'?'Green STM chips identify code lines; only standalone source comments appear pink.':
+ kind==='comment'?'Pink chips identify standalone comment lines only. Statements with inline comments remain green.':
  kind==='package'?'Package view groups the repository-root directory in brown. model.py is a root-level Python module, not a declared Python package.':
  kind==='file'?'File view: Cream → Cyan → Cream on consecutive file changes. Only model.py appears through commit 30.':
  kind==='module'?'Python-module view: Burgundy → Graphite → Burgundy on consecutive module changes.':
