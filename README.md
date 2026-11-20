@@ -174,3 +174,11 @@ lie, I sell thee to the third; if I slay,
 I sell thee to the fourth: so buy or sell,
 I tell thee again, thou shalt not sell my
 possession.
+
+JULIET:
+And if thou steal, thou shalt not sell thyself.
+
+THEODORE:
+I do not steal; I sell the stolen goods.
+
+THEODORE:
