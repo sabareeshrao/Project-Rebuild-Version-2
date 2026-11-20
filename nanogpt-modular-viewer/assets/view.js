@@ -105,8 +105,9 @@ function syntaxHTML(s, sourceKind) {
   return marked+(split>=0?'<span class="comment-syntax">'+escapeHTML(s.slice(split))+'</span>':'');
 }
 
-// Group labels and commit markers occupy one fixed-size metadata slot.
-// Recoloring a row changes text/colors only; it never appends or removes nodes.
+// Scope names and commit markers are preserved for screen readers only.
+// Visible colored chips display exactly one thing: the original short STM ID.
+// Category recoloring never appends or removes nodes or changes row height.
 function metadataFor(line,color,context) {
   const notes=[];
   if(context.mode==='selected') {
@@ -126,15 +127,14 @@ function metadataFor(line,color,context) {
 export function applyRowCategory(row,line,previous,context) {
   const color=chipColor(line,context.category,context.manifest,context.fileId);
   const chip=row.querySelector('.line-chip');
-  const info=row.querySelector('.chip-meta');
   const code=row.querySelector('.code-cell');
-  if(!chip||!info||!code)throw new Error('Missing source row elements');
+  if(!chip||!code)throw new Error('Missing source row elements');
   chip.style.setProperty('--chip-bg',color.background);
   chip.style.setProperty('--chip-ink',color.ink);
-  const text=metadataFor(line,color,context);
-  info.textContent=text;
-  info.setAttribute('aria-label',text || 'No new source group at this line');
-  chip.setAttribute('aria-label','Original source '+line.id+(text?' · '+text:''));
+  const contextLabel=metadataFor(line,color,context);
+  // Retain complete STM and scope detail as accessible metadata, never visible chip text.
+  chip.setAttribute('aria-label','Original source '+line.id+
+    (contextLabel?' · '+contextLabel:''));
   code.classList.toggle('category-divider',
     needsDivider(previous,line,context.category,context.manifest,context.fileId));
 }
@@ -151,10 +151,9 @@ export function makeRow(line,previous,index,context) {
 
   const left=document.createElement('div');left.className='chip-cell';
   const chip=document.createElement('div');chip.className='line-chip';
-  const meta=document.createElement('div');meta.className='chip-meta'; // fixed reserved slot
   const id=document.createElement('div');id.className='line-id';
   id.textContent=(line.id.match(/^STM-\d+/)||[line.id])[0];
-  chip.appendChild(meta);chip.appendChild(id);
+  chip.appendChild(id);
 
   const filename=document.createElement('div');
   filename.className='filename-chip';
