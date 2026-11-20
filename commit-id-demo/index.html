@@ -217,9 +217,8 @@ function appendVisualGap(fragment){
  chip.style.setProperty('--chip-fg','#FFFFFF');
  chip.title='Display-only empty line; no source line or STM ID';
  chip.setAttribute('aria-label','Display-only green separator');
- var label=document.createElement('div');label.className='label';
- label.textContent='VISUAL GAP · not source';
- chip.appendChild(label);
+ // Keep display-only gap visibly empty and green; its accessible label and tooltip
+ // distinguish it from historical source without inventing an STM identifier.
  left.appendChild(chip);
  var right=document.createElement('div');right.className='source-code';
  appendCodeContent(right,'');
