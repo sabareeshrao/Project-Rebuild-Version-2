@@ -43,7 +43,6 @@ function htmlRow(entry,index) {
   const file=document.createElement('div');
   file.className='filename-chip';
   file.textContent=path.split('/').pop()||path;
-  file.title=path;
   file.setAttribute('aria-label','Original source file '+path);
   const chip=document.createElement('div');
   chip.className='line-chip';
@@ -256,7 +255,8 @@ function selectCommit(n){
 }
 function allCommits(){
   state.mode='all';state.commit=manifest.dataAvailableThrough;
-  state.selection=null;$('jump-input').value='';
+  state.selection=null;state.file='';$('file-select').value='';
+  $('jump-input').value='';
   $('jump-input').removeAttribute('aria-invalid');
   display();
 }
