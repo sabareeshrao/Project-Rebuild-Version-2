@@ -2,7 +2,7 @@
 
 This handover represents the user's iterative design process, not a generic ChatGPT template.
 
-- **Original prompts:** `prompts/001.md` ... `prompts/045.md`.
+- **Original prompts:** `prompts/001.md` ... `prompts/050.md`.
 - **Narrated outcomes:** in each prompt record. These are faithfully written summaries, **not full verbatim assistant response exports**.
 - **Actual code:** `reference/*.html` exact GitHub-sourced revisions; canonical `../commit-id-demo/index.html`.
 - **Actual implementation history:** `GIT-PROVENANCE.md` with SHA links.
@@ -11,7 +11,7 @@ This handover represents the user's iterative design process, not a generic Chat
 - **Quality rules:** `QUALITY-GATES.md`.
 
 ## How new learning is added
-1. Append the user's exact prompt (one new `prompts/046.md` etc.).
+1. Append the user's exact prompt (one new `prompts/051.md` etc.).
 2. Document assistant output as verbatim **only if actually captured**, otherwise label it as a summary.
 3. Link the actual code commit and include real code before/after revisions when saved.
 4. Capture what failed, how it was fixed, and the regressions that were tested.
@@ -26,6 +26,10 @@ Multi-file/module color alternation is specified but cannot be visually demonstr
 
 ## New visual and comment classification corrections (Prompts 043–045)
 
-- Green source blanks previously made class/method transitions confusing. Now structural starts have sky-blue `#38BDF8` synthetic boundary chips (no STM ID). Real blank lines remain and inherit scope colors in hierarchy views, green in default Lines mode.
+- Prompts 043–044 experimented with sky-blue structural boundaries and scope-colored blanks. Prompt 046 **rejected the sky-blue boundary chips**. Newer Prompts 048–050 accept scope-colored blank lines with neutral nonmember chips and thin green CODE-only dividers between adjacent same-category groups; there are no synthetic gap rows. File A/B now uses #00BFFF/#008CFF.
 - A lone triple-quoted Python module/class/method documentation literal is a string, not a `#` comment, but Comments mode highlights its entire documentation block pink. Assigned triple-quoted values remain green.
 - Exact before/after HTML revisions are retained in [reference/](reference/), with implementation SHA links in [GIT-PROVENANCE.md](GIT-PROVENANCE.md).
+
+## Current canonical style (Prompt 050)
+
+The current viewer is [../commit-id-demo/index.html](../commit-id-demo/index.html). Its exact GitHub-sourced copy lives in [reference/LATEST-30-COMMITS.html](reference/LATEST-30-COMMITS.html). Rejected sky-blue boundary chips and former green synthetic blank separators are historical prototypes only. No green chips inside active Class/Method/Block/Nested/File/Package/Module groups: all member source lines share the selected category color. Nonmember lines use neutral charcoal. Thin green line only in the code column between directly adjacent nonoverlapping groups of the same selected category. Preserve all historical data and STM IDs.

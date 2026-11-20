@@ -9,8 +9,8 @@
 - [ ] Validate scope ranges (class, method, nested blocks), including incomplete snippets in early commits. Never invent a full method or closing brace not present yet.
 - [ ] When a commit range is selected, show **only its additions**, not all cumulative earlier code. Test 1, 5, 5-10, 1-N, N, invalid 0, >N, reversed ranges.
 - [ ] Distinguish standalone `#` comments, standalone triple-quoted Python documentation, statements with inline comments, and assigned string literals. Only standalone comments/documentation become pink in Comments mode.
-- [ ] Every genuine source blank line stays visible with its original STM ID and a green chip **in all hierarchy views**.
-- [ ] No sky-blue boundary chips; they were rejected in Prompt 046. Small unlabeled green display-only gap rows are permitted at real group changes but have **no STM ID** and never count toward source lines.
+- [ ] Every source blank line remains visible with its unchanged STM ID, and inherits the selected category's color when in scope. Default Lines view uses green; unselected-category/nonmember chips are neutral charcoal.
+- [ ] No sky-blue structural boundary chips or fake green gap rows. A thin #15803D line is allowed in the CODE area only when two distinct adjacent groups of the selected same category touch; no fake STM ID.
 - [ ] Python triple-quoted documentation (`"""`, `'''`) becomes pink in Comments mode including multiline interiors; triple-quoted assigned values and regular inline comments stay code/green.
 
 ## Layout
@@ -35,3 +35,11 @@
 
 ## Continuous improvement protocol
 When user rejects an implementation: capture exact complaint, identify failure mode, update accepted design rules, implement a focused fix, run regression tests for ALL existing accepted behavior, add before/after evidence, and record Git commit SHA. Next AI starts from the latest accepted version, **never from the rejected prototype**.
+
+## Regressions from Prompts 048–050
+- [ ] In Class/Method/Block/Nested/File/Package/Module views, ALL member lines share their category chip color regardless of blank/comment/docstring status; outside groups have neutral charcoal chips, NOT green.
+- [ ] No green CSS `box-shadow` accent appears on every newly added code line; green code dividers are only conditional same-category group boundaries.
+- [ ] Two sibling adjacent class/method groups produce one thin green line **in the code area**; no divider between overlapping outer and inner nested blocks.
+- [ ] No dividers in default Lines and Comments modes, between unrelated groups, or between nonconsecutive lines after commit filtering.
+- [ ] File category uses alternating saturated sky blue `#00BFFF` and `#008CFF`, not the old Cream/Cyan.
+- [ ] All 168 sample source IDs and 30 commit filters remain unchanged; inspect affected styles at mobile and desktop widths.

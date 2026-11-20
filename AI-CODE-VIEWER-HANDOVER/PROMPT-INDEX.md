@@ -1,8 +1,8 @@
-# Chronological Prompt Index — 45 User Turns
+# Chronological Prompt Index — 50 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (a summary, not verbatim chat export), the accepted or rejected design decision, and when possible a verified GitHub implementation link. These **45 files were each committed separately** to document improvement history; actual UI implementation commits precede these retrospective documentation commits.
+Each file below has the **user's prompt**, the assistant's observable outcome (a summary, not verbatim chat export), the accepted or rejected design decision, and when possible a verified GitHub implementation link. These **50 files were each committed separately** to document improvement history; actual UI implementation commits precede these retrospective documentation commits.
 
-**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 45 records.
+**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 50 records.
 
 | # | Prompt focus | Historical record |
 |---:|---|---|
@@ -51,6 +51,11 @@ Each file below has the **user's prompt**, the assistant's observable outcome (a
 | 043 | Screenshot: green blank lines obscure new class boundaries | [Prompt 043](prompts/043.md) |
 | 044 | Final correction: hierarchy-colored blanks and sky-blue scope-start rows | [Prompt 044](prompts/044.md) |
 | 045 | Detect Python triple-quoted documentation in Comments mode | [Prompt 045](prompts/045.md) |
+| 046 | Reject sky-blue structural boundary chips and revert | [Prompt 046](prompts/046.md) |
+| 047 | Verify reverted viewer is working | [Prompt 047](prompts/047.md) |
+| 048 | Scope-only chip colors and conditional green code divider | [Prompt 048](prompts/048.md) |
+| 049 | Change File A/B to saturated sky-blue shades | [Prompt 049](prompts/049.md) |
+| 050 | Blank source lines inherit selected scope color | [Prompt 050](prompts/050.md) |
 
 ## Milestones to inspect while replaying
 
@@ -71,3 +76,5 @@ Each file below has the **user's prompt**, the assistant's observable outcome (a
 The user prompts are drawn from the currently visible conversation. Embedded screenshot markers are only attachment descriptions; no screenshot pixels were invented or silently reconstructed. **Assistant outcomes are summaries**, because a lossless export of every ChatGPT UI-rendered message is not included. For actual original HTML source code, open the complete versioned files in [reference/](reference/) and inspect the linked Git implementation SHAs in [GIT-PROVENANCE.md](GIT-PROVENANCE.md).
 
 If a new AI finds a conflict between an earlier and a later prompt, the later explicitly accepted correction wins. Never erase the earlier error: it teaches what not to repeat.
+- **046–047:** sky-blue structural boundary chip rejected and prior green-gap behavior restored and verified.
+- **048–050:** final refinement: selected categories color every member line (including blanks/comments/docstrings), nonmember chips are neutral, conditional green line in CODE pane only between directly adjacent nonoverlapping same-category groups; File A/B is now saturated sky blue #00BFFF / #008CFF. No synthetic gap rows or boundary chips.

@@ -7,7 +7,7 @@
 1. [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) — nonnegotiable contract.
 2. [DESIGN-SPEC.md](DESIGN-SPEC.md) — UI, IDs, colors and behavior.
 3. [GIT-PROVENANCE.md](GIT-PROVENANCE.md) — original implementation commits and precise evidence.
-4. [PROMPT-INDEX.md](PROMPT-INDEX.md) — all **46 user prompts** in sequence, including the rejection of sky-blue boundaries.
+4. [PROMPT-INDEX.md](PROMPT-INDEX.md) — all **50 user prompts** in sequence, including the newest exclusive category colors and conditional green code dividers.
 5. [prompts/](prompts/) — one historical user prompt plus assistant-outcome notes per numbered file; **one Git documentation commit per prompt**, preserving continuous improvement.
 6. [reference/](reference/) — real, complete historical HTML snapshots, with the latest demo to copy and modify.
 7. [QUALITY-GATES.md](QUALITY-GATES.md) — audit checklist before shipping to the user.
@@ -41,4 +41,8 @@ For a new repository: study commits **oldest → newest**, assign stable IDs to 
 
 ## Current accepted visual rules — Prompt 046
 
-[Prompt 046](prompts/046.md) explicitly **rejects sky-blue boundary chips**. The viewer is back to green original blank-line chips (with STM IDs) in *every* hierarchy view, plus subtle unlabeled **green display-only gap rows** where needed (no STM ID). Python triple-quoted documentation support from Prompt 045 is retained. [Current complete HTML](reference/LATEST-30-COMMITS.html) · [Revert commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/d8d12d2a15b69e6612e5c2b78425111021b68aba).
+[Prompt 046](prompts/046.md) rejects sky-blue **BOUNDARY chips**. Prompts [048](prompts/048.md), [049](prompts/049.md), and [050](prompts/050.md) supersede the temporary all-green-gap fallback: every line inside a selected scope inherits that scope color, nonmember rows are neutral, File chips use vivid sky blues, and ONLY a thin conditional green line in the code pane distinguishes adjoining same-category groups. [Current complete HTML](reference/LATEST-30-COMMITS.html) · [Revert commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/d8d12d2a15b69e6612e5c2b78425111021b68aba).
+
+## Current accepted version (Prompts 048–050)
+
+Read [DESIGN-SPEC.md](DESIGN-SPEC.md) for the exact rules and [reference/LATEST-30-COMMITS.html](reference/LATEST-30-COMMITS.html) for working code. The reverted sky-blue boundary chips remain historical only. **Sky blue is accepted for File chips**, not boundary markers. Original blank rows are preserved but now take the selected scope's color; other unmatched code chips become neutral charcoal; a thin green divider appears only in the code area at consecutive same-category group transitions. No synthetic gaps are inserted.

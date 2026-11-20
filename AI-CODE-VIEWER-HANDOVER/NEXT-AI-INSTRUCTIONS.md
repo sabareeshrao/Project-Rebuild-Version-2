@@ -25,8 +25,8 @@ The user will hand you a NEW GitHub repository. Replicate the evolving code-ID H
 - Wrapped continuation starting at column zero; hanging indentation required.
 - Green source comments turning pink by default.
 - Treating a Python assignment with trailing `# explanation` as a comment-only line.
-- Reintroducing **rejected sky-blue boundary chips** (Prompt 046 explicitly reverted them).
-- Recoloring real blank-line chips with the enclosing class/method/block/file color. Real blanks always remain **green**, including in selected hierarchy views. Unlabeled green display-only gaps may provide separation where source has no blank.
+- Reintroducing **rejected sky-blue BOUNDARY chips** (Prompt 046 reverted them). The new File category DOES use saturated sky blue for its actual file chips.
+- Keeping green chips on blank/comment/docstring lines inside a selected class/method/block/nested/file/package/module. Newer Prompts 048–050 require **every** in-scope source line to inherit the selected category color; unmatched source lines should be neutral, and fake gap rows are forbidden.
 - Treating Python triple-quoted docstrings as ordinary code when Comments is selected, or incorrectly treating assigned triple-quoted strings as comment-only rows.
 - Huge unwieldy row of commit buttons instead of compact stepper plus jump/range.
 - Assuming package/module semantics when the project language or directory does not support them.
@@ -36,4 +36,8 @@ The user will hand you a NEW GitHub repository. Replicate the evolving code-ID H
 Provide a working file link (and Pages link only if configured/confirmed), code source, commit SHA(s), count of inspected snapshots, count of source lines, ID coverage, clear known limitations, and a QA report. If the next project has 100k+ lines, use virtualized rendering and data chunking while retaining natural document/page navigation. Verify on mobile.
 
 ## Reuse existing version
-Reference implementation: [reference/LATEST-30-COMMITS.html](reference/LATEST-30-COMMITS.html), including the restored green blanks/gaps and Python docstring detection. Treat this as a working design example and a historical artifact, not an infallible general-purpose implementation. It indexes only an append-only Python file and hardcodes a limited commit range. Replace its hardcoded data and assumptions when adapting. 
+Reference implementation: [reference/LATEST-30-COMMITS.html](reference/LATEST-30-COMMITS.html), including category-consistent blank/documentation chips, high-saturation sky-blue File chips, conditional green code dividers and Python docstrings. Treat this as a working design example and a historical artifact, not an infallible general-purpose implementation. It indexes only an append-only Python file and hardcodes a limited commit range. Replace its hardcoded data and assumptions when adapting. 
+
+## Explicit latest override (Prompts 048–050)
+
+Selecting a hierarchy colors **all** code rows within each selected scope, including the real blank lines, standalone comments and docstrings. Unmatched chips use neutral charcoal; do not paint them green. When adjacent, nonoverlapping sibling groups of that SAME selected category meet, draw a single thin green separator in the CODE region, not the ID chip column and not as a synthetic extra row. Original code line IDs remain unchanged. File category alternates vivid sky blue shades #00BFFF and #008CFF. Do not use sky-blue boundary chips; those were separately rejected.

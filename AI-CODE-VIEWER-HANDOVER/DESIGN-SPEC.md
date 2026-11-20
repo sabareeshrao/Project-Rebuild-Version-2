@@ -21,11 +21,11 @@ Scope IDs are separate, e.g. `CLS-001-FIL-001-model.py`, `MTH-001-FIL-001-model.
 - Left: one chip per actual source line, vertically centered and as tall as that line's wrapped code.
 - Right: ORIGINAL source text; use monospace, syntax highlighting, and preserved leading indentation. Wrapped continuation stays under the code's indentation, not flush left. No horizontal scrolling. Full page flows vertically; no internal fixed-height scrollbar. Handle deeply indented long lines without clipping.
 - Category selection is via compact top buttons. Rather than nesting layout boxes, change chip background across the selected category's whole range. The first colored chip shows `CLASS · CLS-001 · ClassName` or analogous group name; every line retains its original STM ID.
-- **Never use sky-blue boundary chips.** User rejected them in Prompt 046 and asked to revert.
-- Every original empty source line stays visible with its true STM ID and a **green `#15803D` chip in every view**, even if it belongs to a selected class/method/block/file.
-- At a group transition with no actual source blank, the viewer can add an unobtrusive, **unlabeled green display-only gap** without an STM ID. These are not source lines.
+- **Never use sky-blue BOUNDARY chips.** Rejected in Prompt 046. Sky blue is now intentionally used for the FILE category only (Prompts 048–050).
+- Every genuine empty source line stays visible with its original STM ID. In **Lines** mode it is green. In Class/Method/Block/Nested/File/Package/Module mode it **inherits its selected enclosing category color**. Source lines outside that category have neutral charcoal chips, not green.
+- **No fake empty rows or colored boundary chips.** If two distinct nonoverlapping groups of the **currently selected same category** touch directly in original source, draw a thin **green `#15803D` horizontal line in the CODE area only** at their transition. No chip, synthetic row, or STM ID; do not draw between overlapping parent/child scopes or when there is no neighboring group.
 - Default screen is **Lines**, so ALL physical source lines start green including comments.
-- **Comments mode** turns standalone `#` comment lines and standalone Python triple-quoted documentation blocks (`"""` or `'''`) pink, including multiline documentation content. An executable statement with an inline `#` stays green. Ordinary triple-quoted values assigned to variables or passed as arguments remain code, not documentation. A Python docstring is technically a string literal, but the UI groups it with comment-like documentation. Comments and docstrings stay green in default Lines mode. Syntax coloring is independent of chip colors.
+- **Comments mode** colors standalone `#` comments and Python triple-quoted documentation blocks (`"""` or `'''`) pink, including multiline interiors. All nonmatching lines—including statements with inline `#`, assigned triple-quoted strings and blanks—have neutral chips in Comments mode. In default Lines mode all original source lines, including comments and docstrings, are green. In Class/Method/Block/Nested/File/Package/Module modes, comments and docstrings *inside the selected scope* take that category's color. Python docstrings are technically strings; this is a documentation-view grouping.
 
 ## Colors, exact accepted hex values
 | Category | Chip |
@@ -41,10 +41,10 @@ Scope IDs are separate, e.g. `CLS-001-FIL-001-model.py`, `MTH-001-FIL-001-model.
 | Code Block | Orange `#EA580C` |
 | Nested Block | Yellow `#FACC15`, dark foreground |
 | Lines (default, including original blank lines) | Green `#15803D` |
-| Original blank lines in any mode | Green `#15803D` |
-| Synthetic unlabeled group-transition gap (no STM ID) | Green `#15803D` |
+| Original blank lines | Selected enclosing category color; default Lines green; otherwise neutral |
+| Thin divider in code area between adjacent same-category groups | Green `#15803D` (no chip, row or STM ID) |
 | Comments (only when selected) | Pink `#DB2777` |
-| File A/B | Cream `#EAD7B7` / Cyan `#06B6D4` |
+| File A/B | Saturated sky blue `#00BFFF` / `#008CFF` (dark foreground) |
 | Package or directory A/B | Brown `#78350F` / Silver `#94A3B8` |
 | Module A/B | Burgundy `#881337` / Graphite `#52525B` |
 
@@ -70,4 +70,8 @@ The accepted demo used nanoGPT `model.py` with 30 append-only commits and 168 ph
 
 ## Rejected history
 
-Sky-blue structural separators and scope-colored original blank lines were attempted in Prompts 043–044. They are **not accepted rules** after Prompt 046's explicit revert. Retain previous errors in prompt history, but use the current green-gap HTML. Python docstring recognition (Prompt 045) remains accepted.
+Sky-blue *boundary chips* from Prompts 043–044 were rejected in Prompt 046. The **newer** accepted design in Prompts 048–050 instead uses scope-colored original blanks and a *conditional thin green code-only divider*, with neutral chips outside the selected category. Do not conflate sky-blue FILE chips with the rejected sky-blue BOUNDARY chips. Python docstrings in Comments mode remain supported.
+
+## Latest accepted interaction: Prompts 048–050
+
+Selecting a category must not leave green blank/comment/docstring chips inside that category's spans. For example, in Class view every physical source line inside LayerNorm and GPT is **red**, including source blanks and standalone comments. Unscoped imports/header lines are neutral charcoal (`#232323`) rather than green. Method view colors member lines blue, Code Block orange, Nested Block yellow. File view uses saturated sky blues `#00BFFF` and `#008CFF`. A green horizontal CSS divider appears **only in the source-code area** when two distinct non-overlapping scopes of the currently selected category have consecutive physical line numbers. No extra chip/row is created. Range filtering must not add dividers between unrelated, nonconsecutive source lines.
