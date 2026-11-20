@@ -92,7 +92,8 @@ function renderRows(snapshot){
   return {shown,filesShown};
 }
 function updateFiles(snapshot){
-  const paths=new Set([...snapshot.files.keys(),...snapshot.fileStats.map(x=>x.path)]);
+  const paths=new Set([...snapshot.files.keys(),...snapshot.fileStats.map(x=>x.path),
+    ...snapshot.unavailableTextFiles]);
   const chooser=$('file-filter');
   const existing=chooser.value;
   chooser.replaceChildren(new Option('All files',''));
@@ -134,11 +135,16 @@ async function render(){
     $('file-count').textContent=snapshot.fileStats.length+' files changed';
     $('view-hint').textContent=state.mode==='changes'
       ? 'Changed lines only: additions are regular source; deletions are struck through, with the original green STM chip unchanged. The filename on each row is the real Git file.'
-      : 'Exact surviving source from this commit, reconstructed from original Git patches. Deleted lines are not retained in this snapshot.';
+      : 'Surviving source reconstructed from verified original Git patches. Deleted lines are excluded; any unavailable historical text files are identified below.';
     const info='Showing '+shown+' source rows in '+filesShown+' file'+(filesShown===1?'':'s')+
       '. Authentic first-parent commit '+state.n+'/'+manifest.commitCount+'.';
-    notice(snapshot.warnings.length?info+' '+snapshot.warnings.join(' '):info,
-      snapshot.warnings.length?'warning':'');
+    const gaps=state.mode==='snapshot' && snapshot.unavailableTextFiles.size
+      ? ' Historical text unavailable from GitHub patches: '+[...snapshot.unavailableTextFiles].join(', ')+'.'
+      : '';
+    const issues=[...snapshot.warnings];
+    if(gaps)issues.push(gaps);
+    notice(issues.length?info+' '+issues.join(' '):info,
+      issues.length?'warning':'');
   }catch(error){
     if(current!==renderVersion)return;
     notice('Unable to reconstruct this commit: '+error.message,'error');
