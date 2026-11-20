@@ -51,3 +51,14 @@ When user rejects an implementation: capture exact complaint, identify failure m
 - [ ] Each row displays short STM chip plus separate filename chip, with full STM ID unchanged in original source data and row attributes.
 - [ ] After 5–10, Full file returns cumulative source through commit 10, while All commits clears selection and returns latest indexed commit 15 with 76 lines.
 - [ ] Swipe is allowed for category CONTROLS on small screens, never for CODE lines. Browser visual testing required before claiming rendered Android layout verified.
+
+## Latest source-chip regression gates — Prompts 063–064
+
+- [ ] Colored STM chip has **exactly one visible text child**, the short `STM-NNN`. No second `.chip-meta` row, `NESTED · NBL-001 · ...`, class/method label or commit-marker text.
+- [ ] Neutral filename chip remains first; STM ID chip second; real syntax-highlighted source third. Chip label never duplicates `filename`.
+- [ ] Full permanent STM ID, source scope IDs and provenance remain in JSON/DOM attributes and accessible labels; their loss is a data regression.
+- [ ] Category selections recolor the existing STM chip without replacing mounted row elements, varying row height or moving page scroll.
+- [ ] Comments, genuine blanks, docstrings and out-of-scope lines still follow accepted category rules. No fake dividers/source rows; no edits to original source files or the old HTML prototype.
+- [ ] Source-row compaction is checked across narrow and desktop viewport sizes when a real-browser test is available; mocked-DOM/JS checks alone do not count as real browser visual QA.
+
+[24 focused controlled checks](../nanogpt-modular-viewer/QA-UI-COMPACT-STM-CHIPS.md) passed when the UI was updated, but real Android/desktop rendering and Pages deployment remain unverified.
