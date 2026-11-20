@@ -24,7 +24,7 @@
     },
     "notebook_rule": "Track code-cell source lines using (cell_number_1_based, line_in_cell_1_based); Markdown cells and notebook JSON formatting are not source-code lines.",
     "physical_line_rule": "Python line_count includes code, comments, and blank lines. Coverage ranges refer to the file at source_snapshot.commit, with original file numbering.",
-    "status_rule": "A lesson plan is not proof of learning; lesson_coverage plans must never silently update learner_overrides."
+    "status_rule": "A lesson plan is not proof of learning; lesson_coverage plans must never silently update learner_overrides. Self-reported prior Python coursework is not evidence of source-line mastery."
   },
   "totals": {
     "tracked_code_files": 17,
@@ -316,6 +316,95 @@
   "lesson_plans": [
     {
       "lesson_id": "01",
+      "slug": "01-pytorch-layernorm",
+      "title": "Build nanoGPT: PyTorch Tensors and LayerNorm",
+      "planned_source_coverage": [
+        {
+          "path": "model.py",
+          "ranges": [
+            {
+              "start": 14,
+              "end": 16,
+              "depth": "line_walkthrough",
+              "note": "Inspect PyTorch nn and F imports"
+            },
+            {
+              "start": 18,
+              "end": 27,
+              "depth": "line_walkthrough",
+              "note": "Explain and test complete LayerNorm class; early five related commits"
+            },
+            {
+              "start": 94,
+              "end": 106,
+              "depth": "architecture_preview",
+              "note": "LayerNorm reused twice within Block"
+            },
+            {
+              "start": 108,
+              "end": 116,
+              "depth": "architecture_preview",
+              "note": "n_embd, bias and context model config"
+            },
+            {
+              "start": 126,
+              "end": 132,
+              "depth": "architecture_preview",
+              "note": "Token, position embeddings, ModuleList Block and final LayerNorm"
+            },
+            {
+              "start": 170,
+              "end": 183,
+              "depth": "architecture_preview",
+              "note": "GPT forward hidden states and LayerNorm connection"
+            }
+          ]
+        },
+        {
+          "path": "train.py",
+          "ranges": [
+            {
+              "start": 123,
+              "end": 125,
+              "depth": "architecture_preview",
+              "note": "Input and next-token target batch windows"
+            },
+            {
+              "start": 146,
+              "end": 157,
+              "depth": "architecture_preview",
+              "note": "Training model_args to GPTConfig and model constructor"
+            }
+          ]
+        },
+        {
+          "path": "data/shakespeare_char/prepare.py",
+          "ranges": [
+            {
+              "start": 42,
+              "end": 49,
+              "depth": "architecture_preview",
+              "note": "Character token IDs serialized for downstream training"
+            }
+          ]
+        }
+      ],
+      "completed": false
+    }
+  ],
+  "excluded_from_line_by_line_code_coverage": [
+    "LICENSE",
+    "README.md",
+    ".gitignore",
+    ".gitattributes",
+    "assets/*",
+    "data/*/readme.md"
+  ],
+  "excluded_note": "Supporting documents/assets are covered in project context but are not Python source code; notebooks count only code-cell source lines.",
+  "sync_instructions": "After an HTML lesson, export the attempt record and ask ChatGPT to update progress.json and explicit per-line learner_overrides only when backed by evidence.",
+  "archived_lesson_plans": [
+    {
+      "lesson_id": "01",
       "title": "From Text to Your First Python Code",
       "planned_source_coverage": [
         {
@@ -375,17 +464,9 @@
           ]
         }
       ],
-      "completed": false
+      "completed": false,
+      "superseded_by": "01-pytorch-layernorm",
+      "note": "Old absolute-beginner teaching draft; replaced after user confirmed college-level Python background."
     }
-  ],
-  "excluded_from_line_by_line_code_coverage": [
-    "LICENSE",
-    "README.md",
-    ".gitignore",
-    ".gitattributes",
-    "assets/*",
-    "data/*/readme.md"
-  ],
-  "excluded_note": "Supporting documents/assets are covered in project context but are not Python source code; notebooks count only code-cell source lines.",
-  "sync_instructions": "After an HTML lesson, export the attempt record and ask ChatGPT to update progress.json and explicit per-line learner_overrides only when backed by evidence."
+  ]
 }
