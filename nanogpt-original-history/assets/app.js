@@ -1,196 +1,322 @@
 import {OriginalHistory} from './history.js';
+import {syntaxHTML,sourceKind} from './syntax.js';
 
 const $=id=>document.getElementById(id);
-let manifest=null,history=null;
-const state={n:1,mode:'changes',file:''};
-let renderVersion=0,queue=Promise.resolve();
+const state={commit:1,mode:'all',selection:null,file:''};
+let manifest=null,history=null,windowRows=null,allEvents=[];
 const sourceBase='https://github.com/karpathy/nanoGPT/commit/';
-const safeDate=value=>new Date(value).toLocaleString('en-US',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'UTC'})+' UTC';
-const chunkFile=(start,end)=>'./data/diffs/'+String(start).padStart(3,'0')+'-'+String(end).padStart(3,'0')+'.json';
-async function readJSON(url){
-  const response=await fetch(url,{cache:'no-cache'});
-  if(!response.ok)throw new Error('Could not load '+url+' (HTTP '+response.status+')');
+const pad=n=>String(n).padStart(3,'0');
+
+async function readJSON(path) {
+  const response=await fetch(path,{cache:'no-cache'});
+  if(!response.ok)throw new Error(path+': HTTP '+response.status);
   return response.json();
 }
-function notice(text,kind=''){
-  const el=$('notice');
-  el.hidden=!text;
-  el.className='notice'+(kind?' '+kind:'');
-  if(text)el.textContent=text;
+function message(text,error=false,warning=false) {
+  const node=$('status');
+  node.textContent=text;
+  node.dataset.error=String(error);
+  node.dataset.warning=String(warning);
 }
-function element(tag,className,text){
-  const n=document.createElement(tag);
-  if(className)n.className=className;
-  if(text!==undefined)n.textContent=String(text);
-  return n;
+function parseSelection(value,max){
+  const match=String(value).trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+  if(!match)return null;
+  const start=Number(match[1]),end=match[2]===undefined?start:Number(match[2]);
+  if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<1||start>end||end>max)return null;
+  return {start,end};
 }
-function lineRow(entry,mode){
-  const {path,item,kind}=entry;
-  const row=element('div','code-row '+(kind==='del'?'deleted':kind==='add'?'added':'context'));
+function htmlRow(entry,index) {
+  const {path,item,kind,commit}=entry;
+  const deleted=kind==='del';
+  const row=document.createElement('div');
+  row.className='code-row'+(deleted?' deleted':'');
+  row.dataset.rowIndex=String(index);
   row.dataset.stmId=item.id;
   row.dataset.originalFile=path;
   row.dataset.originCommit=String(item.origin);
-  const labels=element('div','labels');
-  const file=element('div','filename-chip',path);
-  file.setAttribute('aria-label','Original file '+path);
-  const stm=element('div','stm-chip',item.id);
-  stm.setAttribute('aria-label',item.id+' · introduced at original commit '+item.origin);
-  labels.append(file,stm);
-  const cell=element('div','source-cell');
-  const sign=element('span','change-sign',mode==='snapshot'?'':kind==='del'?'−':'+');
-  sign.setAttribute('aria-hidden','true');
-  const code=element('span','source');
-  // textContent protects the original source exactly: no HTML substitution.
-  code.textContent=item.text===''?'\u00a0':item.text;
-  cell.append(sign,code);
-  row.append(labels,cell);
+  if(commit)row.dataset.eventCommit=String(commit);
+  row.setAttribute('aria-label',item.id+' · '+path+' · original commit '+item.origin+
+    (deleted?' · removed in original commit '+commit:''));
+
+  const chips=document.createElement('div');
+  chips.className='chip-cell';
+  const file=document.createElement('div');
+  file.className='filename-chip';
+  file.textContent=path.split('/').pop()||path;
+  file.title=path;
+  file.setAttribute('aria-label','Original source file '+path);
+  const chip=document.createElement('div');
+  chip.className='line-chip';
+  chip.style.setProperty('--chip-bg','#15803d');
+  chip.style.setProperty('--chip-ink','#fff');
+  chip.setAttribute('aria-label',item.id+' · green Lines category');
+  const number=document.createElement('div');
+  number.className='line-id';
+  number.textContent=item.id;
+  chip.appendChild(number);
+  chips.append(file,chip);
+
+  const cell=document.createElement('div');
+  cell.className='code-cell';
+  const source=item.text;
+  const leading=(source.match(/^[ \t]*/)||[''])[0];
+  const indent=document.createElement('span');
+  indent.className='code-indent';
+  indent.style.width='min('+leading.replace(/\t/g,'    ').length+'ch, 38%)';
+  indent.setAttribute('aria-hidden','true');
+  const code=document.createElement('span');
+  code.className='code-content';
+  // Faithful original code side: punctuation, spacing, Python colors, no diff signs.
+  // Escaping is performed in syntaxHTML before assigning innerHTML.
+  code.innerHTML=syntaxHTML(source.slice(leading.length),sourceKind(path,source));
+  cell.append(indent,code);
+  row.append(chips,cell);
   return row;
 }
-function fileSection(path,entries,caption,mode){
-  const block=element('section','file-section');
-  const head=element('div','file-head');
-  head.append(element('span','file-head-name',path),element('span','file-head-count',caption));
-  block.appendChild(head);
-  for(const entry of entries)block.appendChild(lineRow(entry,mode));
-  return block;
-}
-function renderRows(snapshot){
-  const panel=$('rows');
-  const fragment=document.createDocumentFragment();
-  let shown=0,filesShown=0;
-  if(state.mode==='changes'){
-    // GitHub returns files in each real commit; show ALL changed files, not one
-    // artificially selected file repeated for a series of commits.
-    for(const f of snapshot.fileStats){
-      if(state.file&&f.path!==state.file)continue;
-      const entries=snapshot.changes.filter(x=>x.path===f.path);
-      if(entries.length){
-        shown+=entries.length;filesShown++;
-        fragment.appendChild(fileSection(f.path,entries,'+'+f.added+' / −'+f.deleted+' original lines',state.mode));
-      }else{
-        const block=element('section','file-section');
-        const head=element('div','file-head');
-        head.append(element('span','file-head-name',f.path),element('span','file-head-count',f.status+' · no text patch'));
-        block.appendChild(head);
-        fragment.appendChild(block);
-        filesShown++;
+
+// Natural document scrolling, all source rows accessible. Reuse original
+// row/spacer architecture so thousands of code lines do not overload Android DOM.
+class HistoryWindow {
+  constructor(host,windowElement,top,bottom){
+    this.host=host;this.rows=windowElement;this.top=top;this.bottom=bottom;
+    this.estimate=43;this.items=[];this.count=0;this.bit=new Float64Array(1);
+    this.measured=new Map();this.rendered=null;this.frame=0;this.version=0;
+    this.lastViewportWidth=window.innerWidth;
+    this.observer=new ResizeObserver(entries=>{
+      let changed=false;
+      for(const entry of entries){
+        const index=Number(entry.target.dataset.rowIndex);
+        if(!Number.isInteger(index))continue;
+        const height=entry.target.getBoundingClientRect().height;
+        if(height>0&&this.setHeight(index,height))changed=true;
       }
+      if(changed){this.positionSpacers();this.schedule();}
+    });
+    window.addEventListener('scroll',()=>this.schedule(),{passive:true});
+    window.addEventListener('resize',()=>{
+      if(Math.abs(window.innerWidth-this.lastViewportWidth)>1){
+        this.lastViewportWidth=window.innerWidth;
+        this.measured.clear();
+        this.bit=new Float64Array(this.count+1);
+        this.rendered=null;
+        this.rows.replaceChildren();
+        this.positionSpacers();
+      }
+      this.schedule();
+    },{passive:true});
+  }
+  set(items){
+    this.items=items;this.count=items.length;this.version++;
+    this.measured.clear();this.bit=new Float64Array(this.count+1);
+    this.rendered=null;
+    this.observer.disconnect();this.rows.replaceChildren();
+    this.positionSpacers();this.schedule();
+  }
+  deltaPrefix(n){let s=0;for(let i=n;i>0;i-=i&-i)s+=this.bit[i];return s;}
+  position(n){return n*this.estimate+this.deltaPrefix(n);}
+  setHeight(n,h){
+    if(n<0||n>=this.count)return false;
+    const before=this.measured.get(n)??this.estimate;
+    if(Math.abs(before-h)<1)return false;
+    this.measured.set(n,h);
+    for(let i=n+1;i<=this.count;i+=i&-i)this.bit[i]+=h-before;
+    return true;
+  }
+  findIndex(y){
+    let lo=0,hi=this.count;
+    while(lo<hi){
+      const mid=(lo+hi)>>1;
+      if(this.position(mid+1)<=y)lo=mid+1;
+      else hi=mid;
     }
-  }else{
-    for(const [path,source] of [...snapshot.files.entries()].sort((a,b)=>a[0].localeCompare(b[0]))){
-      if(state.file&&path!==state.file)continue;
-      if(!source.length)continue;
-      shown+=source.length;filesShown++;
-      const entries=source.map(item=>({path,item,kind:'context'}));
-      fragment.appendChild(fileSection(path,entries,source.length+' surviving lines',state.mode));
+    return Math.max(0,Math.min(this.count-1,lo));
+  }
+  visible(){
+    if(!this.count)return {start:0,end:0};
+    const r=this.host.getBoundingClientRect();
+    const top=Math.max(0,-r.top);
+    const start=Math.max(0,this.findIndex(Math.max(0,top-650))-2);
+    const end=Math.min(this.count,this.findIndex(top+window.innerHeight+750)+3);
+    return {start,end:Math.max(start+1,end)};
+  }
+  positionSpacers(){
+    if(!this.rendered){
+      this.top.style.height='0px';
+      this.bottom.style.height=Math.max(0,this.position(this.count))+'px';
+    }else{
+      this.top.style.height=Math.max(0,this.position(this.rendered.start))+'px';
+      this.bottom.style.height=Math.max(0,this.position(this.count)-this.position(this.rendered.end))+'px';
     }
   }
-  if(!filesShown)fragment.appendChild(element('div','empty',
-    state.file?'No text lines for this file in the chosen commit/view.':
-    'No text source lines in this historical commit. See the file changes and coverage notices.'));
-  panel.replaceChildren(fragment);
-  return {shown,filesShown};
-}
-function updateFiles(snapshot){
-  const paths=new Set([...snapshot.files.keys(),...snapshot.fileStats.map(x=>x.path),
-    ...snapshot.unavailableTextFiles]);
-  const chooser=$('file-filter');
-  const existing=chooser.value;
-  chooser.replaceChildren(new Option('All files',''));
-  for(const path of [...paths].sort((a,b)=>a.localeCompare(b)))chooser.appendChild(new Option(path,path));
-  if(state.file&&paths.has(state.file)){chooser.value=state.file;}
-  else{state.file='';chooser.value='';}
-}
-function updateButtons(){
-  $('commit-counter').textContent=state.n+' / '+manifest.commitCount;
-  $('previous').disabled=state.n===1;
-  $('next').disabled=state.n>=manifest.dataAvailableThrough;
-  $('jump').max=String(manifest.dataAvailableThrough);
-  $('changes-mode').setAttribute('aria-pressed',String(state.mode==='changes'));
-  $('snapshot-mode').setAttribute('aria-pressed',String(state.mode==='snapshot'));
-}
-async function render(){
-  const current=++renderVersion;
-  updateButtons();
-  const meta=manifest.commits[state.n-1];
-  if(!meta)return;
-  $('commit-title').textContent=meta.message;
-  $('commit-date').dateTime=meta.date;
-  $('commit-date').textContent=safeDate(meta.date);
-  $('author').textContent=meta.author+(meta.merge?' · merged changes':'');
-  $('commit-sha').textContent=meta.sha.slice(0,12);
-  $('commit-link').href=sourceBase+meta.sha;
-  notice('Loading genuine nanoGPT source changes…');
-  // Serialize replay calls. Fast clicks must not corrupt mutable history state.
-  queue=queue.catch(()=>{}).then(()=>history.get(state.n));
-  try{
-    const snapshot=await queue;
-    if(current!==renderVersion)return;
-    updateFiles(snapshot);
-    const {shown,filesShown}=renderRows(snapshot);
-    const adds=snapshot.fileStats.reduce((n,x)=>n+x.added,0);
-    const dels=snapshot.fileStats.reduce((n,x)=>n+x.deleted,0);
-    $('add-count').textContent='+'+adds+' lines';
-    $('delete-count').textContent='−'+dels+' lines';
-    $('file-count').textContent=snapshot.fileStats.length+' files changed';
-    $('view-hint').textContent=state.mode==='changes'
-      ? 'Changed lines only: additions are regular source; deletions are struck through, with the original green STM chip unchanged. The filename on each row is the real Git file.'
-      : 'Surviving source reconstructed from verified original Git patches. Deleted lines are excluded; any unavailable historical text files are identified below.';
-    const info='Showing '+shown+' source rows in '+filesShown+' file'+(filesShown===1?'':'s')+
-      '. Authentic first-parent commit '+state.n+'/'+manifest.commitCount+'.';
-    const gaps=state.mode==='snapshot' && snapshot.unavailableTextFiles.size
-      ? ' Historical text unavailable from GitHub patches: '+[...snapshot.unavailableTextFiles].join(', ')+'.'
-      : '';
-    const issues=[...snapshot.warnings];
-    if(gaps)issues.push(gaps);
-    notice(issues.length?info+' '+issues.join(' '):info,
-      issues.length?'warning':'');
-  }catch(error){
-    if(current!==renderVersion)return;
-    notice('Unable to reconstruct this commit: '+error.message,'error');
-    $('rows').replaceChildren(element('div','empty','The original data could not be verified; no source lines were fabricated.'));
+  schedule(){
+    if(this.frame)return;
+    this.frame=requestAnimationFrame(()=>{this.frame=0;this.update();});
+  }
+  update(){
+    if(!this.count){this.rows.replaceChildren();return;}
+    const wanted=this.visible();
+    if(this.rendered&&this.rendered.start===wanted.start&&this.rendered.end===wanted.end){
+      this.positionSpacers();return;
+    }
+    const frag=document.createDocumentFragment();
+    for(let n=wanted.start;n<wanted.end;n++)frag.appendChild(htmlRow(this.items[n],n));
+    this.observer.disconnect();
+    this.rows.replaceChildren(frag);
+    this.rendered=wanted;
+    this.positionSpacers();
+    for(const row of this.rows.children)this.observer.observe(row);
   }
 }
-function choose(n){
-  if(!Number.isInteger(n)||n<1||n>manifest.dataAvailableThrough){
-    notice('Currently indexed: original commits 1–'+manifest.dataAvailableThrough+
-      ' out of '+manifest.commitCount+'. Additional history needs verified diff chunks.','warning');
-    return;
+function collectAllEvents(){
+  const rows=[];
+  for(let commit=1;commit<=manifest.dataAvailableThrough;commit++){
+    const snapshot=history.snapshots.get(commit);
+    if(!snapshot)throw new Error('Unverified source snapshot at '+commit);
+    // Preserve GitHub's actual per-commit file ordering, then hunk ordering.
+    for(const file of snapshot.fileStats)
+      for(const record of snapshot.changes)
+        if(record.path===file.path)
+          rows.push({path:record.path,item:record.item,kind:record.kind,commit});
   }
-  state.n=n;
-  render();
+  return rows;
+}
+function getRows(){
+  let rows;
+  if(state.mode==='full'){
+    const snapshot=history.snapshots.get(state.commit);
+    rows=[];
+    for(const [path,lines] of snapshot.files)
+      for(const item of lines)rows.push({path,item,kind:'context',commit:state.commit});
+  }else if(state.mode==='all')rows=allEvents;
+  else{
+    const first=state.mode==='selected'&&state.selection?state.selection.start:state.commit;
+    const last=state.mode==='selected'&&state.selection?state.selection.end:state.commit;
+    rows=allEvents.filter(r=>r.commit>=first&&r.commit<=last &&
+      (state.mode!=='added'||r.kind==='add'));
+  }
+  if(state.file)rows=rows.filter(r=>r.path===state.file);
+  return rows;
+}
+function setFileOptions(){
+  const select=$('file-select');
+  const files=new Set(allEvents.map(r=>r.path));
+  for(const snapshot of history.snapshots.values())
+    for(const path of snapshot.unavailableTextFiles||[])files.add(path);
+  const previously=state.file;
+  select.replaceChildren(new Option('All files',''));
+  for(const path of [...files].sort())select.appendChild(new Option(path,path));
+  if(previously&&files.has(previously))select.value=previously;
+  else{select.value='';state.file='';}
+}
+function display(){
+  const meta=manifest.commits[state.commit-1];
+  const isAll=state.mode==='all';
+  const bounds=state.selection;
+  $('commit-title').textContent=isAll
+    ? 'All original Git commits · full source evolution'
+    :state.mode==='selected'&&bounds&&bounds.start!==bounds.end
+      ? 'Commits '+bounds.start+'–'+bounds.end+' · original Git changes'
+      :meta.message;
+  const sha=isAll?manifest.commits[manifest.dataAvailableThrough-1]:meta;
+  $('commit-link').href=sourceBase+sha.sha;
+  $('commit-link').textContent=sha.sha.slice(0,12)+' · Original nanoGPT commit';
+  $('commit-indicator').textContent=isAll?manifest.dataAvailableThrough+' / '+manifest.commitCount:
+    state.mode==='selected'&&bounds&&bounds.start!==bounds.end
+    ? bounds.start+'–'+bounds.end : String(state.commit);
+  $('previous').disabled=state.commit<=1 && !isAll;
+  $('next').disabled=state.commit>=manifest.dataAvailableThrough;
+  $('file-name').textContent=state.file||'All files';
+  $('batch-indicator').textContent='Original nanoGPT Git history · '+manifest.commitCount+' real first-parent commits';
+  $('mode-group').querySelectorAll('button').forEach(b=>{
+    const pressed=b.dataset.action==='all'?isAll:b.dataset.mode===state.mode;
+    b.setAttribute('aria-pressed',String(pressed));
+  });
+  const rows=getRows();
+  const deleted=rows.filter(r=>r.kind==='del').length;
+  const added=rows.filter(r=>r.kind==='add').length;
+  const fileCount=new Set(rows.map(r=>r.path)).size;
+  $('file-meta').textContent=rows.length+' source rows · '+fileCount+' files';
+  $('hint').textContent=isAll
+    ? 'All commits: every indexed original source addition and deletion, chronological across files. Deleted code is struck through; green STM chips stay.'
+    :state.mode==='full'
+    ? 'Full file: all surviving source lines at original commit '+state.commit+'. Select All commits to include historical deletions.'
+    :'Original Git change lines for selected commit(s). Select All commits for the complete historical source.';
+  const incomplete=history.snapshots.get(manifest.dataAvailableThrough).unavailableTextFiles;
+  const warning=incomplete&&incomplete.size>0;
+  message('Showing '+rows.length+' original line events ('+added+' added, '+deleted+' deleted) across '+fileCount+
+    ' files. '+(warning?'One oversized historical notebook patch is unavailable; all Python source is verified.':''),false,warning);
+  windowRows.set(rows);
+}
+function selectCommit(n){
+  if(!Number.isInteger(n)||n<1||n>manifest.dataAvailableThrough)return;
+  state.commit=n;
+  if(state.mode==='all')state.mode='full';
+  if(state.mode==='selected')state.selection={start:n,end:n};
+  display();
+}
+function allCommits(){
+  state.mode='all';state.commit=manifest.dataAvailableThrough;
+  state.selection=null;$('jump-input').value='';
+  $('jump-input').removeAttribute('aria-invalid');
+  display();
 }
 function attach(){
-  $('previous').addEventListener('click',()=>choose(state.n-1));
-  $('next').addEventListener('click',()=>choose(state.n+1));
-  $('jump-form').addEventListener('submit',event=>{
-    event.preventDefault();
-    const n=Number($('jump').value);
-    choose(n);
+  $('previous').addEventListener('click',()=>selectCommit(state.commit-1));
+  $('next').addEventListener('click',()=>selectCommit(state.commit+1));
+  $('mode-group').addEventListener('click',e=>{
+    const button=e.target.closest('button');
+    if(!button)return;
+    if(button.dataset.action==='all'){allCommits();return;}
+    if(!button.dataset.mode)return;
+    state.mode=button.dataset.mode;
+    if(state.mode==='selected'&&!state.selection)state.selection={start:state.commit,end:state.commit};
+    if(state.mode==='full')state.selection=null;
+    display();
   });
-  $('changes-mode').addEventListener('click',()=>{if(state.mode==='changes')return;state.mode='changes';render();});
-  $('snapshot-mode').addEventListener('click',()=>{if(state.mode==='snapshot')return;state.mode='snapshot';render();});
-  $('file-filter').addEventListener('change',event=>{state.file=event.target.value;render();});
-  document.addEventListener('keydown',event=>{
-    if(event.altKey||event.ctrlKey||event.metaKey||/INPUT|SELECT|TEXTAREA/.test(event.target.tagName))return;
-    if(event.key==='ArrowLeft')choose(state.n-1);
-    if(event.key==='ArrowRight')choose(state.n+1);
+  $('jump-form').addEventListener('submit',e=>{
+    e.preventDefault();
+    const input=$('jump-input');
+    const selected=parseSelection(input.value,manifest.dataAvailableThrough);
+    if(!selected){
+      input.setAttribute('aria-invalid','true');
+      message('Enter a valid real commit from 1 to '+manifest.dataAvailableThrough+
+        ' or a range (for example 5-10).',true);
+      return;
+    }
+    input.removeAttribute('aria-invalid');
+    state.commit=selected.end;state.selection=selected;
+    // A single commit defaults to complete surviving source, not just a Git diff.
+    state.mode=selected.start===selected.end?'full':'selected';
+    display();
+  });
+  $('jump-input').addEventListener('input',()=>$('jump-input').removeAttribute('aria-invalid'));
+  $('file-select').addEventListener('change',e=>{state.file=e.target.value;display();});
+  document.addEventListener('keydown',e=>{
+    if(e.altKey||e.ctrlKey||e.metaKey||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+    if(e.key==='ArrowLeft')selectCommit(state.commit-1);
+    if(e.key==='ArrowRight')selectCommit(state.commit+1);
   });
 }
 async function start(){
   try{
     manifest=await readJSON('./data/manifest.json');
-    if(manifest.sourceRepository!=='karpathy/nanoGPT'||manifest.historyKind!=='first-parent Git chronology')
-      throw new Error('Unknown historical source manifest');
-    if(manifest.dataAvailableThrough<1)throw new Error('Source diff batches have not been published yet');
-    history=new OriginalHistory(manifest,async(start,end)=>readJSON(chunkFile(start,end)));
-    $('coverage').textContent='Verified diff data currently indexed through original commit '+manifest.dataAvailableThrough+
-      ' of '+manifest.commitCount+' first-parent commits.';
-    attach();
-    await render();
+    if(manifest.sourceRepository!=='karpathy/nanoGPT'||
+       manifest.historyKind!=='first-parent Git chronology'||
+       manifest.dataAvailableThrough!==manifest.commitCount)
+      throw new Error('Original commit manifest or historical diff coverage is incomplete');
+    history=new OriginalHistory(manifest,async(start,end)=>{
+      const path='./data/diffs/'+pad(start)+'-'+pad(end)+'.json';
+      return readJSON(path);
+    });
+    message('Reconstructing '+manifest.dataAvailableThrough+' genuine Git commits and their source lines…');
+    await history.get(manifest.dataAvailableThrough);
+    allEvents=collectAllEvents();
+    state.commit=manifest.dataAvailableThrough;
+    windowRows=new HistoryWindow($('line-area'),$('line-window'),$('top-spacer'),$('bottom-spacer'));
+    setFileOptions();attach();display();
   }catch(error){
-    notice('Viewer could not initialize: '+error.message+
-      (location.protocol==='file:'?' Serve this folder over HTTP(S), not as a local file.':''),'error');
+    message('Historical viewer could not initialize: '+error.message+
+      (location.protocol==='file:'?' Open the GitHub Pages URL over HTTP(S).':''),true);
   }
 }
 void start();
