@@ -26,7 +26,7 @@ function element(tag,className,text){
 }
 function lineRow(entry,mode){
   const {path,item,kind}=entry;
-  const row=element('div','code-row '+(kind||'context'));
+  const row=element('div','code-row '+(kind==='del'?'deleted':kind==='add'?'added':'context'));
   row.dataset.stmId=item.id;
   row.dataset.originalFile=path;
   row.dataset.originCommit=String(item.origin);
