@@ -51,13 +51,13 @@
       <div id="categories" class="categories" role="group" aria-label="Color code source by hierarchy category">
         <button type="button" class="category" data-kind="module" disabled aria-label="Coming later: module hierarchy color" aria-pressed="false">Module</button>
         <button type="button" class="category" data-kind="package" disabled aria-label="Coming later: package hierarchy color" aria-pressed="false">Directory</button>
-        <button type="button" class="category" data-kind="file" disabled aria-label="Coming later: file hierarchy color" aria-pressed="false">File</button>
+        <button type="button" class="category" data-kind="file" aria-pressed="false" aria-label="Color source by its original file, independent of Comments">File</button>
         <button type="button" class="category" data-kind="class" disabled aria-label="Coming later: class hierarchy color" aria-pressed="false">Class</button>
         <button type="button" class="category" data-kind="method" disabled aria-label="Coming later: method hierarchy color" aria-pressed="false">Method</button>
         <button type="button" class="category" data-kind="block" disabled aria-label="Coming later: block hierarchy color" aria-pressed="false">Code Block</button>
         <button type="button" class="category" data-kind="nested" disabled aria-label="Coming later: nested hierarchy color" aria-pressed="false">Nested Block</button>
         <button type="button" class="category" data-kind="line" aria-pressed="true">Lines</button>
-        <button type="button" class="category" data-kind="comment" disabled aria-label="Coming later: comment hierarchy color" aria-pressed="false" aria-label="Toggle pink comments and docstrings inside the selected hierarchy category">Comments</button>
+        <button type="button" class="category" data-kind="comment" aria-pressed="false" aria-label="Toggle pink comments and docstrings within Lines or File coloring">Comments</button>
       </div>
     </div>
   </section>
@@ -73,7 +73,7 @@
     </div>
   </section>
   <p id="status" role="status" aria-live="polite">Loading original nanoGPT Git history…</p>
-  <p id="hint">All commits shows every verified added or deleted source line across the real history, in original chronological order. Deleted code is struck through; STM chips stay green.</p>
+  <p id="hint">All commits shows the complete original source evolution. File and Lines remain selected while Comments independently toggles pink documentation; all filters and modes persist.</p>
 
   <section id="line-area" class="line-area" aria-label="Original nanoGPT source code and permanent green statement identifiers">
     <div id="top-spacer" aria-hidden="true"></div>
