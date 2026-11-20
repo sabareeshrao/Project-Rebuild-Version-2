@@ -81,3 +81,12 @@ if profile:
     ) as prof:
 
         X, Y = get_batch('train')
+        for k in range(num_steps):
+            with ctx:
+                logits, loss = model(X, Y)
+            X, Y = get_batch('train')
+            optimizer.zero_grad(set_to_none=True)
+            loss.backward()
+            optimizer.step()
+            lossf = loss.item()
+            print(f"{k}/{num_steps} loss: {lossf:.4f}")
