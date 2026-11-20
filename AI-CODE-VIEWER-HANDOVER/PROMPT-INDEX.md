@@ -1,8 +1,8 @@
-# Chronological Prompt Index — 70 User Turns
+# Chronological Prompt Index — 71 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **70 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
+Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **71 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
 
-**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 70 records.
+**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 71 records.
 
 | # | Prompt focus | Historical record |
 |---:|---|---|
@@ -76,6 +76,7 @@ Each file below has the **user's prompt**, the assistant's observable outcome (c
 | 068 | Proposal: reorder 235 learning commits by file shifts without rewriting Git history | [Prompt 068](prompts/068.md) |
 | 069 | New proposal: original Karpathy commits with category-colored struck-through deletions | [Prompt 069](prompts/069.md) |
 | 070 | Count live versus historically deleted Python and other text lines in original nanoGPT | [Prompt 070](prompts/070.md) |
+| 071 | Confirm original nanoGPT line-count audit completed | [Prompt 071](prompts/071.md) |
 
 The full archive covers **more than UI tweaks**: source-code identity, architecture, commit archaeology, batch planning, tests, review feedback and communication. For a UI-only curated list, use [UI-CHANGE-INDEX.md](UI-CHANGE-INDEX.md). For verified counts and important fidelity limits, use [PROMPT-COVERAGE-AUDIT.md](PROMPT-COVERAGE-AUDIT.md).
 
@@ -123,3 +124,5 @@ If a new AI finds a conflict between an earlier and a later prompt, the later ex
 - **069:** newer idea supersedes file-shift-only plan: visualize **actual original `karpathy/nanoGPT` Git commits** with struck-through deleted code text while retaining the applicable structural chip color; separate true commit diffs from exact historical source snapshots. Requires separate lineage-aware registry, not changing the 235 teaching IDs. No implementation approved or made. [Prompt 069](prompts/069.md).
 
 - **070:** audited authentic original nanoGPT first-parent Git history (159 mainline commits among 210 reachable) for historical line changes: **Python 1,824 added, 604 deleted, 1,220 surviving**; including all repository text and raw notebook JSON **3,783 added, 1,066 deleted, 2,717 surviving**. Counts are change events, not unique line identities. [Calculation/methodology](prompts/070.md). No viewer or STM changes.
+
+- **071:** verified the last six first-parent commits and confirmed completion of the 159-commit audit: Python 1,220 surviving, 604 deleted events and 1,824 historical additions; all text 2,717 surviving, 1,066 deleted events and 3,783 additions. [Prompt 071](prompts/071.md). No viewer change.
