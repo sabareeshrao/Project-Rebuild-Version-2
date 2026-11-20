@@ -1,14 +1,21 @@
 # nanoGPT — Modular Commit-First Code Viewer
 
-**Batch 01 of 16 is implemented for original nanoGPT source commits 1–15.** It is in a separate folder. The accepted 30-commit prototype at ../commit-id-demo/index.html is NOT modified.
+**Batches 01–04 of 16 are implemented for original nanoGPT source commits 1–60.** The modular explorer now covers **four original files, 366 physical source lines and seven JSON chunks**. It remains in a separate folder; the accepted 30-commit reference at ../commit-id-demo/index.html is NOT modified.
 
 ## Entry points
 
 - [Open the viewer](index.html)
 - [Source history manifest](data/manifest.json)
+- [All seven batch source chunks](data/batches/)
 - [Batch 01 source lines](data/batches/001-015.json)
+- [Batch 02 source lines](data/batches/016-030.json)
+- [Batch 03 source lines](data/batches/031-045.json)
+- [Batch 04 model.py lines](data/batches/046-060.json)
 - [Full batch tracker](BATCH_TRACKER.md)
 - [Batch 01 QA](QA-BATCH-001.md)
+- [Batch 02 QA](QA-BATCH-002.md)
+- [Batch 03 QA](QA-BATCH-003.md)
+- [Batch 04 QA](QA-BATCH-004.md)
 - [Compact sticky-toolbar / stable-scroll QA](QA-UI-REFINEMENT.md)
 - [Prior viewer design handover](../AI-CODE-VIEWER-HANDOVER/README.md)
 
@@ -16,9 +23,9 @@ Expected GitHub Pages address (depends on repository Pages configuration): https
 
 ## Source coverage
 
-These are the first 15 *reconstructed nanoGPT* commits, NOT the more recent HTML, learning, handover or prompt-history commits. First original source SHA: cac2c626c007c5a5bb298f001a9efa7091a313ca. Last original source SHA: af0f71fda3840a543379f9e075d032a77d5380f1. The original model.py source at the 15th commit has **76 physical lines**, including 11 genuine blank lines. Every source snapshot was compared against the exact original GitHub model.py version at that SHA.
+These are the first **60 reconstructed nanoGPT source commits**, NOT the repository's newer HTML, learning, handover or prompt-history commits. First original source SHA: `cac2c626c007c5a5bb298f001a9efa7091a313ca`; latest indexed original source SHA: `3ad5fad8988a76d177b26c29b181bd57cf6e138f`. All 60 source commits were checked against their real chronological history. At commit 60: `model.py` has **330** physical lines, `LICENSE` **21**, `.gitignore` **12** and `.gitattributes` **3**. The first 15 commits remain historically documented in [Batch 01 QA](QA-BATCH-001.md).
 
-The 15 commits gradually add the file header/imports, the optional-bias LayerNorm class, and most of CausalSelfAttention. Earlier snapshots are intentionally incomplete source; code is never invented merely to make an intermediate commit runnable.
+The historical series starts with model.py headers, imports, LayerNorm and CausalSelfAttention; builds MLP, Block, GPTConfig and GPT; then introduces generation and optimizer logic, before adding three actual root metadata/license files. Earlier snapshots are intentionally incomplete code; source is never invented merely to make an intermediate commit runnable.
 
 ## Modular folder architecture
 
@@ -31,7 +38,7 @@ The 15 commits gradually add the file header/imports, the optional-bias LayerNor
 | assets/view.js | Original STM chips, syntax, hierarchy scopes and conditional dividers |
 | assets/virtual.js | Natural page-scroll virtualization with measured variable-height code rows |
 | data/manifest.json | Source commit SHAs, per-file indexes, scopes and chunk pointers |
-| data/batches/001-015.json | 76 exact original source-line records introduced in source commits 1–15 |
+| data/batches/*.json | Seven original source-data chunks, indexed in commit-introduction order across four files |
 
 The browser loads code data on demand and mounts only nearby visible rows, rather than creating DOM elements for all source lines. This is the modular foundation for bigger repositories, not a claim that the full 235-commit or million-line build is complete or benchmarked.
 
@@ -51,17 +58,17 @@ Use GitHub Pages, or serve the checked-out folder with a local HTTP server. Do *
 
 For a local checkout: change directory to nanogpt-modular-viewer, run **python3 -m http.server 8000**, then visit http://localhost:8000.
 
-## Continue with Batch 02 (original source commits 16–30)
+## Continue with Batch 05 (original source commits 61–75)
 
-1. Resolve their 15 authentic source SHAs from the same repository, oldest to newest, ignoring HTML and learning/history commits.
-2. Independently fetch each GitHub source snapshot and verify every physical line, comment, indentation, blank and original STM identity.
-3. Append only new lines to data/batches/016-030.json, update per-file chunk pointers, per-source-commit totals and structural scope metadata in data/manifest.json.
-4. Verify Full file, Added only and range filters on each commit. Do not fake missing intermediate code or manufacture extra rows.
-5. Update BATCH_TRACKER.md and QA evidence. Keep the earlier viewer intact.
+1. Identify the authentic source commits 61–75, excluding viewer/docs commits.
+2. Fetch and compare all historical source files and snapshots. Source editing, deletion, renaming or moving must be modeled explicitly; do not assume the next batch stays append-only.
+3. Create the next verified modular JSON chunk(s), extending global STM IDs without altering older IDs; update source lineage and manifest totals/scopes.
+4. Regression-test Full file, Added only, Selected ranges, All commits reset, category colors and conditional code-only dividers, comments/docstrings and virtual scroll stability.
+5. Publish QA and tracker evidence in separate commits; record every user prompt in the historical prompt index. Keep the original single-file prototype intact.
 
 ## Limitations
 
-The first 15 reconstructed commits are verified as append-only in model.py. If later commits edit/delete/rename older lines, the data model must be expanded to versioned line events; do not silently treat them as append-only. Multiple files need new stable file IDs and independently verified per-file cumulative line totals. Very large repositories may need paged scope metadata and browser scroll-height segmentation in addition to windowed DOM rendering. No claim of Android visual testing or completed GitHub Pages deployment is made in this document.
+Through the first **60 source commits**, source histories were verified as append-only; later commits may require versioned edit, deletion, move and rename events. Four original files now have independent IDs, per-file line counts and chunk references. Very large projects may need paged scope metadata and browser scroll-height segmentation in addition to windowed DOM rendering. **Android/desktop visual QA, verified live Pages deployment and high-line-count performance benchmarks have not been completed.**
 
 
 ## UI refinement after the initial Batch 01 — latest accepted version
@@ -79,3 +86,12 @@ This is a **viewer-interface change only**; the 15 historical nanoGPT source com
 [Implementation commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/8b12df7ed3c438438896f09ce0cb52a66d15dee4) · [Focused tests and limitations](QA-UI-REFINEMENT.md).
 
 **Verification boundary:** The source-control and DOM behavior passed static and mocked-DOM tests; actual Android/desktop browser visual rendering and live Pages deployment remain separate checks, not verified in this test report.
+
+## Current Batch 04 milestone — source commits 01–60
+
+- [Verified source manifest](data/manifest.json): **60 commits**, four files, **366 physical lines**, 62 structural scopes, seven independently loadable JSON chunks.
+- [Batch 02 QA](QA-BATCH-002.md), [Batch 03 QA](QA-BATCH-003.md), [Batch 04 QA](QA-BATCH-004.md): real historical snapshot comparisons, introduction-order STM IDs and controlled regression evidence.
+- Viewer shell metadata (title, batch label, file counts) now derives the current batch from the manifest instead of showing stale Batch 01 text. `LICENSE` displays as plain text instead of false Python syntax highlights.
+- The previously accepted palette, sticky controls, filename → STM → code order, in-place category updates, scroll virtualization and the untouched old prototype remain intact.
+
+**Latest implementation QA boundary:** 35 controlled assertions plus mocked DOM identity/scroll preservation checks passed. No independent Android/browser screenshot or published Pages visit was verified.
