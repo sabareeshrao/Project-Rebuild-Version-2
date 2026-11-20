@@ -2,7 +2,7 @@
 
 This is the **UI-specific view** of the larger [chronological full prompt record](PROMPT-INDEX.md). It includes original design requests, bug reports, rejected visual experiments, and implementation approvals. Non-UI conversation prompts (such as source batch counting, architecture plans, and status questions) remain available in the full archive and are **not** listed here.
 
-**34 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
+**36 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
 
 | Prompt | UI request or issue | Record |
 |---:|---|---|
@@ -40,6 +40,8 @@ This is the **UI-specific view** of the larger [chronological full prompt record
 | 064 | Approve compact STM-only chip UI, implementation and prompt-history commit | [View prompt](prompts/064.md) |
 | 065 | Make Comments a toggle within any selected category, retaining hierarchy colors | [View prompt](prompts/065.md) |
 | 069 | Proposal: original Git changes with category-colored chips and struck-through deleted code | [View prompt](prompts/069.md) |
+| 073 | Report original-history UI corruption: changed-only default, lost source styling | [View prompt](prompts/073.md) |
+| 074 | Restore original UI and default complete 159-commit history source view | [View prompt](prompts/074.md) |
 
 For **latest accepted design**, do not use old rejected prompts as specifications. Read [DESIGN-SPEC.md](DESIGN-SPEC.md), [the modular viewer](../nanogpt-modular-viewer/index.html), and [its verified UI QA](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md). For implementation before/after evidence, inspect [GIT-PROVENANCE.md](GIT-PROVENANCE.md). The original screenshots that were only present in ChatGPT were not saved as verifiable files.
 
@@ -48,3 +50,5 @@ For **latest accepted design**, do not use old rejected prompts as specification
 **Latest overlay override — Prompt 065:** The pink **Comments** control is independent of category selection. It may be ON simultaneously with Class / Method / Block / Nested / Lines / File / Directory / Module. Comment/docstring physical lines inside the selected colored scope become pink; other in-scope lines retain category color and outside-scope lines stay neutral. Turning Comments OFF restores base colors. [Viewer QA](../nanogpt-modular-viewer/QA-UI-COMMENTS-OVERLAY.md).
 
 **Proposed future view — Prompt 069 (not implemented):** Integrate original Karpathy nanoGPT commit chronology and show deleted/replaced source code struck through in a dedicated diff display, retaining the original category color on each line's chip. Exact historical snapshot mode must not show deleted lines as current code. Keep a separate lineage/ID registry from the existing 235-commit teaching reconstruction; original Git SHAs and source code must be preserved. User requested understanding of the idea, not immediate implementation. [Prompt 069](prompts/069.md).
+
+**Accepted original-history correction — Prompts 073–074:** Keep the established modular viewer UI unchanged in appearance even when reading Andrej Karpathy's separate real Git source history. Restore its black theme, compact sticky controls, filename-first green STM chip, and Python syntax-highlighted code. **All commits is the default and displays every verified original source-line event** across 159 real first-parent commits (2,729 additions + 804 struck-through deletions) in a continuous native-page scroll. Don't revert to GitHub-style +/− diff rows or changed-only view. The full original-history snapshot remains accessible through Full file. Source data/IDs and legacy viewer remain unchanged. [QA and screenshots caveat](../nanogpt-original-history/QA-RESTORED-UI-ALL-LINES.md).
