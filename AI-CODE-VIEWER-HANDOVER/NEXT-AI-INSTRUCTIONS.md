@@ -49,3 +49,26 @@ Do not extrapolate the original 30-commit single-HTML prototype to 100,000 or mo
 ## New modular viewer baseline — after Prompt 057
 
 Before adding new source commits, preserve the latest [modular viewer](../nanogpt-modular-viewer/index.html) and [UI QA checks](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md). Keep the compact sticky toolbar (not the large masthead) while allowing titles/stats to scroll away. Do not make inactive category buttons gray again: keep their own filled colors. A category-only change must update existing rendered rows in place and preserve page position and virtual measurements; avoid layout-height shifts and mobile browser height-only remeasurement. All commits must clear a jump range and show the latest indexed cumulative source; Full file is tied to the currently selected commit. Display STM-NNN and filename in separate aligned chips, while preserving full STM-NNN-FIL-NNN-filename identity in the immutable source data and DOM attributes. The new modular viewer currently covers 15 actual nanoGPT source commits; the single-HTML 30-commit sample remains an untouched reference.
+
+## Current modular viewer continuation — after Prompt 062 / Batch 04
+
+**The latest canonical modular viewer now indexes 60 of 235 reconstructed nanoGPT original source commits.** It contains 366 genuine physical source lines across `model.py`, `LICENSE`, `.gitignore` and `.gitattributes`, with 7 JSON chunks, 4 file IDs, and 62 structural scopes.
+
+Read these *current* files before starting the next batch:
+- [Modular viewer README](../nanogpt-modular-viewer/README.md)
+- [Manifest with 60 authentic source commits](../nanogpt-modular-viewer/data/manifest.json)
+- [Batches 01–04 tracker](../nanogpt-modular-viewer/BATCH_TRACKER.md)
+- [Batch 02 QA](../nanogpt-modular-viewer/QA-BATCH-002.md)
+- [Batch 03 QA](../nanogpt-modular-viewer/QA-BATCH-003.md)
+- [Batch 04 QA](../nanogpt-modular-viewer/QA-BATCH-004.md)
+- [Prompt 061](prompts/061.md) and [Prompt 062](prompts/062.md)
+
+**Next actual source range:** Batch 05, source commits **061–075**. Do not confuse source commit 61 with Prompt 061 or repository GitHub commit count. The earlier single-HTML reference still indexes only 30 source commits and remains untouched.
+
+From Batch 02 through Batch 04 the original changes were verified to be append-only; this is **not a guarantee** that source commits 61–235 will be. The per-file SourceStore currently uses append-only source-line ranges, so adding an edit/deletion/rename must begin with an explicit versioned line-history data-model extension, not a silent inaccurate append.
+
+Later UI refinements must preserve the filename-first chips, full permanent STM IDs, source code fidelity, the compact sticky toolbar, all color categories, in-place recoloring and natural page virtual scrolling. The user rejected synthetic boundary chips and any project-wide giant HTML. Batch 04 introduced LICENSE: its source must render as plain text rather than falsely highlighted as Python code.
+
+Prompts **061–062** are now recorded in the [62-turn full index](PROMPT-INDEX.md). Record every additional user prompt, not only UI prompts. The 60-prompt coverage audit is a historical snapshot, not the current archive count.
+
+**Verification boundary:** The implementation passed source-snapshot equality tests and 35 controlled regression assertions plus a mocked-DOM scroll-preservation check. Live Android/desktop visual tests, Pages deployment and 100k+ line performance remain unverified.
