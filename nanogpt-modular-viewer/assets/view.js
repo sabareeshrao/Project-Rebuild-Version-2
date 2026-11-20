@@ -71,6 +71,18 @@ export function chipColor(line, category, manifest, fileId) {
     label:line.n===scope.from ? category.toUpperCase()+' · '+scope.id+' · '+scope.name : ''};
 }
 
+// Independent Comments toggle: the chosen hierarchy still owns each row.
+// Only standalone # comments and documentation inside that selected category
+// turn pink. Out-of-scope rows remain neutral; IDs and source are untouched.
+export function chipColorWithComments(line,context) {
+  const base=chipColor(line,context.category,context.manifest,context.fileId);
+  const isDocumentation=line.kind==='comment'||line.kind==='docstring';
+  if(!context.commentsOverlay||!isDocumentation||base.background===NEUTRAL.background)
+    return base;
+  return {...base,background:COLORS.comment,ink:'#fff',
+    overlayKind:line.kind==='docstring'?'documentation':'standalone comment'};
+}
+
 // Find the first true Python # outside quoted strings. Inline trailing comments
 // are syntax highlighted; executable lines do NOT become COMMENT chips.
 function commentStart(s) {
@@ -125,16 +137,17 @@ function metadataFor(line,color,context) {
 // Used by both freshly mounted virtual rows and IN-PLACE category changes.
 // Never reset heights or replace source/code DOM simply to switch categories.
 export function applyRowCategory(row,line,previous,context) {
-  const color=chipColor(line,context.category,context.manifest,context.fileId);
+  const color=chipColorWithComments(line,context);
   const chip=row.querySelector('.line-chip');
   const code=row.querySelector('.code-cell');
   if(!chip||!code)throw new Error('Missing source row elements');
   chip.style.setProperty('--chip-bg',color.background);
   chip.style.setProperty('--chip-ink',color.ink);
   const contextLabel=metadataFor(line,color,context);
-  // Retain complete STM and scope detail as accessible metadata, never visible chip text.
+  // The overlay is visual-only; group and commit provenance stay accessible.
+  const accessibleDetail=[contextLabel,color.overlayKind].filter(Boolean).join(' · ');
   chip.setAttribute('aria-label','Original source '+line.id+
-    (contextLabel?' · '+contextLabel:''));
+    (accessibleDetail?' · '+accessibleDetail:''));
   code.classList.toggle('category-divider',
     needsDivider(previous,line,context.category,context.manifest,context.fileId));
 }
