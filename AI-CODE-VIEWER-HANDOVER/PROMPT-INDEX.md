@@ -1,8 +1,8 @@
-# Chronological Prompt Index — 65 User Turns
+# Chronological Prompt Index — 66 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **65 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
+Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **66 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
 
-**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 65 records.
+**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 66 records.
 
 | # | Prompt focus | Historical record |
 |---:|---|---|
@@ -71,6 +71,7 @@ Each file below has the **user's prompt**, the assistant's observable outcome (c
 | 063 | Screenshot feedback: remove redundant hierarchy and commit text from source chips | [Prompt 063](prompts/063.md) |
 | 064 | Approve STM-only colored chips; implement and commit prompt history | [Prompt 064](prompts/064.md) |
 | 065 | Comments toggle overlays pink documentation within selected hierarchy | [Prompt 065](prompts/065.md) |
+| 066 | Verify whether 235 nanoGPT commits are file-first or real developer evolution | [Prompt 066](prompts/066.md) |
 
 The full archive covers **more than UI tweaks**: source-code identity, architecture, commit archaeology, batch planning, tests, review feedback and communication. For a UI-only curated list, use [UI-CHANGE-INDEX.md](UI-CHANGE-INDEX.md). For verified counts and important fidelity limits, use [PROMPT-COVERAGE-AUDIT.md](PROMPT-COVERAGE-AUDIT.md).
 
@@ -109,3 +110,5 @@ If a new AI finds a conflict between an earlier and a later prompt, the later ex
 - **063–064:** new accepted UI: filename (neutral) → one colored **STM-NNN** chip → actual source code. Do not show visible group labels or commit markers in STM chips; color identifies the category. Keep full IDs, scope provenance and optional accessible labels internally. [Implementation renderer](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/e514141bb688f04fcb03f8de0a3363926aa3b02b), [compact CSS](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/edcbc56f818dc87c13bdfcad64c1b968abf2fc81), [24 controlled QA checks](../nanogpt-modular-viewer/QA-UI-COMPACT-STM-CHIPS.md). No original source or prototype changes.
 
 - **065:** Comments button now independently toggles pink comments/docstrings **inside whichever structural group is selected**, without changing primary category or recoloring out-of-scope lines. Existing STM-only chips, source history and in-place virtualized rendering stay intact. [Implementation](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/c1b0f00c1b94d5b194a09478b5a8c88dfba9fbd8) · [41 focused checks](../nanogpt-modular-viewer/QA-UI-COMMENTS-OVERLAY.md).
+
+- **066:** inspected full oldest 235 rebuild commit sequence and confirmed it is *deliberately file/subsystem sequential*, not the author's real historical back-and-forth development timeline. `model.py` is complete within source commits 001–057 and never revisited in the 235 reconstructed commits. The distinction matters for teaching authentic source growth versus organic development; no code or UI changes were made. [Prompt 066 evidence](prompts/066.md).
