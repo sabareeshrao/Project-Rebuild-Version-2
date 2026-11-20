@@ -1,9 +1,66 @@
 import {OriginalHistory} from './history.js';
-import {syntaxHTML,sourceKind} from './syntax.js';
+import {syntaxHTML,sourceKind,classifyFileLines} from './syntax.js';
 
 const $=id=>document.getElementById(id);
-const state={commit:1,mode:'all',selection:null,file:''};
+const state={commit:1,mode:'all',selection:null,file:'',category:'line',commentsOverlay:false};
 let manifest=null,history=null,windowRows=null,allEvents=[];
+let filePalette=new Map();
+const classified=new WeakMap();
+const storageKey='nanogpt-original-history-viewer-preferences-v1';
+
+function saveState(){
+  try{
+    localStorage.setItem(storageKey,JSON.stringify({
+      commit:state.commit,mode:state.mode,selection:state.selection,file:state.file,
+      category:state.category,commentsOverlay:state.commentsOverlay
+    }));
+  }catch(_){/* Storage may be disabled; normal navigation still works. */}
+}
+function restoreState(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(storageKey)||'null');
+    if(!saved||typeof saved!=='object')return;
+    if(['all','full','added','selected'].includes(saved.mode))state.mode=saved.mode;
+    if(['line','file'].includes(saved.category))state.category=saved.category;
+    state.commentsOverlay=saved.commentsOverlay===true;
+    if(Number.isInteger(saved.commit)&&saved.commit>=1&&saved.commit<=manifest.dataAvailableThrough)
+      state.commit=saved.commit;
+    if(saved.selection&&Number.isInteger(saved.selection.start)&&
+      Number.isInteger(saved.selection.end)&&saved.selection.start>=1&&
+      saved.selection.end<=manifest.dataAvailableThrough&&
+      saved.selection.start<=saved.selection.end){
+      state.selection={start:saved.selection.start,end:saved.selection.end};
+    }
+    const allowed=[...$('file-select').options].some(o=>o.value===saved.file);
+    if(allowed&&typeof saved.file==='string'){state.file=saved.file;$('file-select').value=saved.file;}
+    if(state.mode==='selected'&&!state.selection)
+      state.selection={start:state.commit,end:state.commit};
+  }catch(_){/* Invalid/blocked storage cannot prevent viewing original source. */}
+}
+function classifications(path,lines){
+  let paths=classified.get(lines);
+  if(!paths){paths=new Map();classified.set(lines,paths);}
+  if(!paths.has(path))paths.set(path,classifyFileLines(path,lines));
+  return paths.get(path);
+}
+function chipPaint(entry){
+  const index=filePalette.get(entry.path)??0;
+  const overlay=state.commentsOverlay&&
+    (entry.lineKind==='comment'||entry.lineKind==='docstring');
+  const color=overlay?'#db2777':state.category==='file'
+    ?(index%2===0?'#00bfff':'#008cff'):'#15803d';
+  return {color,ink:state.category==='file'&&!overlay?'#06192d':'#fff',
+    label:overlay?'Comments overlay':state.category==='file'?'File category':'Lines category'};
+}
+function paintRow(row,entry){
+  const chip=row.querySelector('.line-chip');
+  if(!chip)throw new Error('Source row is missing its STM chip');
+  const paint=chipPaint(entry);
+  chip.style.setProperty('--chip-bg',paint.color);
+  chip.style.setProperty('--chip-ink',paint.ink);
+  chip.setAttribute('aria-label',entry.item.id+' · '+paint.label+
+    ' · original file '+entry.path);
+}
 const sourceBase='https://github.com/karpathy/nanoGPT/commit/';
 const pad=n=>String(n).padStart(3,'0');
 
@@ -46,9 +103,6 @@ function htmlRow(entry,index) {
   file.setAttribute('aria-label','Original source file '+path);
   const chip=document.createElement('div');
   chip.className='line-chip';
-  chip.style.setProperty('--chip-bg','#15803d');
-  chip.style.setProperty('--chip-ink','#fff');
-  chip.setAttribute('aria-label',item.id+' · green Lines category');
   const number=document.createElement('div');
   number.className='line-id';
   number.textContent=item.id;
@@ -67,9 +121,10 @@ function htmlRow(entry,index) {
   code.className='code-content';
   // Faithful original code side: punctuation, spacing, Python colors, no diff signs.
   // Escaping is performed in syntaxHTML before assigning innerHTML.
-  code.innerHTML=syntaxHTML(source.slice(leading.length),sourceKind(path,source));
+  code.innerHTML=syntaxHTML(source.slice(leading.length),entry.lineKind||sourceKind(path,source));
   cell.append(indent,code);
   row.append(chips,cell);
+  paintRow(row,entry);
   return row;
 }
 
@@ -79,7 +134,7 @@ class HistoryWindow {
   constructor(host,windowElement,top,bottom){
     this.host=host;this.rows=windowElement;this.top=top;this.bottom=bottom;
     this.estimate=43;this.items=[];this.count=0;this.bit=new Float64Array(1);
-    this.measured=new Map();this.rendered=null;this.frame=0;this.version=0;
+    this.measured=new Map();this.rendered=null;this.frame=0;this.version=0;this.sourceKey=null;
     this.lastViewportWidth=window.innerWidth;
     this.observer=new ResizeObserver(entries=>{
       let changed=false;
@@ -104,12 +159,31 @@ class HistoryWindow {
       this.schedule();
     },{passive:true});
   }
-  set(items){
+  set(items,key){
+    // Category toggles and All-commits navigation recolor EXISTING mounted
+    // source rows. Don't rebuild the DOM, measurements or scroll position.
+    if(key===this.sourceKey){this.recolor();return false;}
+    this.sourceKey=key;
     this.items=items;this.count=items.length;this.version++;
     this.measured.clear();this.bit=new Float64Array(this.count+1);
     this.rendered=null;
     this.observer.disconnect();this.rows.replaceChildren();
-    this.positionSpacers();this.schedule();
+    this.positionSpacers();this.schedule();return true;
+  }
+  recolor(){
+    for(const row of this.rows.children){
+      const index=Number(row.dataset.rowIndex);
+      const entry=this.items[index];
+      if(entry)paintRow(row,entry);
+    }
+  }
+  scrollToCommit(commit){
+    const index=this.items.findIndex(entry=>entry.commit>=commit);
+    if(index<0)return;
+    const sticky=$('sticky-tools').getBoundingClientRect().height;
+    const top=window.scrollY+this.host.getBoundingClientRect().top+
+      this.position(index)-sticky-10;
+    window.scrollTo({top:Math.max(0,top),behavior:'auto'});
   }
   deltaPrefix(n){let s=0;for(let i=n;i>0;i-=i&-i)s+=this.bit[i];return s;}
   position(n){return n*this.estimate+this.deltaPrefix(n);}
@@ -171,11 +245,19 @@ function collectAllEvents(){
   for(let commit=1;commit<=manifest.dataAvailableThrough;commit++){
     const snapshot=history.snapshots.get(commit);
     if(!snapshot)throw new Error('Unverified source snapshot at '+commit);
-    // Preserve GitHub's actual per-commit file ordering, then hunk ordering.
-    for(const file of snapshot.fileStats)
-      for(const record of snapshot.changes)
-        if(record.path===file.path)
-          rows.push({path:record.path,item:record.item,kind:record.kind,commit});
+    // Use the prior snapshot for removed lines and the new snapshot for additions:
+    // a deleted comment retains its true historical comment/docstring identity.
+    const before=history.snapshots.get(commit-1);
+    for(const file of snapshot.fileStats){
+      const newKinds=classifications(file.path,snapshot.files.get(file.path)||[]);
+      const oldKinds=classifications(file.path,before.files.get(file.path)||[]);
+      for(const record of snapshot.changes){
+        if(record.path!==file.path)continue;
+        const lineKind=(record.kind==='del'?oldKinds:newKinds).get(record.item.id)
+          ||sourceKind(file.path,record.item.text);
+        rows.push({path:record.path,item:record.item,kind:record.kind,commit,lineKind});
+      }
+    }
   }
   return rows;
 }
@@ -184,12 +266,17 @@ function getRows(){
   if(state.mode==='full'){
     const snapshot=history.snapshots.get(state.commit);
     rows=[];
-    for(const [path,lines] of snapshot.files)
-      for(const item of lines)rows.push({path,item,kind:'context',commit:state.commit});
+    for(const [path,lines] of snapshot.files){
+      const kinds=classifications(path,lines);
+      for(const item of lines)
+        rows.push({path,item,kind:'context',commit:state.commit,
+          lineKind:kinds.get(item.id)||sourceKind(path,item.text)});
+    }
   }else if(state.mode==='all')rows=allEvents;
   else{
-    const first=state.mode==='selected'&&state.selection?state.selection.start:state.commit;
-    const last=state.mode==='selected'&&state.selection?state.selection.end:state.commit;
+    const selection=(state.mode==='selected'||state.mode==='added')?state.selection:null;
+    const first=selection?selection.start:state.commit;
+    const last=selection?selection.end:state.commit;
     rows=allEvents.filter(r=>r.commit>=first&&r.commit<=last &&
       (state.mode!=='added'||r.kind==='add'));
   }
@@ -219,10 +306,10 @@ function display(){
   const sha=isAll?manifest.commits[manifest.dataAvailableThrough-1]:meta;
   $('commit-link').href=sourceBase+sha.sha;
   $('commit-link').textContent=sha.sha.slice(0,12)+' · Original nanoGPT commit';
-  $('commit-indicator').textContent=isAll?manifest.dataAvailableThrough+' / '+manifest.commitCount:
+  $('commit-indicator').textContent=isAll?state.commit+' / '+manifest.commitCount:
     state.mode==='selected'&&bounds&&bounds.start!==bounds.end
     ? bounds.start+'–'+bounds.end : String(state.commit);
-  $('previous').disabled=state.commit<=1 && !isAll;
+  $('previous').disabled=state.commit<=1;
   $('next').disabled=state.commit>=manifest.dataAvailableThrough;
   $('file-name').textContent=state.file||'All files';
   $('batch-indicator').textContent='Original nanoGPT Git history · '+manifest.commitCount+' real first-parent commits';
@@ -230,35 +317,51 @@ function display(){
     const pressed=b.dataset.action==='all'?isAll:b.dataset.mode===state.mode;
     b.setAttribute('aria-pressed',String(pressed));
   });
+  $('categories').querySelectorAll('button[data-kind]').forEach(button=>{
+    button.setAttribute('aria-pressed',String(button.dataset.kind==='comment'
+      ?state.commentsOverlay:button.dataset.kind===state.category));
+  });
   const rows=getRows();
   const deleted=rows.filter(r=>r.kind==='del').length;
   const added=rows.filter(r=>r.kind==='add').length;
   const fileCount=new Set(rows.map(r=>r.path)).size;
   $('file-meta').textContent=rows.length+' source rows · '+fileCount+' files';
-  $('hint').textContent=isAll
-    ? 'All commits: every indexed original source addition and deletion, chronological across files. Deleted code is struck through; green STM chips stay.'
+  const scope=state.category==='file'?'File colors':'Green Lines';
+  const overlay=state.commentsOverlay?' · Comments ON (pink)':' · Comments OFF';
+  $('hint').textContent=(isAll
+    ? 'All commits: chronological source additions and struck-through deletions across real files.'
     :state.mode==='full'
-    ? 'Full file: all surviving source lines at original commit '+state.commit+'. Select All commits to include historical deletions.'
-    :'Original Git change lines for selected commit(s). Select All commits for the complete historical source.';
+      ? 'Full file: all source lines surviving original commit '+state.commit+'.'
+      :state.mode==='added'
+        ? 'Added only: actual new source lines from selected original commit(s).'
+        : 'Selected: genuine source additions and struck-through deletions.')+
+      ' '+scope+overlay+'.';
   const incomplete=history.snapshots.get(manifest.dataAvailableThrough).unavailableTextFiles;
   const warning=incomplete&&incomplete.size>0;
-  message('Showing '+rows.length+' original line events ('+added+' added, '+deleted+' deleted) across '+fileCount+
+  message('Showing '+rows.length+(state.mode==='full'?' surviving source lines':' original line events')+
+    ' ('+added+' added, '+deleted+' deleted) across '+fileCount+
     ' files. '+(warning?'One oversized historical notebook patch is unavailable; all Python source is verified.':''),false,warning);
-  windowRows.set(rows);
+  const scopeKey=state.mode==='all'?'all':state.mode==='full'
+    ?'full:'+state.commit
+    :state.mode+':'+(state.selection?.start??state.commit)+'-'+
+      (state.selection?.end??state.commit);
+  windowRows.set(rows,scopeKey+'|'+state.file);
 }
 function selectCommit(n){
   if(!Number.isInteger(n)||n<1||n>manifest.dataAvailableThrough)return;
   state.commit=n;
-  if(state.mode==='all')state.mode='full';
-  if(state.mode==='selected')state.selection={start:n,end:n};
-  display();
+  if(state.mode==='selected'||state.mode==='added')
+    state.selection={start:n,end:n};
+  $('jump-input').value=String(n);
+  saveState();display();
+  if(state.mode==='all')windowRows.scrollToCommit(n);
 }
 function allCommits(){
-  state.mode='all';state.commit=manifest.dataAvailableThrough;
-  state.selection=null;state.file='';$('file-select').value='';
-  $('jump-input').value='';
+  // Mode is the only dimension changed. Keep file, category, comments,
+  // commit and saved selection ready for the next mode switch.
+  state.mode='all';
   $('jump-input').removeAttribute('aria-invalid');
-  display();
+  saveState();display();
 }
 function attach(){
   $('previous').addEventListener('click',()=>selectCommit(state.commit-1));
@@ -269,9 +372,17 @@ function attach(){
     if(button.dataset.action==='all'){allCommits();return;}
     if(!button.dataset.mode)return;
     state.mode=button.dataset.mode;
-    if(state.mode==='selected'&&!state.selection)state.selection={start:state.commit,end:state.commit};
-    if(state.mode==='full')state.selection=null;
-    display();
+    if((state.mode==='selected'||state.mode==='added')&&!state.selection)
+      state.selection={start:state.commit,end:state.commit};
+    saveState();display();
+  });
+  $('categories').addEventListener('click',e=>{
+    const button=e.target.closest('button[data-kind]');
+    if(!button||button.disabled)return;
+    if(button.dataset.kind==='comment')state.commentsOverlay=!state.commentsOverlay;
+    else if(['file','line'].includes(button.dataset.kind))state.category=button.dataset.kind;
+    else return;
+    saveState();display();
   });
   $('jump-form').addEventListener('submit',e=>{
     e.preventDefault();
@@ -285,12 +396,13 @@ function attach(){
     }
     input.removeAttribute('aria-invalid');
     state.commit=selected.end;state.selection=selected;
-    // A single commit defaults to complete surviving source, not just a Git diff.
-    state.mode=selected.start===selected.end?'full':'selected';
-    display();
+    // Jump changes the numbered commit/range ONLY. Preserve view mode,
+    // filename filter, File/Lines category and independent Comments overlay.
+    saveState();display();
+    if(state.mode==='all')windowRows.scrollToCommit(selected.start);
   });
   $('jump-input').addEventListener('input',()=>$('jump-input').removeAttribute('aria-invalid'));
-  $('file-select').addEventListener('change',e=>{state.file=e.target.value;display();});
+  $('file-select').addEventListener('change',e=>{state.file=e.target.value;saveState();display();});
   document.addEventListener('keydown',e=>{
     if(e.altKey||e.ctrlKey||e.metaKey||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
     if(e.key==='ArrowLeft')selectCommit(state.commit-1);
@@ -311,9 +423,12 @@ async function start(){
     message('Reconstructing '+manifest.dataAvailableThrough+' genuine Git commits and their source lines…');
     await history.get(manifest.dataAvailableThrough);
     allEvents=collectAllEvents();
+    filePalette=new Map();
+    for(const entry of allEvents)
+      if(!filePalette.has(entry.path))filePalette.set(entry.path,filePalette.size);
     state.commit=manifest.dataAvailableThrough;
     windowRows=new HistoryWindow($('line-area'),$('line-window'),$('top-spacer'),$('bottom-spacer'));
-    setFileOptions();attach();display();
+    setFileOptions();restoreState();attach();display();
   }catch(error){
     message('Historical viewer could not initialize: '+error.message+
       (location.protocol==='file:'?' Open the GitHub Pages URL over HTTP(S).':''),true);
