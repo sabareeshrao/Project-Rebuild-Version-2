@@ -25,8 +25,8 @@ The user will hand you a NEW GitHub repository. Replicate the evolving code-ID H
 - Wrapped continuation starting at column zero; hanging indentation required.
 - Green source comments turning pink by default.
 - Treating a Python assignment with trailing `# explanation` as a comment-only line.
-- Using all-green visual gap rows for structural changes. Instead, use **sky-blue `#38BDF8` boundary rows** only at real file/class/method/block/nested scope starts. They have no STM IDs. Never suppress a genuine blank source line or its ID.
-- Keeping original blank lines green inside a selected class/method/block/nested/file/package/module: blanks should inherit that selected scope color. In default Lines mode blanks and comments remain green.
+- Reintroducing **rejected sky-blue boundary chips** (Prompt 046 explicitly reverted them).
+- Recoloring real blank-line chips with the enclosing class/method/block/file color. Real blanks always remain **green**, including in selected hierarchy views. Unlabeled green display-only gaps may provide separation where source has no blank.
 - Treating Python triple-quoted docstrings as ordinary code when Comments is selected, or incorrectly treating assigned triple-quoted strings as comment-only rows.
 - Huge unwieldy row of commit buttons instead of compact stepper plus jump/range.
 - Assuming package/module semantics when the project language or directory does not support them.
@@ -36,4 +36,4 @@ The user will hand you a NEW GitHub repository. Replicate the evolving code-ID H
 Provide a working file link (and Pages link only if configured/confirmed), code source, commit SHA(s), count of inspected snapshots, count of source lines, ID coverage, clear known limitations, and a QA report. If the next project has 100k+ lines, use virtualized rendering and data chunking while retaining natural document/page navigation. Verify on mobile.
 
 ## Reuse existing version
-Reference implementation: [reference/LATEST-30-COMMITS.html](reference/LATEST-30-COMMITS.html), including sky-blue structural-start boundaries and Python docstring detection. Treat this as a working design example and a historical artifact, not an infallible general-purpose implementation. It indexes only an append-only Python file and hardcodes a limited commit range. Replace its hardcoded data and assumptions when adapting. 
+Reference implementation: [reference/LATEST-30-COMMITS.html](reference/LATEST-30-COMMITS.html), including the restored green blanks/gaps and Python docstring detection. Treat this as a working design example and a historical artifact, not an infallible general-purpose implementation. It indexes only an append-only Python file and hardcodes a limited commit range. Replace its hardcoded data and assumptions when adapting. 
