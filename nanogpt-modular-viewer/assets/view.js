@@ -152,13 +152,15 @@ export function makeRow(line,previous,index,context) {
   const meta=document.createElement('div');meta.className='chip-meta'; // fixed reserved slot
   const id=document.createElement('div');id.className='line-id';
   id.textContent=(line.id.match(/^STM-\d+/)||[line.id])[0];
-  chip.appendChild(meta);chip.appendChild(id);left.appendChild(chip);
+  chip.appendChild(meta);chip.appendChild(id);
 
   const filename=document.createElement('div');
   filename.className='filename-chip';
   filename.textContent=file.path.split('/').pop() || file.path;
   filename.setAttribute('aria-label','File '+file.path);
+  // Filename first, category-colored STM chip second, original code on the right.
   left.appendChild(filename);
+  left.appendChild(chip);
 
   const code=document.createElement('div');code.className='code-cell';
   const leading=(line.text.match(/^[ \t]*/)||[''])[0];
