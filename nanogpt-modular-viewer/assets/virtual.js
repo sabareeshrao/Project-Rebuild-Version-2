@@ -47,10 +47,12 @@ export class WindowedRows {
       &&(previous.selection?.start??null)===(next.selection?.start??null)
       &&(previous.selection?.end??null)===(next.selection?.end??null);
     if(sameSourceRange){
-      // Category-only update: keep scroll position, DOM nodes, row heights,
-      // source-chunk cache, virtual spacers and source-line anchors unchanged.
+      // Category and independent Comments-overlay updates keep the same DOM,
+      // virtual row measurements, source cache and natural page scroll.
       this.context=next;
-      if(previous.category!==next.category&&this.rendered&&this.visibleSource){
+      if((previous.category!==next.category ||
+          previous.commentsOverlay!==next.commentsOverlay)
+        && this.rendered && this.visibleSource){
         for(let index=this.rendered.start;index<this.rendered.end;index++){
           const line=this.visibleSource[index-this.visibleSourceFirstIndex];
           const preceding=index>0?this.visibleSource[index-this.visibleSourceFirstIndex-1]:null;
