@@ -21,10 +21,11 @@ Scope IDs are separate, e.g. `CLS-001-FIL-001-model.py`, `MTH-001-FIL-001-model.
 - Left: one chip per actual source line, vertically centered and as tall as that line's wrapped code.
 - Right: ORIGINAL source text; use monospace, syntax highlighting, and preserved leading indentation. Wrapped continuation stays under the code's indentation, not flush left. No horizontal scrolling. Full page flows vertically; no internal fixed-height scrollbar. Handle deeply indented long lines without clipping.
 - Category selection is via compact top buttons. Rather than nesting layout boxes, change chip background across the selected category's whole range. The first colored chip shows `CLASS · CLS-001 · ClassName` or analogous group name; every line retains its original STM ID.
-- A visible spacer may be inserted only at a class/method/file/package/module boundary lacking a real empty source line. It is always green and **has no STM ID**; never count it as original source or write it back into source.
-- All real empty source lines must ALWAYS have green chips regardless of selected category.
+- At each **actual start of a file, class, method, code block, or nested block**, insert a separate **sky-blue `#38BDF8` visual-only boundary row** with dark foreground `#082F49`, labeling the new scope. It has **no STM ID** and is not a physical source line; group multiple simultaneous starts into a single boundary row.
+- Every actual empty source line remains visible with its real STM ID. In a selected hierarchy (Class/Method/Block/Nested/File/Package/Module), its chip **inherits the enclosing scope color**. In default Lines or Comments mode the blank-line chip stays green unless it is itself content within a recognized documentation block. Blank lines outside a selected scope stay green.
+- Sky blue is reserved for actual new-scope boundaries, not original empty lines. Do not add generic green separator rows or hide original blank lines.
 - Default screen is **Lines**, so ALL physical source lines start green including comments.
-- Comments turn pink only after clicking **Comments**, and only when the line is solely a comment (`^\s*#` in simple Python code). A code statement with a trailing `#` remains green. Syntax coloring of code/comments is separate from chip color.
+- **Comments mode** turns standalone `#` comment lines and standalone Python triple-quoted documentation blocks (`"""` or `'''`) pink, including multiline documentation content. An executable statement with an inline `#` stays green. Ordinary triple-quoted values assigned to variables or passed as arguments remain code, not documentation. A Python docstring is technically a string literal, but the UI groups it with comment-like documentation. Comments and docstrings stay green in default Lines mode. Syntax coloring is independent of chip colors.
 
 ## Colors, exact accepted hex values
 | Category | Chip |
@@ -39,7 +40,9 @@ Scope IDs are separate, e.g. `CLS-001-FIL-001-model.py`, `MTH-001-FIL-001-model.
 | Method | Blue `#2563EB` |
 | Code Block | Orange `#EA580C` |
 | Nested Block | Yellow `#FACC15`, dark foreground |
-| Lines / blank lines | Green `#15803D` |
+| Lines (default, including original blank lines) | Green `#15803D` |
+| Blank lines in selected hierarchy | Inherit selected scope chip color |
+| Structural boundary (synthetic, no STM) | Sky blue `#38BDF8` with dark text `#082F49` |
 | Comments (only when selected) | Pink `#DB2777` |
 | File A/B | Cream `#EAD7B7` / Cyan `#06B6D4` |
 | Package or directory A/B | Brown `#78350F` / Silver `#94A3B8` |

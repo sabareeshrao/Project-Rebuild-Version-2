@@ -8,8 +8,10 @@
 - [ ] Validate IDs unique, correctly formatted and monotonic by introduction order. Every physical line including blanks and comments has exactly one ID.
 - [ ] Validate scope ranges (class, method, nested blocks), including incomplete snippets in early commits. Never invent a full method or closing brace not present yet.
 - [ ] When a commit range is selected, show **only its additions**, not all cumulative earlier code. Test 1, 5, 5-10, 1-N, N, invalid 0, >N, reversed ranges.
-- [ ] Distinguish standalone comments and statements with inline comments. Pink only for standalone in Comments mode.
-- [ ] Every source blank and every display gap is green in all hierarchy views. Synthetic gaps have NO source STM IDs and do not affect source line count.
+- [ ] Distinguish standalone `#` comments, standalone triple-quoted Python documentation, statements with inline comments, and assigned string literals. Only standalone comments/documentation become pink in Comments mode.
+- [ ] Every original source blank line remains in the viewer with its genuine STM ID and takes the selected enclosing hierarchy's chip color, remaining green in default Lines/Comments mode or outside selected scopes.
+- [ ] New structural scope starts have **high-contrast sky-blue `#38BDF8` boundary rows** (no STM IDs, no change to source line count). Never simulate them with all-green gaps or hide original blanks.
+- [ ] Python triple-quoted documentation (`"""`, `'''`) becomes pink in Comments mode including multiline interiors; triple-quoted assigned values and regular inline comments stay code/green.
 
 ## Layout
 - [ ] All visible original source lines appear and source text is readable, with syntax colors, indentation and no truncation.
