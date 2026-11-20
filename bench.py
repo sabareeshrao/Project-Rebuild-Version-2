@@ -109,3 +109,9 @@ else:
             optimizer.step()
             lossf = loss.item()
             print(f"{k}/{num_steps} loss: {lossf:.4f}")
+        torch.cuda.synchronize()
+        t1 = time.time()
+        dt = t1-t0
+        mfu = model.estimate_mfu(batch_size * 1 * num_steps, dt)
+        if stage == 1:
+            print(f"time per iteration: {dt/num_steps*1000:.4f}ms, MFU: {mfu*100:.2f}%")
