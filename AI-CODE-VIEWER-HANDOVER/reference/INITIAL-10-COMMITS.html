@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Commit ID Explorer — nanoGPT · First 10 Commits</title>
+<style>
+:root{color-scheme:dark;--bg:#000;--panel:#171717;--button:#303030;--border:#383838;--muted:#A3A3A3;--text:#fff;--class:#DC2626;--method:#2563EB;--block:#EA580C;--nested:#FACC15;--line:#15803D}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Roboto,Arial,system-ui,sans-serif}
+.page{max-width:1440px;margin:auto;padding:18px clamp(12px,3vw,34px) 32px}
+.header{display:flex;gap:14px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;color:#a3a3a3;font-weight:800;font-size:10px}
+h1{font-size:clamp(22px,3vw,32px);letter-spacing:-.025em;margin:2px 0 3px}
+.muted{color:var(--muted)}.subtitle{margin:0;font-size:12px}
+a{color:#93c5fd;text-decoration:none}a:hover{text-decoration:underline}
+.stats{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.stat{background:var(--panel);border:1px solid var(--border);padding:8px 12px;border-radius:10px;min-width:90px}
+.stat b{font-size:18px;display:block;font-variant-numeric:tabular-nums}.stat span{display:block;color:var(--muted);font-size:10px}
+.toolbar{margin-top:16px;border:1px solid var(--border);border-radius:14px;background:#111;padding:12px}
+.tools-row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.commit-nav,.tabs,.actions{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+button{border:1px solid #414141;background:#303030;color:#f7f7f7;border-radius:8px;font:600 12px Roboto,Arial,sans-serif;min-height:35px;min-width:35px;padding:7px 10px;cursor:pointer}
+button:hover{filter:brightness(1.18)}button:focus-visible,a:focus-visible{outline:2px solid #93c5fd;outline-offset:3px}
+button[aria-pressed="true"]{background:#fff;color:#000;border-color:#fff}
+.level{--chip:#15803D;border-color:var(--chip);background:var(--chip);color:#fff;white-space:nowrap}
+.level[data-kind="nested"]{color:#302400}
+.level[aria-pressed="true"]{outline:2px solid #fff;outline-offset:2px;background:var(--chip);color:#fff}
+.level[data-kind="nested"][aria-pressed="true"]{color:#302400}
+.group-title{font-size:11px;color:#bcbcbc;margin:10px 0 6px;font-weight:650}
+.meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+#commit-title{font-size:15px;font-weight:750;letter-spacing:-.01em}
+.hash{font:12px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+.guide{font-size:12px;color:var(--muted);margin-top:8px}
+.view{margin-top:12px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#050505}
+.filebar{padding:9px 12px;background:#181818;border-bottom:1px solid #303030;display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;font-size:12px}
+.filebar strong{color:#fff}.filebar span{color:#a3a3a3}
+.scroll{overflow:auto;height:min(65vh,650px);overscroll-behavior:contain;scrollbar-color:#555 #111}
+.code-grid{min-width:930px;min-height:100%;padding:8px 0 15px}
+.code-row{display:grid;grid-template-columns:348px minmax(660px,1fr);align-items:center;min-height:47px;padding:2px 8px 2px 0;border-bottom:1px solid rgba(255,255,255,.045)}
+.code-row:hover{background:#161616}
+.chip-wrap{position:sticky;left:0;z-index:2;background:#050505;padding:1px 10px 1px 12px}
+.code-row:hover .chip-wrap{background:#161616}
+.chip{display:flex;flex-direction:column;justify-content:center;gap:1px;background:var(--color);border-radius:7px;padding:4px 9px;height:39px;max-width:100%}
+.chip.yellow{color:#302400}.chip:not(.yellow){color:#fff}
+.chip-label{height:14px;line-height:14px;font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip-id{line-height:14px;white-space:nowrap;font-size:10px;font-weight:700;letter-spacing:-.015em}
+.code{padding:4px 12px;font:12.5px/1.7 'JetBrains Mono','Fira Code',Consolas,'Liberation Mono',monospace;white-space:pre;tab-size:4;overflow:visible;min-width:max-content}
+.code.empty{color:#696969}
+.new .code{box-shadow:inset 3px 0 #22c55e}
+.keyword{color:#c792ea}.string{color:#c3e88d}.comment{color:#7b8994}.builtin{color:#82aaff}.function{color:#82aaff}
+.footer{margin:10px 0 0;font-size:11px;color:var(--muted);max-width:950px}
+@media(max-width:700px){.page{padding:10px 10px 22px}.stat{min-width:76px}.tools-row{align-items:flex-start}.toolbar{padding:10px}.code-grid{min-width:830px}.code-row{grid-template-columns:280px minmax(560px,1fr)}.chip-id{font-size:9px}.chip-wrap{padding-left:7px;padding-right:7px}.code{font-size:11.5px}.scroll{height:62vh}}
+</style></head>
+<body><main class="page">
+<header class="header"><div><div class="eyebrow">Commit-first source code index · actual Git history</div><h1>nanoGPT · Code ID Explorer</h1><p class="subtitle">Repository: <a href="https://github.com/sabareeshrao/Project-Rebuild-Version-2" target="_blank" rel="noopener">Project-Rebuild-Version-2</a> · <b>model.py</b> · First 10 commits</p></div>
+<div class="stats"><div class="stat"><b id="total-lines">50</b><span>Lines in selected commit</span></div><div class="stat"><b id="added-lines">5</b><span>New lines this commit</span></div><div class="stat"><b>1–10</b><span>Chronological commits</span></div></div></header>
+<section class="toolbar" aria-label="Code navigation">
+<div class="tools-row"><div class="commit-nav"><button id="prev" title="Previous commit" aria-label="Previous commit">←</button><span style="font-size:11px;color:#a3a3a3;margin:0 4px">COMMIT</span><div id="commit-buttons" class="commit-nav"></div><button id="next" title="Next commit" aria-label="Next commit">→</button></div>
+<div class="actions"><button id="full" aria-pressed="true">Full file</button><button id="added" aria-pressed="false">Added only</button></div></div>
+<div class="meta"><span id="commit-title"></span><a id="commit-link" class="hash" target="_blank" rel="noopener"></a></div>
+<div class="group-title">COLOR BY HIERARCHY — CHOOSE A LEVEL</div>
+<div class="tabs" id="levels">
+<button class="level" style="--chip:#DC2626" data-kind="class" aria-pressed="false">Class</button>
+<button class="level" style="--chip:#2563EB" data-kind="method" aria-pressed="false">Method</button>
+<button class="level" style="--chip:#EA580C" data-kind="block" aria-pressed="false">Code block</button>
+<button class="level" style="--chip:#FACC15" data-kind="nested" aria-pressed="false">Nested block</button>
+<button class="level" style="--chip:#15803D" data-kind="line" aria-pressed="true">Lines</button></div>
+<p class="guide" id="group-info" aria-live="polite">Every line has a permanent STM ID. Select a hierarchy level to recolor group members and label each group's first visible chip.</p>
+</section>
+<section class="view" aria-label="Actual historical source code"><div class="filebar"><div><strong>model.py</strong> <span>· FIL-001</span></div><span id="view-note">Historical file through commit 10</span></div><div class="scroll" id="code-scroll"><div class="code-grid" id="code-grid"></div></div></section>
+<p class="footer">All lines and whitespace are sourced from the real Git commits, in chronological order. Blank lines and comments receive IDs too. IDs are display metadata; no source code is modified. The first 10 commits contain an intentionally incomplete model.py because the project is still being built at this point.</p>
+</main>
+<script id="historical-source" type="application/json">{"repo":"sabareeshrao/Project-Rebuild-Version-2","file":"model.py","fileId":"FIL-001","commits":[{"n":1,"sha":"cac2c626c007c5a5bb298f001a9efa7091a313ca","title":"Start original nanoGPT model module header","message":"Start original nanoGPT model module header","added":8,"total":8,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/cac2c626c007c5a5bb298f001a9efa7091a313ca"},{"n":2,"sha":"1b0b2d229884d905b7c736112345c520f2250a34","title":"Introduce original GPT model imports","message":"Introduce original GPT model imports","added":8,"total":16,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/1b0b2d229884d905b7c736112345c520f2250a34"},{"n":3,"sha":"7515b19bf95404294b3ca6a6ab0b22d829fff7df","title":"Declare original optional-bias LayerNorm","message":"Declare original optional-bias LayerNorm","added":4,"total":20,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/7515b19bf95404294b3ca6a6ab0b22d829fff7df"},{"n":4,"sha":"ac18d044565fa9cd11f10ff88b5e9395a979bf9e","title":"Initialize learnable LayerNorm scale and bias","message":"Initialize learnable LayerNorm scale and bias","added":4,"total":24,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/ac18d044565fa9cd11f10ff88b5e9395a979bf9e"},{"n":5,"sha":"feb101a3c891690892790bc0c362cb1666c2a385","title":"Complete original LayerNorm forward calculation","message":"Complete original LayerNorm forward calculation","added":3,"total":27,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/feb101a3c891690892790bc0c362cb1666c2a385"},{"n":6,"sha":"9db19cfc88373aba66663b88f453121a8d58c4b1","title":"Declare original causal self-attention projections","message":"Declare original causal self-attention projections","added":6,"total":33,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/9db19cfc88373aba66663b88f453121a8d58c4b1"},{"n":7,"sha":"cb6a068138863bda2adf018d727588fd11e19cc6","title":"Configure packed QKV and output projection","message":"Configure packed QKV and output projection","added":4,"total":37,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/cb6a068138863bda2adf018d727588fd11e19cc6"},{"n":8,"sha":"596e8c5dfc066e3a9b90245c9db3e2f1c7b73731","title":"Configure attention dropout and head metadata","message":"Configure attention dropout and head metadata","added":6,"total":43,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/596e8c5dfc066e3a9b90245c9db3e2f1c7b73731"},{"n":9,"sha":"1143003f280676a06cf33ea738d9f5070024244d","title":"Detect PyTorch scaled dot-product attention","message":"Detect PyTorch scaled dot-product attention","added":2,"total":45,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/1143003f280676a06cf33ea738d9f5070024244d"},{"n":10,"sha":"03f761745efe3006334eab8f1bd8af02062891a3","title":"Register original manual causal mask fallback","message":"Register original manual causal mask fallback","added":5,"total":50,"url":"https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/03f761745efe3006334eab8f1bd8af02062891a3"}],"lines":[{"n":1,"text":"\"\"\"","firstCommit":1,"id":"STM-001-FIL-001-model.py"},{"n":2,"text":"Full definition of a GPT Language Model, all of it in this single file.","firstCommit":1,"id":"STM-002-FIL-001-model.py"},{"n":3,"text":"References:","firstCommit":1,"id":"STM-003-FIL-001-model.py"},{"n":4,"text":"1) the official GPT-2 TensorFlow implementation released by OpenAI:","firstCommit":1,"id":"STM-004-FIL-001-model.py"},{"n":5,"text":"https://github.com/openai/gpt-2/blob/master/src/model.py","firstCommit":1,"id":"STM-005-FIL-001-model.py"},{"n":6,"text":"2) huggingface/transformers PyTorch implementation:","firstCommit":1,"id":"STM-006-FIL-001-model.py"},{"n":7,"text":"https://github.com/huggingface/transformers/blob/main/src/transformers/models/gpt2/modeling_gpt2.py","firstCommit":1,"id":"STM-007-FIL-001-model.py"},{"n":8,"text":"\"\"\"","firstCommit":1,"id":"STM-008-FIL-001-model.py"},{"n":9,"text":"","firstCommit":2,"id":"STM-009-FIL-001-model.py"},{"n":10,"text":"import math","firstCommit":2,"id":"STM-010-FIL-001-model.py"},{"n":11,"text":"import inspect","firstCommit":2,"id":"STM-011-FIL-001-model.py"},{"n":12,"text":"from dataclasses import dataclass","firstCommit":2,"id":"STM-012-FIL-001-model.py"},{"n":13,"text":"","firstCommit":2,"id":"STM-013-FIL-001-model.py"},{"n":14,"text":"import torch","firstCommit":2,"id":"STM-014-FIL-001-model.py"},{"n":15,"text":"import torch.nn as nn","firstCommit":2,"id":"STM-015-FIL-001-model.py"},{"n":16,"text":"from torch.nn import functional as F","firstCommit":2,"id":"STM-016-FIL-001-model.py"},{"n":17,"text":"","firstCommit":3,"id":"STM-017-FIL-001-model.py"},{"n":18,"text":"class LayerNorm(nn.Module):","firstCommit":3,"id":"STM-018-FIL-001-model.py"},{"n":19,"text":"    \"\"\" LayerNorm but with an optional bias. PyTorch doesn't support simply bias=False \"\"\"","firstCommit":3,"id":"STM-019-FIL-001-model.py"},{"n":20,"text":"","firstCommit":3,"id":"STM-020-FIL-001-model.py"},{"n":21,"text":"    def __init__(self, ndim, bias):","firstCommit":4,"id":"STM-021-FIL-001-model.py"},{"n":22,"text":"        super().__init__()","firstCommit":4,"id":"STM-022-FIL-001-model.py"},{"n":23,"text":"        self.weight = nn.Parameter(torch.ones(ndim))","firstCommit":4,"id":"STM-023-FIL-001-model.py"},{"n":24,"text":"        self.bias = nn.Parameter(torch.zeros(ndim)) if bias else None","firstCommit":4,"id":"STM-024-FIL-001-model.py"},{"n":25,"text":"","firstCommit":5,"id":"STM-025-FIL-001-model.py"},{"n":26,"text":"    def forward(self, input):","firstCommit":5,"id":"STM-026-FIL-001-model.py"},{"n":27,"text":"        return F.layer_norm(input, self.weight.shape, self.weight, self.bias, 1e-5)","firstCommit":5,"id":"STM-027-FIL-001-model.py"},{"n":28,"text":"","firstCommit":6,"id":"STM-028-FIL-001-model.py"},{"n":29,"text":"class CausalSelfAttention(nn.Module):","firstCommit":6,"id":"STM-029-FIL-001-model.py"},{"n":30,"text":"","firstCommit":6,"id":"STM-030-FIL-001-model.py"},{"n":31,"text":"    def __init__(self, config):","firstCommit":6,"id":"STM-031-FIL-001-model.py"},{"n":32,"text":"        super().__init__()","firstCommit":6,"id":"STM-032-FIL-001-model.py"},{"n":33,"text":"        assert config.n_embd % config.n_head == 0","firstCommit":6,"id":"STM-033-FIL-001-model.py"},{"n":34,"text":"        # key, query, value projections for all heads, but in a batch","firstCommit":7,"id":"STM-034-FIL-001-model.py"},{"n":35,"text":"        self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd, bias=config.bias)","firstCommit":7,"id":"STM-035-FIL-001-model.py"},{"n":36,"text":"        # output projection","firstCommit":7,"id":"STM-036-FIL-001-model.py"},{"n":37,"text":"        self.c_proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)","firstCommit":7,"id":"STM-037-FIL-001-model.py"},{"n":38,"text":"        # regularization","firstCommit":8,"id":"STM-038-FIL-001-model.py"},{"n":39,"text":"        self.attn_dropout = nn.Dropout(config.dropout)","firstCommit":8,"id":"STM-039-FIL-001-model.py"},{"n":40,"text":"        self.resid_dropout = nn.Dropout(config.dropout)","firstCommit":8,"id":"STM-040-FIL-001-model.py"},{"n":41,"text":"        self.n_head = config.n_head","firstCommit":8,"id":"STM-041-FIL-001-model.py"},{"n":42,"text":"        self.n_embd = config.n_embd","firstCommit":8,"id":"STM-042-FIL-001-model.py"},{"n":43,"text":"        self.dropout = config.dropout","firstCommit":8,"id":"STM-043-FIL-001-model.py"},{"n":44,"text":"        # flash attention make GPU go brrrrr but support is only in PyTorch >= 2.0","firstCommit":9,"id":"STM-044-FIL-001-model.py"},{"n":45,"text":"        self.flash = hasattr(torch.nn.functional, 'scaled_dot_product_attention')","firstCommit":9,"id":"STM-045-FIL-001-model.py"},{"n":46,"text":"        if not self.flash:","firstCommit":10,"id":"STM-046-FIL-001-model.py"},{"n":47,"text":"            print(\"WARNING: using slow attention. Flash Attention requires PyTorch >= 2.0\")","firstCommit":10,"id":"STM-047-FIL-001-model.py"},{"n":48,"text":"            # causal mask to ensure that attention is only applied to the left in the input sequence","firstCommit":10,"id":"STM-048-FIL-001-model.py"},{"n":49,"text":"            self.register_buffer(\"bias\", torch.tril(torch.ones(config.block_size, config.block_size))","firstCommit":10,"id":"STM-049-FIL-001-model.py"},{"n":50,"text":"                                        .view(1, 1, config.block_size, config.block_size))","firstCommit":10,"id":"STM-050-FIL-001-model.py"}],"scopes":[{"kind":"class","id":"CLS-001","name":"LayerNorm","from":18,"to":27},{"kind":"class","id":"CLS-002","name":"CausalSelfAttention","from":29,"to":50},{"kind":"method","id":"MTH-001","name":"LayerNorm.__init__","from":21,"to":24},{"kind":"method","id":"MTH-002","name":"LayerNorm.forward","from":26,"to":27},{"kind":"method","id":"MTH-003","name":"CausalSelfAttention.__init__","from":31,"to":50},{"kind":"block","id":"BLK-001","name":"LayerNorm.__init__ body","from":22,"to":24},{"kind":"block","id":"BLK-002","name":"LayerNorm.forward body","from":27,"to":27},{"kind":"block","id":"BLK-003","name":"CausalSelfAttention.__init__ body","from":32,"to":50},{"kind":"nested","id":"NBL-001","name":"if not self.flash","from":46,"to":50}]}</script>
+<script>
+(function(){
+'use strict';
+var data=JSON.parse(document.getElementById('historical-source').textContent);
+var commit=10,kind='line',addedOnly=false;
+var colors={class:'#DC2626',method:'#2563EB',block:'#EA580C',nested:'#FACC15',line:'#15803D'};
+var el=function(id){return document.getElementById(id)};
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function syntax(t,n){
+ if(!t.trim())return '&nbsp;';
+ if(t.trim().startsWith('#'))return '<span class="comment">'+esc(t)+'</span>';
+ if(n<=8||t.trim().startsWith('"""'))return '<span class="string">'+esc(t)+'</span>';
+ var parts=t.split(/(".*?"|'.*?')/g);
+ return parts.map(function(p,i){
+ if(i%2===1)return '<span class="string">'+esc(p)+'</span>';
+ return esc(p).replace(/\b(class|def|if|not|else|import|from|as|assert|return|None|True|False)\b/g,'<span class="keyword">$1</span>')
+ .replace(/\b(super|print|hasattr)\b/g,'<span class="builtin">$1</span>');
+ }).join('');
+}
+function groupFor(l){return data.scopes.find(function(s){return s.kind===kind&&l.n>=s.from&&l.n<=s.to})}
+var btnHost=el('commit-buttons');
+data.commits.forEach(function(c){var b=document.createElement('button');b.textContent=c.n;b.title='Commit '+c.n+': '+c.title;b.setAttribute('aria-label','View commit '+c.n);b.addEventListener('click',function(){commit=c.n;render(true)});btnHost.appendChild(b)});
+el('prev').addEventListener('click',function(){if(commit>1){commit--;render(true)}});
+el('next').addEventListener('click',function(){if(commit<10){commit++;render(true)}});
+el('full').addEventListener('click',function(){addedOnly=false;render(false)});
+el('added').addEventListener('click',function(){addedOnly=true;render(false)});
+document.querySelectorAll('.level').forEach(function(b){b.addEventListener('click',function(){kind=b.dataset.kind;render(false)})});
+function render(resetScroll){
+ var c=data.commits[commit-1],all=data.lines.filter(function(l){return l.firstCommit<=commit});
+ var shown=all.filter(function(l){return !addedOnly||l.firstCommit===commit});
+ el('total-lines').textContent=c.total;el('added-lines').textContent=c.added;
+ el('commit-title').textContent=c.title;
+ el('commit-link').textContent=c.sha.slice(0,10)+' · View original GitHub diff';
+ el('commit-link').href=c.url;
+ el('view-note').textContent=addedOnly?'Only additions in commit '+commit:'Historical file through commit '+commit;
+ el('prev').disabled=commit===1;el('next').disabled=commit===10;
+ btnHost.querySelectorAll('button').forEach(function(b,i){b.setAttribute('aria-pressed',String(i+1===commit))});
+ document.querySelectorAll('.level').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.kind===kind))});
+ el('full').setAttribute('aria-pressed',String(!addedOnly));el('added').setAttribute('aria-pressed',String(addedOnly));
+ var seen=new Set(),groups=new Set();
+ var fragment=document.createDocumentFragment();
+ shown.forEach(function(l){
+ var scope=groupFor(l),active=!!scope,col=active?colors[kind]:colors.line;
+ if(scope)groups.add(scope.id);
+ var isFirst=active&&!seen.has(scope.id);if(scope)seen.add(scope.id);
+ var row=document.createElement('div');row.className='code-row'+(l.firstCommit===commit?' new':'');
+ var col1=document.createElement('div');col1.className='chip-wrap';
+ var chip=document.createElement('div');chip.className='chip'+(active&&kind==='nested'?' yellow':'');chip.style.setProperty('--color',col);
+ chip.title=l.id+(active?' · '+scope.id+' '+scope.name:'')+' · Introduced in commit '+l.firstCommit;
+ var groupLabel=document.createElement('div');groupLabel.className='chip-label';groupLabel.textContent=isFirst?kind.toUpperCase()+' · '+scope.id+' · '+scope.name:'\u00a0';
+ var lineLabel=document.createElement('div');lineLabel.className='chip-id';lineLabel.textContent=l.id;
+ chip.appendChild(groupLabel);chip.appendChild(lineLabel);col1.appendChild(chip);
+ var col2=document.createElement('div');col2.className='code'+(!l.text?' empty':'');
+ col2.innerHTML=syntax(l.text,l.n);
+ row.appendChild(col1);row.appendChild(col2);fragment.appendChild(row);
+ });
+ el('code-grid').replaceChildren(fragment);
+ var note;
+ if(kind==='line') note='Green chips identify every original source line.';
+ else if(groups.size) note='Colored '+kind+' chips show '+groups.size+' group'+(groups.size===1?'':'s')+'. The first visible chip names its '+kind+' ID.';
+ else note='No '+kind+' exists yet at this commit. All visible line IDs remain green.';
+ el('group-info').textContent=note+' · '+shown.length+' visible lines.';
+ if(resetScroll){el('code-scroll').scrollTop=0;el('code-scroll').scrollLeft=0}
+}
+render(true);
+})();
+</script></body></html>
