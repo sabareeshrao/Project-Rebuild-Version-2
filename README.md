@@ -214,3 +214,11 @@ Note that the code by default uses [PyTorch 2.0](https://pytorch.org/get-started
 - Eval zero-shot perplexities on standard evals (e.g. LAMBADA? HELM? etc.)
 - Finetune the finetuning script, I think the hyperparams are not great
 - Schedule for linear batch size increase during training
+- Incorporate other embeddings (rotary, alibi)
+- Separate out the optim buffers from model params in checkpoints I think
+- Additional logging around network health (e.g. gradient clip events, magnitudes)
+- Few more investigations around better init etc.
+
+## troubleshooting
+
+Note that by default this repo uses PyTorch 2.0 (i.e. `torch.compile`). This is fairly new and experimental, and not yet available on all platforms (e.g. Windows). If you're running into related error messages try to disable this by adding `--compile=False` flag. This will slow down the code but at least it will run.
