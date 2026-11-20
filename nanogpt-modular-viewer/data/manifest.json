@@ -4,11 +4,11 @@
   "repository": "sabareeshrao/Project-Rebuild-Version-2",
   "history": {
     "totalNanoGPTCommits": 235,
-    "completedThrough": 15,
+    "completedThrough": 60,
     "plannedBatchSize": 15,
-    "batchNumber": 1,
+    "batchNumber": 4,
     "sourceMode": "append-only-verified",
-    "description": "Only the 235 reconstructed nanoGPT commits; viewer, handover and learning commits excluded."
+    "description": "First 60 chronological nanoGPT reconstruction commits across four exact source files; no edits/deletions observed in this range."
   },
   "files": [
     {
@@ -18,7 +18,7 @@
       "module": "model",
       "directoryId": "DIR-001",
       "directory": "(repository root)",
-      "lineCount": 76,
+      "lineCount": 330,
       "chunks": [
         {
           "id": "001-015",
@@ -28,6 +28,93 @@
           "startLine": 1,
           "endLine": 76,
           "path": "batches/001-015.json"
+        },
+        {
+          "id": "016-030",
+          "batch": 2,
+          "startCommit": 16,
+          "endCommit": 30,
+          "startLine": 77,
+          "endLine": 168,
+          "path": "batches/016-030.json"
+        },
+        {
+          "id": "031-045",
+          "batch": 3,
+          "startCommit": 31,
+          "endCommit": 45,
+          "startLine": 169,
+          "endLine": 261,
+          "path": "batches/031-045.json"
+        },
+        {
+          "id": "046-060",
+          "batch": 4,
+          "startCommit": 46,
+          "endCommit": 57,
+          "startLine": 262,
+          "endLine": 330,
+          "path": "batches/046-060.json"
+        }
+      ]
+    },
+    {
+      "id": "FIL-002",
+      "path": "LICENSE",
+      "moduleId": "MOD-002",
+      "module": "Repository metadata files",
+      "directoryId": "DIR-001",
+      "directory": "(repository root)",
+      "lineCount": 21,
+      "chunks": [
+        {
+          "id": "058-058-license",
+          "batch": 4,
+          "startCommit": 58,
+          "endCommit": 58,
+          "startLine": 1,
+          "endLine": 21,
+          "path": "batches/046-060-license.json"
+        }
+      ]
+    },
+    {
+      "id": "FIL-003",
+      "path": ".gitignore",
+      "moduleId": "MOD-002",
+      "module": "Repository metadata files",
+      "directoryId": "DIR-001",
+      "directory": "(repository root)",
+      "lineCount": 12,
+      "chunks": [
+        {
+          "id": "059-059-gitignore",
+          "batch": 4,
+          "startCommit": 59,
+          "endCommit": 59,
+          "startLine": 1,
+          "endLine": 12,
+          "path": "batches/046-060-gitignore.json"
+        }
+      ]
+    },
+    {
+      "id": "FIL-004",
+      "path": ".gitattributes",
+      "moduleId": "MOD-002",
+      "module": "Repository metadata files",
+      "directoryId": "DIR-001",
+      "directory": "(repository root)",
+      "lineCount": 3,
+      "chunks": [
+        {
+          "id": "060-060-gitattributes",
+          "batch": 4,
+          "startCommit": 60,
+          "endCommit": 60,
+          "startLine": 1,
+          "endLine": 3,
+          "path": "batches/046-060-gitattributes.json"
         }
       ]
     }
@@ -136,6 +223,398 @@
       "name": "else",
       "from": 65,
       "to": 71
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "class",
+      "id": "CLS-003",
+      "name": "MLP",
+      "from": 78,
+      "to": 93
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "class",
+      "id": "CLS-004",
+      "name": "Block",
+      "from": 94,
+      "to": 107
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "class",
+      "id": "CLS-005",
+      "name": "GPTConfig",
+      "from": 108,
+      "to": 117
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "class",
+      "id": "CLS-006",
+      "name": "GPT",
+      "from": 118,
+      "to": 330
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-005",
+      "name": "__init__()",
+      "from": 80,
+      "to": 86
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-005",
+      "name": "__init__() body",
+      "from": 81,
+      "to": 86
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-006",
+      "name": "forward()",
+      "from": 87,
+      "to": 93
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-006",
+      "name": "forward() body",
+      "from": 88,
+      "to": 93
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-007",
+      "name": "__init__()",
+      "from": 96,
+      "to": 102
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-007",
+      "name": "__init__() body",
+      "from": 97,
+      "to": 102
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-008",
+      "name": "forward()",
+      "from": 103,
+      "to": 107
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-008",
+      "name": "forward() body",
+      "from": 104,
+      "to": 107
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-009",
+      "name": "__init__()",
+      "from": 120,
+      "to": 149
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-009",
+      "name": "__init__() body",
+      "from": 121,
+      "to": 149
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-010",
+      "name": "get_num_params()",
+      "from": 150,
+      "to": 161
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-010",
+      "name": "get_num_params() body",
+      "from": 151,
+      "to": 161
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-011",
+      "name": "_init_weights()",
+      "from": 162,
+      "to": 169
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-011",
+      "name": "_init_weights() body",
+      "from": 163,
+      "to": 169
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-012",
+      "name": "forward()",
+      "from": 170,
+      "to": 194
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-012",
+      "name": "forward() body",
+      "from": 171,
+      "to": 194
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-013",
+      "name": "crop_block_size()",
+      "from": 195,
+      "to": 205
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-013",
+      "name": "crop_block_size() body",
+      "from": 196,
+      "to": 205
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-014",
+      "name": "from_pretrained()",
+      "from": 206,
+      "to": 262
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-014",
+      "name": "from_pretrained() body",
+      "from": 208,
+      "to": 262
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-015",
+      "name": "configure_optimizers()",
+      "from": 263,
+      "to": 288
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-015",
+      "name": "configure_optimizers() body",
+      "from": 264,
+      "to": 288
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-016",
+      "name": "estimate_mfu()",
+      "from": 289,
+      "to": 304
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-016",
+      "name": "estimate_mfu() body",
+      "from": 290,
+      "to": 304
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "method",
+      "id": "MTH-017",
+      "name": "generate()",
+      "from": 305,
+      "to": 330
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "block",
+      "id": "BLK-017",
+      "name": "generate() body",
+      "from": 307,
+      "to": 330
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-004",
+      "name": "for pn, p in self.named_parameters():",
+      "from": 143,
+      "to": 147
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-005",
+      "name": "if pn.endswith('c_proj.weight'):",
+      "from": 144,
+      "to": 147
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-006",
+      "name": "if non_embedding:",
+      "from": 158,
+      "to": 159
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-007",
+      "name": "if isinstance(module, nn.Linear):",
+      "from": 163,
+      "to": 166
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-008",
+      "name": "if module.bias is not None:",
+      "from": 165,
+      "to": 166
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-009",
+      "name": "elif isinstance(module, nn.Embedding):",
+      "from": 167,
+      "to": 169
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-010",
+      "name": "for block in self.transformer.h:",
+      "from": 180,
+      "to": 181
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-011",
+      "name": "if targets is not None:",
+      "from": 184,
+      "to": 187
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-012",
+      "name": "else:",
+      "from": 188,
+      "to": 192
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-013",
+      "name": "for block in self.transformer.h:",
+      "from": 202,
+      "to": 205
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-014",
+      "name": "if hasattr(block.attn, 'bias'):",
+      "from": 203,
+      "to": 205
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-015",
+      "name": "if 'dropout' in override_args:",
+      "from": 227,
+      "to": 230
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-016",
+      "name": "for k in sd_keys_hf:",
+      "from": 249,
+      "to": 260
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-017",
+      "name": "if any(k.endswith(w) for w in transposed):",
+      "from": 250,
+      "to": 254
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-018",
+      "name": "with torch.no_grad():",
+      "from": 253,
+      "to": 254
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-019",
+      "name": "else:",
+      "from": 255,
+      "to": 260
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-020",
+      "name": "with torch.no_grad():",
+      "from": 258,
+      "to": 260
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-021",
+      "name": "for _ in range(max_new_tokens):",
+      "from": 312,
+      "to": 329
+    },
+    {
+      "fileId": "FIL-001",
+      "kind": "nested",
+      "id": "NBL-022",
+      "name": "if top_k is not None:",
+      "from": 320,
+      "to": 323
     }
   ],
   "commits": [
@@ -362,6 +841,951 @@
       },
       "fileAdded": {
         "FIL-001": 5
+      }
+    },
+    {
+      "n": 16,
+      "sha": "af508e60e993883b8991763ab189fa9743b2ef68",
+      "title": "introduce original GPT feed-forward expansion",
+      "message": "build: introduce original GPT feed-forward expansion",
+      "added": 6,
+      "total": 82,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/af508e60e993883b8991763ab189fa9743b2ef68",
+      "fileTotals": {
+        "FIL-001": 82,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 17,
+      "sha": "279441476aafb713c0bc1714dd3342c347ff8cc6",
+      "title": "configure GELU projection and residual dropout",
+      "message": "build: configure GELU projection and residual dropout",
+      "added": 3,
+      "total": 85,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/279441476aafb713c0bc1714dd3342c347ff8cc6",
+      "fileTotals": {
+        "FIL-001": 85,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 3,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 18,
+      "sha": "0b0ca1bb0b2d493e7eaa7ac55ff94bd27feecc52",
+      "title": "complete original GPT MLP forward pass",
+      "message": "build: complete original GPT MLP forward pass",
+      "added": 7,
+      "total": 92,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/0b0ca1bb0b2d493e7eaa7ac55ff94bd27feecc52",
+      "fileTotals": {
+        "FIL-001": 92,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 7,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 19,
+      "sha": "df5a6ba78e145417f78dd84031ca4916976fdebc",
+      "title": "assemble pre-normalized transformer attention block",
+      "message": "build: assemble pre-normalized transformer attention block",
+      "added": 7,
+      "total": 99,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/df5a6ba78e145417f78dd84031ca4916976fdebc",
+      "fileTotals": {
+        "FIL-001": 99,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 7,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 20,
+      "sha": "bccb7b302de8c395cb99ebfc6b0d8730aead2b23",
+      "title": "complete original residual transformer block",
+      "message": "build: complete original residual transformer block",
+      "added": 7,
+      "total": 106,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/bccb7b302de8c395cb99ebfc6b0d8730aead2b23",
+      "fileTotals": {
+        "FIL-001": 106,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 7,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 21,
+      "sha": "c930821239e049ffd06ce30a4d883bc7d266c0e0",
+      "title": "declare original GPT hyperparameter dataclass",
+      "message": "build: declare original GPT hyperparameter dataclass",
+      "added": 10,
+      "total": 116,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/c930821239e049ffd06ce30a4d883bc7d266c0e0",
+      "fileTotals": {
+        "FIL-001": 116,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 10,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 22,
+      "sha": "4f30c0e266202b2bf2d5f8e6203276e1f37a324a",
+      "title": "introduce original GPT model container",
+      "message": "build: introduce original GPT model container",
+      "added": 8,
+      "total": 124,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/4f30c0e266202b2bf2d5f8e6203276e1f37a324a",
+      "fileTotals": {
+        "FIL-001": 124,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 23,
+      "sha": "14ff811954741b57322f47f423ddbd7a9bffaf8f",
+      "title": "assemble embeddings transformer blocks and normalization",
+      "message": "build: assemble embeddings transformer blocks and normalization",
+      "added": 8,
+      "total": 132,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/14ff811954741b57322f47f423ddbd7a9bffaf8f",
+      "fileTotals": {
+        "FIL-001": 132,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 24,
+      "sha": "b7269301fa3c7231241862244ed2335b8eed8e2d",
+      "title": "tie original token embedding and output projection weights",
+      "message": "build: tie original token embedding and output projection weights",
+      "added": 6,
+      "total": 138,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/b7269301fa3c7231241862244ed2335b8eed8e2d",
+      "fileTotals": {
+        "FIL-001": 138,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 25,
+      "sha": "5010ef5f3e376575ed6fc2ee6f7f158af7a8aad5",
+      "title": "initialize original GPT residual projection weights",
+      "message": "build: initialize original GPT residual projection weights",
+      "added": 7,
+      "total": 145,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/5010ef5f3e376575ed6fc2ee6f7f158af7a8aad5",
+      "fileTotals": {
+        "FIL-001": 145,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 7,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 26,
+      "sha": "dfdcb6c970d8985c9edb82ff2971aebbae8172c9",
+      "title": "report original model parameter count",
+      "message": "build: report original model parameter count",
+      "added": 3,
+      "total": 148,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/dfdcb6c970d8985c9edb82ff2971aebbae8172c9",
+      "fileTotals": {
+        "FIL-001": 148,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 3,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 27,
+      "sha": "ee3a8af0098613bd6cbd8c65954211a5d2ef4b5b",
+      "title": "document original GPT parameter count calculation",
+      "message": "build: document original GPT parameter count calculation",
+      "added": 8,
+      "total": 156,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/ee3a8af0098613bd6cbd8c65954211a5d2ef4b5b",
+      "fileTotals": {
+        "FIL-001": 156,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 28,
+      "sha": "c10bbb83f5a3111e763a888dff17484207485247",
+      "title": "count GPT parameters excluding positional embeddings",
+      "message": "build: count GPT parameters excluding positional embeddings",
+      "added": 4,
+      "total": 160,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/c10bbb83f5a3111e763a888dff17484207485247",
+      "fileTotals": {
+        "FIL-001": 160,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 4,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 29,
+      "sha": "79d614d152cc9d4a076adf41214667438670887a",
+      "title": "initialize linear layer weights and optional biases",
+      "message": "build: initialize linear layer weights and optional biases",
+      "added": 6,
+      "total": 166,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/79d614d152cc9d4a076adf41214667438670887a",
+      "fileTotals": {
+        "FIL-001": 166,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 30,
+      "sha": "5f05102b47878b6f367b648613a5aef68f14122f",
+      "title": "initialize original GPT embedding tables",
+      "message": "build: initialize original GPT embedding tables",
+      "added": 2,
+      "total": 168,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/5f05102b47878b6f367b648613a5aef68f14122f",
+      "fileTotals": {
+        "FIL-001": 168,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 2,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 31,
+      "sha": "a493dda8d4b35ec5dd6d2fd466c3ed0568f27ef5",
+      "title": "begin GPT forward with position indices",
+      "message": "build: begin GPT forward with position indices",
+      "added": 6,
+      "total": 174,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/a493dda8d4b35ec5dd6d2fd466c3ed0568f27ef5",
+      "fileTotals": {
+        "FIL-001": 174,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 32,
+      "sha": "598860f4be3f5e067a87560059aa3ca50721aaf0",
+      "title": "apply token embeddings positional embeddings and blocks",
+      "message": "build: apply token embeddings positional embeddings and blocks",
+      "added": 8,
+      "total": 182,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/598860f4be3f5e067a87560059aa3ca50721aaf0",
+      "fileTotals": {
+        "FIL-001": 182,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 33,
+      "sha": "843c38756bebd82035a7b8c56e477cafad8cc053",
+      "title": "calculate masked cross entropy for supervised targets",
+      "message": "build: calculate masked cross entropy for supervised targets",
+      "added": 5,
+      "total": 187,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/843c38756bebd82035a7b8c56e477cafad8cc053",
+      "fileTotals": {
+        "FIL-001": 187,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 5,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 34,
+      "sha": "9eca870c65f45210f2b3098d16eb8edfc12587de",
+      "title": "return inference logits and training loss",
+      "message": "build: return inference logits and training loss",
+      "added": 6,
+      "total": 193,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/9eca870c65f45210f2b3098d16eb8edfc12587de",
+      "fileTotals": {
+        "FIL-001": 193,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 35,
+      "sha": "3d12b591e30a23a5a2c3ab866eef625b60833273",
+      "title": "begin original block-size cropping utility",
+      "message": "build: begin original block-size cropping utility",
+      "added": 8,
+      "total": 201,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/3d12b591e30a23a5a2c3ab866eef625b60833273",
+      "fileTotals": {
+        "FIL-001": 201,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 36,
+      "sha": "6037be224b270756297e84a34cf365bc41a5c439",
+      "title": "update causal attention masks after context cropping",
+      "message": "build: update causal attention masks after context cropping",
+      "added": 3,
+      "total": 204,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/6037be224b270756297e84a34cf365bc41a5c439",
+      "fileTotals": {
+        "FIL-001": 204,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 3,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 37,
+      "sha": "1664ddabb8a08f1a31e3890ba9de1bf6692303f7",
+      "title": "introduce original pretrained GPT-2 loader",
+      "message": "build: introduce original pretrained GPT-2 loader",
+      "added": 9,
+      "total": 213,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/1664ddabb8a08f1a31e3890ba9de1bf6692303f7",
+      "fileTotals": {
+        "FIL-001": 213,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 9,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 38,
+      "sha": "48b87e65e1af27debf4d7608b1d53023abd8d368",
+      "title": "map supported GPT-2 pretrained model sizes",
+      "message": "build: map supported GPT-2 pretrained model sizes",
+      "added": 8,
+      "total": 221,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/48b87e65e1af27debf4d7608b1d53023abd8d368",
+      "fileTotals": {
+        "FIL-001": 221,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 39,
+      "sha": "6da5473cc8472831626fbb4b7623f3792933492d",
+      "title": "configure GPT-2 checkpoint dimensions and dropout",
+      "message": "build: configure GPT-2 checkpoint dimensions and dropout",
+      "added": 8,
+      "total": 229,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/6da5473cc8472831626fbb4b7623f3792933492d",
+      "fileTotals": {
+        "FIL-001": 229,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 40,
+      "sha": "b7a171d3410dbfeaaacf283da4e868da222947c3",
+      "title": "create GPT model and list pretrained parameter keys",
+      "message": "build: create GPT model and list pretrained parameter keys",
+      "added": 6,
+      "total": 235,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/b7a171d3410dbfeaaacf283da4e868da222947c3",
+      "fileTotals": {
+        "FIL-001": 235,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 41,
+      "sha": "3400e7fc2782b1d5e7b882f7bdc2ef29a36555c6",
+      "title": "load Hugging Face GPT-2 state dictionary",
+      "message": "build: load Hugging Face GPT-2 state dictionary",
+      "added": 4,
+      "total": 239,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/3400e7fc2782b1d5e7b882f7bdc2ef29a36555c6",
+      "fileTotals": {
+        "FIL-001": 239,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 4,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 42,
+      "sha": "28c3c5af87728220399bc7de74eeb05ee34ca3e9",
+      "title": "identify transposed GPT-2 Conv1D weights",
+      "message": "build: identify transposed GPT-2 Conv1D weights",
+      "added": 9,
+      "total": 248,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/28c3c5af87728220399bc7de74eeb05ee34ca3e9",
+      "fileTotals": {
+        "FIL-001": 248,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 9,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 43,
+      "sha": "43f5dbba766ec67778ec0af8b58d657e94aad213",
+      "title": "transfer GPT-2 Conv1D weights with transposition",
+      "message": "build: transfer GPT-2 Conv1D weights with transposition",
+      "added": 6,
+      "total": 254,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/43f5dbba766ec67778ec0af8b58d657e94aad213",
+      "fileTotals": {
+        "FIL-001": 254,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 44,
+      "sha": "d35f24bfc83e41e1952c644501a6f909a6b89a82",
+      "title": "transfer remaining GPT-2 checkpoint parameters",
+      "message": "build: transfer remaining GPT-2 checkpoint parameters",
+      "added": 5,
+      "total": 259,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/d35f24bfc83e41e1952c644501a6f909a6b89a82",
+      "fileTotals": {
+        "FIL-001": 259,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 5,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 45,
+      "sha": "8abb79a4353173cfb22c01e3d6be0960ce0938dc",
+      "title": "return transferred GPT-2 model",
+      "message": "build: return transferred GPT-2 model",
+      "added": 2,
+      "total": 261,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/8abb79a4353173cfb22c01e3d6be0960ce0938dc",
+      "fileTotals": {
+        "FIL-001": 261,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 2,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 46,
+      "sha": "253519d20b472ec231f0afe6283311fc58d9a732",
+      "title": "group trainable GPT optimizer parameters",
+      "message": "build: group trainable GPT optimizer parameters",
+      "added": 6,
+      "total": 267,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/253519d20b472ec231f0afe6283311fc58d9a732",
+      "fileTotals": {
+        "FIL-001": 267,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 47,
+      "sha": "bc19f51d99afa38a74bb02044748f8e8feab58fa",
+      "title": "separate AdamW decayed and non-decayed weights",
+      "message": "build: separate AdamW decayed and non-decayed weights",
+      "added": 8,
+      "total": 275,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/bc19f51d99afa38a74bb02044748f8e8feab58fa",
+      "fileTotals": {
+        "FIL-001": 275,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 48,
+      "sha": "f6f68ff5b9a0a7c1c3c8c5299a28f9f7b2a528ce",
+      "title": "report decayed and non-decayed optimizer parameter counts",
+      "message": "build: report decayed and non-decayed optimizer parameter counts",
+      "added": 4,
+      "total": 279,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/f6f68ff5b9a0a7c1c3c8c5299a28f9f7b2a528ce",
+      "fileTotals": {
+        "FIL-001": 279,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 4,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 49,
+      "sha": "da5745f3ababcbaa7cdaba9c13d90a9568083537",
+      "title": "construct fused AdamW when available on CUDA",
+      "message": "build: construct fused AdamW when available on CUDA",
+      "added": 6,
+      "total": 285,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/da5745f3ababcbaa7cdaba9c13d90a9568083537",
+      "fileTotals": {
+        "FIL-001": 285,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 50,
+      "sha": "440ee41e73c2550730e0fe3ae45bc4868c61048c",
+      "title": "return original GPT AdamW optimizer",
+      "message": "build: return original GPT AdamW optimizer",
+      "added": 2,
+      "total": 287,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/440ee41e73c2550730e0fe3ae45bc4868c61048c",
+      "fileTotals": {
+        "FIL-001": 287,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 2,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 51,
+      "sha": "c6bc02f5caa1bd2eb916169912fee17fb3840ba5",
+      "title": "estimate GPT model flop components for MFU",
+      "message": "build: estimate GPT model flop components for MFU",
+      "added": 8,
+      "total": 295,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/c6bc02f5caa1bd2eb916169912fee17fb3840ba5",
+      "fileTotals": {
+        "FIL-001": 295,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 52,
+      "sha": "f116db5532cdd2127d945c94604ccf2aa97673a1",
+      "title": "calculate GPT model flops utilization",
+      "message": "build: calculate GPT model flops utilization",
+      "added": 8,
+      "total": 303,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/f116db5532cdd2127d945c94604ccf2aa97673a1",
+      "fileTotals": {
+        "FIL-001": 303,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 53,
+      "sha": "4f3857c54a14913337c383594571c2953001f622",
+      "title": "declare original autoregressive generation interface",
+      "message": "build: declare original autoregressive generation interface",
+      "added": 8,
+      "total": 311,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/4f3857c54a14913337c383594571c2953001f622",
+      "fileTotals": {
+        "FIL-001": 311,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 8,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 54,
+      "sha": "c3b675221abf5ded36ffa070b8aeba5f59371ae4",
+      "title": "crop generation context and calculate scaled logits",
+      "message": "build: crop generation context and calculate scaled logits",
+      "added": 7,
+      "total": 318,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/c3b675221abf5ded36ffa070b8aeba5f59371ae4",
+      "fileTotals": {
+        "FIL-001": 318,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 7,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 55,
+      "sha": "4b3746ec6451341c5b9ff98fcb6b27dabe2b33cc",
+      "title": "restrict generation logits to top-k tokens",
+      "message": "build: restrict generation logits to top-k tokens",
+      "added": 4,
+      "total": 322,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/4b3746ec6451341c5b9ff98fcb6b27dabe2b33cc",
+      "fileTotals": {
+        "FIL-001": 322,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 4,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 56,
+      "sha": "6b5ac8672b2e9bb0d60b48ce43daaa3c150a4acc",
+      "title": "sample next token and append to sequence",
+      "message": "build: sample next token and append to sequence",
+      "added": 6,
+      "total": 328,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/6b5ac8672b2e9bb0d60b48ce43daaa3c150a4acc",
+      "fileTotals": {
+        "FIL-001": 328,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 6,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 57,
+      "sha": "8b64d2683e711a8b50583438edcfaf99e7406294",
+      "title": "return generated sequence from original GPT",
+      "message": "build: return generated sequence from original GPT",
+      "added": 2,
+      "total": 330,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/8b64d2683e711a8b50583438edcfaf99e7406294",
+      "fileTotals": {
+        "FIL-001": 330,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 2,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 58,
+      "sha": "c87eafc9d26a3ed565f81a7fa625067b056ad9b2",
+      "title": "preserve original nanoGPT MIT license",
+      "message": "build: preserve original nanoGPT MIT license",
+      "added": 21,
+      "total": 351,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/c87eafc9d26a3ed565f81a7fa625067b056ad9b2",
+      "fileTotals": {
+        "FIL-001": 330,
+        "FIL-002": 21,
+        "FIL-003": 0,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 0,
+        "FIL-002": 21,
+        "FIL-003": 0,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 59,
+      "sha": "8b70eefff3ef4f45663e31bd1811bf5de7062173",
+      "title": "preserve original nanoGPT .gitignore",
+      "message": "build: preserve original nanoGPT .gitignore",
+      "added": 12,
+      "total": 363,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/8b70eefff3ef4f45663e31bd1811bf5de7062173",
+      "fileTotals": {
+        "FIL-001": 330,
+        "FIL-002": 21,
+        "FIL-003": 12,
+        "FIL-004": 0
+      },
+      "fileAdded": {
+        "FIL-001": 0,
+        "FIL-002": 0,
+        "FIL-003": 12,
+        "FIL-004": 0
+      }
+    },
+    {
+      "n": 60,
+      "sha": "3ad5fad8988a76d177b26c29b181bd57cf6e138f",
+      "title": "preserve original nanoGPT .gitattributes",
+      "message": "build: preserve original nanoGPT .gitattributes",
+      "added": 3,
+      "total": 366,
+      "url": "https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/3ad5fad8988a76d177b26c29b181bd57cf6e138f",
+      "fileTotals": {
+        "FIL-001": 330,
+        "FIL-002": 21,
+        "FIL-003": 12,
+        "FIL-004": 3
+      },
+      "fileAdded": {
+        "FIL-001": 0,
+        "FIL-002": 0,
+        "FIL-003": 0,
+        "FIL-004": 3
       }
     }
   ]
