@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#050505">
-<title>nanoGPT · Modular Commit-First Code Viewer · Batch 01</title>
+<title>nanoGPT · Modular Commit-First Code Viewer</title>
 <meta name="description" content="Real nanoGPT source reconstructed commit by commit, with permanent STM IDs, modular data chunks and a windowed page viewer.">
 <link rel="stylesheet" href="./assets/viewer.css">
 </head>
@@ -12,7 +12,7 @@
 <main class="shell">
   <header class="site-head">
     <div>
-      <p class="eyebrow">Original nanoGPT history · Batch 01 / 16</p>
+      <p class="eyebrow" id="batch-indicator">Original nanoGPT history · Loading indexed batches…</p>
       <h1>Commit-First Code Explorer</h1>
       <p class="subtitle">Real source · Stable STM IDs · Modular data · Natural page scrolling</p>
     </div>
@@ -26,7 +26,7 @@
         <span class="small-label">Commit</span>
         <div class="stepper" role="group" aria-label="Previous or next source commit">
           <button id="previous" class="step" type="button" aria-label="Previous source commit">−</button>
-          <output id="commit-indicator" aria-live="polite">15</output>
+          <output id="commit-indicator" aria-live="polite">—</output>
           <button id="next" class="step" type="button" aria-label="Next source commit">+</button>
         </div>
         <form id="jump-form" class="jump">
@@ -69,7 +69,7 @@
     </div>
     <div>
       <div id="file-name" class="small-label">model.py</div>
-      <div id="file-meta" class="subtitle">Indexed commits 1–15</div>
+      <div id="file-meta" class="subtitle">Loading indexed source files…</div>
     </div>
   </section>
   <p id="status" role="status" aria-live="polite">Loading modular source manifest…</p>
@@ -82,12 +82,11 @@
   </section>
 
   <p class="footer">
-    Batch 01 includes <strong>15 reconstructed nanoGPT source commits</strong> (76 genuine physical lines in
-    <code>model.py</code>), validated against their GitHub snapshots. All source lines, blank lines and comments retain
-    original STM identities. The viewer loads source JSON chunks as needed and renders nearby rows, not the entire
-    history as DOM nodes. Historical code is not rewritten to make incomplete early commits runnable.
-    No synthetic sky-blue boundary chips or green gap rows are used.
-    Source-history coverage will grow batch by batch; other files and non-append edits must be validated as they are introduced.
+    The indexed historical source is verified against original GitHub commits. Every physical source line,
+    including blank lines and comments, has a stable STM identity. Source files and JSON chunks load on demand;
+    the viewer mounts nearby rows, rather than the entire source history. Incomplete historical snapshots stay
+    incomplete. No synthetic source rows or sky-blue boundary chips are added. Any future source edit, deletion,
+    move or rename must be explicitly modeled and verified before it is indexed.
   </p>
 </main>
 <script type="module" src="./assets/app.js"></script>
