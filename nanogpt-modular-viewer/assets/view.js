@@ -144,8 +144,12 @@ export function applyRowCategory(row,line,previous,context) {
   chip.style.setProperty('--chip-bg',color.background);
   chip.style.setProperty('--chip-ink',color.ink);
   const contextLabel=metadataFor(line,color,context);
-  // The overlay is visual-only; group and commit provenance stay accessible.
-  const accessibleDetail=[contextLabel,color.overlayKind].filter(Boolean).join(' · ');
+  // Each member row keeps its parent scope ID in accessible metadata, not in
+  // visible chip text. This also covers comments inside long nested blocks.
+  const scope=getScope(line.n,context.category,context.fileId,context.manifest);
+  const scopeDetail=scope&&!contextLabel.includes(scope.id)
+    ? context.category.toUpperCase()+' · '+scope.id+' · '+scope.name : '';
+  const accessibleDetail=[contextLabel,scopeDetail,color.overlayKind].filter(Boolean).join(' · ');
   chip.setAttribute('aria-label','Original source '+line.id+
     (accessibleDetail?' · '+accessibleDetail:''));
   code.classList.toggle('category-divider',
