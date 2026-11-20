@@ -7,7 +7,7 @@
 1. [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) — nonnegotiable contract.
 2. [DESIGN-SPEC.md](DESIGN-SPEC.md) — UI, IDs, colors and behavior.
 3. [GIT-PROVENANCE.md](GIT-PROVENANCE.md) — original implementation commits and precise evidence.
-4. [PROMPT-INDEX.md](PROMPT-INDEX.md) — all **55 user prompts** in sequence, including the newest exclusive category colors and conditional green code dividers.
+4. [PROMPT-INDEX.md](PROMPT-INDEX.md) — all **57 user prompts** in sequence, including the newest exclusive category colors and conditional green code dividers.
 5. [prompts/](prompts/) — one historical user prompt plus assistant-outcome notes per numbered file; **one Git documentation commit per prompt**, preserving continuous improvement.
 6. [reference/](reference/) — real, complete historical HTML snapshots, with the latest demo to copy and modify.
 7. [QUALITY-GATES.md](QUALITY-GATES.md) — audit checklist before shipping to the user.
@@ -52,3 +52,7 @@ Read [DESIGN-SPEC.md](DESIGN-SPEC.md) for the exact rules and [reference/LATEST-
 The earlier 30-commit all-in-one HTML is now an **untouched visual reference**. The **new modular nanoGPT build** is at [../nanogpt-modular-viewer/](../nanogpt-modular-viewer/README.md). Batch 01 indexes the first 15 real reconstructed nanoGPT source commits with 76 source lines independently compared against all 15 GitHub snapshots. It separates HTML, CSS, four JavaScript modules, a source metadata manifest and a lazy-loaded batch chunk; it renders windowed rows with natural page scrolling. [Implementation commit](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/b9873f09edf42c197a6002d42a3bf943c7ac3ac3) · [Batch QA](../nanogpt-modular-viewer/QA-BATCH-001.md) · [16-batch plan](../nanogpt-modular-viewer/BATCH_TRACKER.md).
 
 **Scope:** Only the 235 reconstructed nanoGPT source commits are counted. This excludes GitHub demo, prompt handover and separate learning commits. Preserve the existing STM IDs and selected-color/green-divider design contract. Large-scale performance and Android rendering still need browser verification.
+
+## Latest UI (Prompts 056–057)
+
+The separate [modular nanoGPT viewer](../nanogpt-modular-viewer/index.html) now has a **compact sticky controls-only header**, colored category buttons even when unselected, a one-click **All commits** reset from range filters, and short STM IDs plus a **separate filename chip**. Switching category recolors mounted rows in place without resetting scroll/measurements. [Implementation](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/8b12df7ed3c438438896f09ce0cb52a66d15dee4) · [QA](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md). Source remains Batch 01 (15/235 indexed, 76 lines); original 30-commit prototype untouched. Android live visual rendering remains unverified.

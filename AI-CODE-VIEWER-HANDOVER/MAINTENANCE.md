@@ -2,7 +2,7 @@
 
 This handover represents the user's iterative design process, not a generic ChatGPT template.
 
-- **Original prompts:** `prompts/001.md` ... `prompts/055.md`.
+- **Original prompts:** `prompts/001.md` ... `prompts/057.md`.
 - **Narrated outcomes:** in each prompt record. These are faithfully written summaries, **not full verbatim assistant response exports**.
 - **Actual code:** `reference/*.html` exact GitHub-sourced revisions; canonical `../commit-id-demo/index.html`.
 - **Actual implementation history:** `GIT-PROVENANCE.md` with SHA links.
@@ -11,7 +11,7 @@ This handover represents the user's iterative design process, not a generic Chat
 - **Quality rules:** `QUALITY-GATES.md`.
 
 ## How new learning is added
-1. Append the user's exact prompt (one new `prompts/056.md` etc.).
+1. Append the user's exact prompt (one new `prompts/058.md` etc.).
 2. Document assistant output as verbatim **only if actually captured**, otherwise label it as a summary.
 3. Link the actual code commit and include real code before/after revisions when saved.
 4. Capture what failed, how it was fixed, and the regressions that were tested.
@@ -37,3 +37,7 @@ The current viewer is [../commit-id-demo/index.html](../commit-id-demo/index.htm
 ## Prompt 055 milestone — modular nanoGPT viewer
 
 The accepted static demo at [../commit-id-demo/index.html](../commit-id-demo/index.html) remains unchanged. [../nanogpt-modular-viewer/](../nanogpt-modular-viewer/README.md) now holds a separate modular implementation with original nanoGPT commits 001–015, 76 verified model.py source lines, SourceStore, windowed DOM virtualization, a 15-commit data chunk and a tracker for the remaining 15 batches. Each new batch must append new verified source history while retaining existing STM IDs, user-selected hierarchy colors and conditional green dividers. Continue documenting prompts from 056 onward.
+
+## Prompts 056–057 — latest modular UI
+
+[Implementation](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/8b12df7ed3c438438896f09ce0cb52a66d15dee4) adds a compact sticky control deck, permanently filled category colors, All commits reset, source-row in-place category recoloring and a second filename chip alongside short STM ID. See [QA](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md). Still only first 15 nanoGPT source commits; Batch 02 remains planned.

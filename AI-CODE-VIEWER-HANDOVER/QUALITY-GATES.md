@@ -43,3 +43,11 @@ When user rejects an implementation: capture exact complaint, identify failure m
 - [ ] No dividers in default Lines and Comments modes, between unrelated groups, or between nonconsecutive lines after commit filtering.
 - [ ] File category uses alternating saturated sky blue `#00BFFF` and `#008CFF`, not the old Cream/Cyan.
 - [ ] All 168 sample source IDs and 30 commit filters remain unchanged; inspect affected styles at mobile and desktop widths.
+
+## Sticky viewer QA — Prompts 056–057
+- [ ] Sticky toolbar remains compact, with title/stats scrolling away; category buttons remain fully color-filled in all pressed states.
+- [ ] Category-only selection reuses row objects and height measurements; scroll position and visible source rows stay stable.
+- [ ] A fixed-size chip metadata slot and status/hint rows prevent height changes when category text changes; mobile height-only resize does not reset the virtualizer.
+- [ ] Each row displays short STM chip plus separate filename chip, with full STM ID unchanged in original source data and row attributes.
+- [ ] After 5–10, Full file returns cumulative source through commit 10, while All commits clears selection and returns latest indexed commit 15 with 76 lines.
+- [ ] Swipe is allowed for category CONTROLS on small screens, never for CODE lines. Browser visual testing required before claiming rendered Android layout verified.
