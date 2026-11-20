@@ -128,7 +128,10 @@ function render(resetScroll){
  row.appendChild(col1);row.appendChild(col2);fragment.appendChild(row);
  });
  el('code-grid').replaceChildren(fragment);
- var note=kind==='line'?'Green chips identify every original source line.':groups.size?('Colored '+kind+' chips show '+groups.size+' group'+(groups.size===1?'':'s')+'. The first visible chip names its '+kind+' ID+'.):'No '+kind+' exists yet at this commit. All visible line IDs remain green.';
+ var note;
+ if(kind==='line') note='Green chips identify every original source line.';
+ else if(groups.size) note='Colored '+kind+' chips show '+groups.size+' group'+(groups.size===1?'':'s')+'. The first visible chip names its '+kind+' ID.';
+ else note='No '+kind+' exists yet at this commit. All visible line IDs remain green.';
  el('group-info').textContent=note+' · '+shown.length+' visible lines.';
  if(resetScroll){el('code-scroll').scrollTop=0;el('code-scroll').scrollLeft=0}
 }
