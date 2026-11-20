@@ -1,0 +1,391 @@
+{
+  "schema_version": 1,
+  "repository": "sabareeshrao/Project-Rebuild-Version-2",
+  "source_snapshot": {
+    "branch": "main",
+    "commit": "97e264126419dd66e9cd70d7e31f4e1dd1c5fdc3",
+    "note": "This tracker is pinned to the original source state, before learning/ files were added. Reconcile blob hashes if code changes."
+  },
+  "coverage_model": {
+    "default_learner_status": "not_started",
+    "statuses": [
+      "not_started",
+      "seen",
+      "explained",
+      "practiced",
+      "demonstrated"
+    ],
+    "meaning": {
+      "not_started": "No learner evidence stored",
+      "seen": "Learner reports viewing this source line",
+      "explained": "Learner can explain the purpose and dependent code",
+      "practiced": "Learner completed a related exercise",
+      "demonstrated": "Learner independently recreated or modified relevant behavior and showed working result"
+    },
+    "notebook_rule": "Track code-cell source lines using (cell_number_1_based, line_in_cell_1_based); Markdown cells and notebook JSON formatting are not source-code lines.",
+    "physical_line_rule": "Python line_count includes code, comments, and blank lines. Coverage ranges refer to the file at source_snapshot.commit, with original file numbering.",
+    "status_rule": "A lesson plan is not proof of learning; lesson_coverage plans must never silently update learner_overrides."
+  },
+  "totals": {
+    "tracked_code_files": 17,
+    "python_files": 15,
+    "notebooks": 2,
+    "python_physical_lines": 1220,
+    "notebook_code_lines": 407,
+    "tracked_units": 1627
+  },
+  "files": [
+    {
+      "path": "bench.py",
+      "blob_sha": "09d574a5b8e6360af60ac17449ba8f01c1abf5e1",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 117,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "config/eval_gpt2.py",
+      "blob_sha": "53978cb9e2408c9172d4b482afbd48784c3f8b27",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 8,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "config/eval_gpt2_large.py",
+      "blob_sha": "4cbeaeff29e1be57088b0baa446899b750caf224",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 8,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "config/eval_gpt2_medium.py",
+      "blob_sha": "9d0db116d1b5876457b286e98d02c69f12d12899",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 8,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "config/eval_gpt2_xl.py",
+      "blob_sha": "1bae34f9f1d752c4b13d9f8b428a104426818553",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 8,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "config/finetune_shakespeare.py",
+      "blob_sha": "148a4c4fa314f489ecd5629653cc710abd2cd795",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 25,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "config/train_gpt2.py",
+      "blob_sha": "8f192732ac7a15b1696ca2f61bce7985e36efc37",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 25,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "config/train_shakespeare_char.py",
+      "blob_sha": "41c81dfb4ea48523199e774ff1f309d9ab1a1181",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 37,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "configurator.py",
+      "blob_sha": "a8bba9599537cbb34b378399a077b525a87d497f",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 47,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "data/openwebtext/prepare.py",
+      "blob_sha": "2a9b9752b7f4626c29cb02c83d33e591831ab1c8",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 81,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "data/shakespeare/prepare.py",
+      "blob_sha": "bda25b139f41f66ef95282337d21d820bc252636",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 33,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "data/shakespeare_char/prepare.py",
+      "blob_sha": "9fd1621d55b2e0fd268ca1a79cf3b056ed23d16b",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 68,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "model.py",
+      "blob_sha": "c698f8b60129d793494de058b0dd4e318c0dcb5e",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 330,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "sample.py",
+      "blob_sha": "d25d6e0861388217c01c2f4284810ee39faa40a2",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 89,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "scaling_laws.ipynb",
+      "blob_sha": "946ea831dc721647126b76f20ed2d423a6a86106",
+      "kind": "notebook_code_cells",
+      "units": "code_cell_source_lines",
+      "line_count": 263,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": [],
+      "code_cells": [
+        {
+          "cell_number_1_based": 2,
+          "line_count": 4,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 4,
+          "line_count": 20,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 6,
+          "line_count": 18,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 7,
+          "line_count": 5,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 8,
+          "line_count": 4,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 11,
+          "line_count": 38,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 12,
+          "line_count": 45,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 15,
+          "line_count": 33,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 17,
+          "line_count": 20,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 19,
+          "line_count": 17,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 20,
+          "line_count": 11,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 23,
+          "line_count": 27,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 24,
+          "line_count": 7,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 25,
+          "line_count": 11,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 26,
+          "line_count": 3,
+          "baseline_learner_status": "not_started"
+        }
+      ]
+    },
+    {
+      "path": "train.py",
+      "blob_sha": "de5785051050d64bbda37a4964c2c079f0739b2b",
+      "kind": "python_source",
+      "units": "physical_file_lines",
+      "line_count": 336,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": []
+    },
+    {
+      "path": "transformer_sizing.ipynb",
+      "blob_sha": "43262add3ba64c68b3b211a4a8adad6d183cac50",
+      "kind": "notebook_code_cells",
+      "units": "code_cell_source_lines",
+      "line_count": 144,
+      "baseline_learner_status": "not_started",
+      "learner_overrides": [],
+      "code_cells": [
+        {
+          "cell_number_1_based": 2,
+          "line_count": 1,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 3,
+          "line_count": 14,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 4,
+          "line_count": 42,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 5,
+          "line_count": 8,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 7,
+          "line_count": 2,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 10,
+          "line_count": 44,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 11,
+          "line_count": 13,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 13,
+          "line_count": 11,
+          "baseline_learner_status": "not_started"
+        },
+        {
+          "cell_number_1_based": 15,
+          "line_count": 9,
+          "baseline_learner_status": "not_started"
+        }
+      ]
+    }
+  ],
+  "lesson_plans": [
+    {
+      "lesson_id": "01",
+      "title": "From Text to Your First Python Code",
+      "planned_source_coverage": [
+        {
+          "path": "data/shakespeare_char/prepare.py",
+          "ranges": [
+            {
+              "start": 19,
+              "end": 20,
+              "depth": "context_preview",
+              "note": "File read; full syntax deferred to later chapter"
+            },
+            {
+              "start": 21,
+              "end": 21,
+              "depth": "line_walkthrough",
+              "note": "Connect print, f-string and len to real dataset-length output"
+            },
+            {
+              "start": 23,
+              "end": 25,
+              "depth": "future_preview",
+              "note": "Unique characters and vocab size are explained in Lesson 2"
+            }
+          ]
+        },
+        {
+          "path": "model.py",
+          "ranges": [
+            {
+              "start": 1,
+              "end": 8,
+              "depth": "architecture_preview",
+              "note": "GPT model file header; no Python internals claimed"
+            }
+          ]
+        },
+        {
+          "path": "train.py",
+          "ranges": [
+            {
+              "start": 30,
+              "end": 30,
+              "depth": "architecture_preview",
+              "note": "Imports GPT classes from model.py, why files connect"
+            }
+          ]
+        },
+        {
+          "path": "sample.py",
+          "ranges": [
+            {
+              "start": 9,
+              "end": 9,
+              "depth": "architecture_preview",
+              "note": "Generation script imports same GPT class; no syntax mastery claimed"
+            }
+          ]
+        }
+      ],
+      "completed": false
+    }
+  ],
+  "excluded_from_line_by_line_code_coverage": [
+    "LICENSE",
+    "README.md",
+    ".gitignore",
+    ".gitattributes",
+    "assets/*",
+    "data/*/readme.md"
+  ],
+  "excluded_note": "Supporting documents/assets are covered in project context but are not Python source code; notebooks count only code-cell source lines.",
+  "sync_instructions": "After an HTML lesson, export the attempt record and ask ChatGPT to update progress.json and explicit per-line learner_overrides only when backed by evidence."
+}
