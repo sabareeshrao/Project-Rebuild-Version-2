@@ -206,3 +206,11 @@ If you'd like to sample from a model you trained, use the `--out_dir` to point t
 
 For simple model benchmarking and profiling, `bench.py` might be useful. It's identical to what happens in the meat of the training loop of `train.py`, but omits much of the other complexities.
 
+Note that the code by default uses [PyTorch 2.0](https://pytorch.org/get-started/pytorch-2.0/). At the time of writing (Dec 29, 2022) this makes `torch.compile()` available in the nightly release. The improvement from the one line of code is noticeable, e.g. cutting down iteration time from ~250ms / iter to 135ms / iter. Nice work PyTorch team!
+
+## todos
+
+- Investigate and add FSDP instead of DDP
+- Eval zero-shot perplexities on standard evals (e.g. LAMBADA? HELM? etc.)
+- Finetune the finetuning script, I think the hyperparams are not great
+- Schedule for linear batch size increase during training
