@@ -1,5 +1,13 @@
 # Instructions to the Next AI — Read Before Coding
 
+## Critical latest rule — Prompts 063–064 (supersedes earlier first-chip scope label)
+
+In the modular nanoGPT viewer, every colored source chip visibly contains **only its short STM number**, e.g. `STM-046`. The selected **color** identifies the hierarchy. **Never** add a second label row (`NESTED · NBL-001 · if not self.flash`, class/method names, or `COMMIT · +N` markers) inside the chip. Keep complete STM and structural identity/provenance in the registry, DOM attributes and accessible labels.
+
+Preserve **filename → STM → original code** order. The chip is a single compact line, even for the first row of each class/method/block. Category switching recolors existing mounted rows in place without changing their heights or scroll positions. This supersedes older instructions below that had the "first chip names scope" layout or reserved second metadata line.
+
+Read [Prompt 063](prompts/063.md), [Prompt 064](prompts/064.md), [current renderer](../nanogpt-modular-viewer/assets/view.js), [compact CSS](../nanogpt-modular-viewer/assets/viewer.css), [focused QA](../nanogpt-modular-viewer/QA-UI-COMPACT-STM-CHIPS.md). Current source coverage remains **60 of 235** authentic nanoGPT commits; next source batch is **061–075**.
+
 ## Your job
 The user will hand you a NEW GitHub repository. Replicate the evolving code-ID HTML viewer, not the nanoGPT project itself. The source of truth is the NEW repo's code, commits and actual Git diffs. Do not inject metadata comments into the source. Build in a separate folder and leave original code intact unless explicitly instructed otherwise.
 
