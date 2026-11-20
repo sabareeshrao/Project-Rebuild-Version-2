@@ -30,3 +30,11 @@ Dependencies:
 -  `datasets` for huggingface datasets <3 (if you want to download + preprocess OpenWebText)
 -  `tiktoken` for OpenAI's fast BPE code <3
 -  `wandb` for optional logging <3
+-  `tqdm` for progress bars <3
+
+## quick start
+
+If you are not a deep learning professional and you just want to feel the magic and get your feet wet, the fastest way to get started is to train a character-level GPT on the works of Shakespeare. First, we download it as a single (1MB) file and turn it from raw text into one large stream of integers:
+
+```sh
+python data/shakespeare_char/prepare.py
