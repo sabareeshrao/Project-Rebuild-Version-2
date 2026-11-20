@@ -1,15 +1,17 @@
 {
   "schema_version": 1,
   "learner_profile": {
-    "assumed_starting_level": "absolute_beginner",
+    "assumed_starting_level": "College-level Python background (self-reported), new/unassessed PyTorch and GPT internals",
     "language": "Python",
     "project": "nanoGPT",
-    "evidence_policy": "Do not assume a learner knows a concept merely because it appears in a lesson."
+    "evidence_policy": "Prior Python coursework is self-reported exposure, not verified mastery. Quiz answers, executed code, and explanations establish new evidence.",
+    "self_reported_background": "Studied Python at college; skip syntax drills for variables, basic loops, functions and classes."
   },
-  "current_lesson": "01",
+  "current_lesson": "01-pytorch-layernorm",
   "lesson_attempts": {
     "01": {
       "status": "not_started",
+      "slug": "01-pytorch-layernorm",
       "started_at": null,
       "completed_at": null,
       "quiz_answers": {},
@@ -19,31 +21,31 @@
   },
   "knowledge": {
     "python.program_structure": {
-      "status": "unassessed",
+      "status": "prior_exposure_self_reported",
       "evidence": []
     },
     "python.print": {
-      "status": "unassessed",
+      "status": "prior_exposure_self_reported",
       "evidence": []
     },
     "python.strings": {
-      "status": "unassessed",
+      "status": "prior_exposure_self_reported",
       "evidence": []
     },
     "python.variables": {
-      "status": "unassessed",
+      "status": "prior_exposure_self_reported",
       "evidence": []
     },
     "python.len": {
-      "status": "unassessed",
+      "status": "prior_exposure_self_reported",
       "evidence": []
     },
     "python.indexing": {
-      "status": "unassessed",
+      "status": "prior_exposure_self_reported",
       "evidence": []
     },
     "python.f_strings": {
-      "status": "unassessed",
+      "status": "prior_exposure_self_reported",
       "evidence": []
     },
     "project.data_to_model_flow": {
@@ -51,15 +53,39 @@
       "evidence": []
     },
     "python.files": {
-      "status": "not_taught",
+      "status": "prior_exposure_self_reported",
       "evidence": []
     },
     "python.collections": {
-      "status": "not_taught",
+      "status": "prior_exposure_self_reported",
       "evidence": []
     },
     "pytorch.tensors": {
       "status": "not_taught",
+      "evidence": []
+    },
+    "pytorch.tensor_shape": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "pytorch.embeddings": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "pytorch.parameters": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "pytorch.layernorm_axes": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "project.block_flow": {
+      "status": "unassessed",
+      "evidence": []
+    },
+    "project.config_to_module": {
+      "status": "unassessed",
       "evidence": []
     }
   },
@@ -71,5 +97,13 @@
     "Future lessons should build on demonstrated concepts and use brief revision only where needed.",
     "Keep the original project code unchanged by placing learning materials under learning/."
   ],
-  "sync_instructions": "Open learning/lessons/01-first-python/index.html, complete the lesson, download the attempt JSON, and share the file with ChatGPT. It can then record your demonstrated learning in GitHub."
+  "sync_instructions": "Complete learning/lessons/01-pytorch-layernorm/index.html and run learning/lessons/01-pytorch-layernorm/practice.py. Export HTML quiz attempt and share actual Python output. Update GitHub knowledge and explicit source-line statuses only after verifying evidence.",
+  "superseded_lessons": [
+    {
+      "lesson_id": "01",
+      "path": "learning/lessons/01-first-python/index.html",
+      "replaced_by": "learning/lessons/01-pytorch-layernorm/index.html",
+      "reason": "Revised learning level based on user self-report of college Python coursework."
+    }
+  ]
 }
