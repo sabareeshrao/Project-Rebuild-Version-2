@@ -25,3 +25,16 @@ if __name__ == '__main__':
     # owt by default only contains the 'train' split, so create a test split
     split_dataset = dataset["train"].train_test_split(test_size=0.0005, seed=2357, shuffle=True)
     split_dataset['val'] = split_dataset.pop('test') # rename the test split to val
+
+    # this results in:
+    # >>> split_dataset
+    # DatasetDict({
+    #     train: Dataset({
+    #         features: ['text'],
+    #         num_rows: 8009762
+    #     })
+    #     val: Dataset({
+    #         features: ['text'],
+    #         num_rows: 4007
+    #     })
+    # })
