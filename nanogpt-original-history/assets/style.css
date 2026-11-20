@@ -221,7 +221,7 @@ html,body{overflow-x:clip}
   text-decoration-thickness:1.3px;color:#d4a4a7;
 }
 .code-row.deleted .code-cell{background:rgba(126,30,40,.10)}
-.code-row.deleted .line-chip{background:#15803d;color:#fff}
+.code-row.deleted .line-chip{background:var(--chip-bg,#15803d);color:var(--chip-ink,#fff)}
 .code-row.deleted .code-indent{opacity:.7}
 .code-row.deleted .code-content .keyword,
 .code-row.deleted .code-content .string,
@@ -239,3 +239,15 @@ html,body{overflow-x:clip}
 #line-window{min-width:0}
 #status[data-warning="true"]{color:#f6c081}
 #hint,#status{min-height:17px}
+
+/* File and Comments are independent, composable category controls.
+   Keep original toolbar/row geometry exactly unchanged. */
+.category[data-kind="file"][aria-pressed="true"],
+.category[data-kind="comment"][aria-pressed="true"]{
+  border-color:#fff;box-shadow:0 0 0 1px #fff;
+}
+.code-row.deleted .line-chip{
+  /* Deleting code does not erase File/Lines/Comments membership. */
+  background:var(--chip-bg,#15803d);
+  color:var(--chip-ink,#fff);
+}
