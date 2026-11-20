@@ -129,3 +129,7 @@ def get_batch(split):
     else:
         x, y = x.to(device), y.to(device)
     return x, y
+
+# init these up here, can override if init_from='resume' (i.e. from a checkpoint)
+iter_num = 0
+best_val_loss = 1e9
