@@ -1,8 +1,8 @@
-# Chronological Prompt Index — 50 User Turns
+# Chronological Prompt Index — 55 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (a summary, not verbatim chat export), the accepted or rejected design decision, and when possible a verified GitHub implementation link. These **50 files were each committed separately** to document improvement history; actual UI implementation commits precede these retrospective documentation commits.
+Each file below has the **user's prompt**, the assistant's observable outcome (a summary, not verbatim chat export), the accepted or rejected design decision, and when possible a verified GitHub implementation link. These **55 files were each committed separately** to document improvement history; actual UI implementation commits precede these retrospective documentation commits.
 
-**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 50 records.
+**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 55 records.
 
 | # | Prompt focus | Historical record |
 |---:|---|---|
@@ -56,6 +56,11 @@ Each file below has the **user's prompt**, the assistant's observable outcome (a
 | 048 | Scope-only chip colors and conditional green code divider | [Prompt 048](prompts/048.md) |
 | 049 | Change File A/B to saturated sky-blue shades | [Prompt 049](prompts/049.md) |
 | 050 | Blank source lines inherit selected scope color | [Prompt 050](prompts/050.md) |
+| 051 | Confirm documentation is stored as individual prompt commits | [Prompt 051](prompts/051.md) |
+| 052 | Replace single giant HTML for 100,000+ lines | [Prompt 052](prompts/052.md) |
+| 053 | Count real source commits and choose 15-commit batches | [Prompt 053](prompts/053.md) |
+| 054 | Limit batch scope to nanoGPT only | [Prompt 054](prompts/054.md) |
+| 055 | Build modular Batch 01 from nanoGPT source commits 1–15 | [Prompt 055](prompts/055.md) |
 
 ## Milestones to inspect while replaying
 
@@ -78,3 +83,5 @@ The user prompts are drawn from the currently visible conversation. Embedded scr
 If a new AI finds a conflict between an earlier and a later prompt, the later explicitly accepted correction wins. Never erase the earlier error: it teaches what not to repeat.
 - **046–047:** sky-blue structural boundary chip rejected and prior green-gap behavior restored and verified.
 - **048–050:** final refinement: selected categories color every member line (including blanks/comments/docstrings), nonmember chips are neutral, conditional green line in CODE pane only between directly adjacent nonoverlapping same-category groups; File A/B is now saturated sky blue #00BFFF / #008CFF. No synthetic gap rows or boundary chips.
+
+- **051–055:** evolve from single-file demo into separate modular nanoGPT viewer, choose 235 nanoGPT source commits divided into 16 batches, implement Batch 01 (source commits 001–015 / 76 lines) and preserve all prior STM IDs and UI rules. [Batch source](../nanogpt-modular-viewer/README.md).

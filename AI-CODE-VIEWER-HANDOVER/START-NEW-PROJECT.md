@@ -17,3 +17,5 @@ User supplies the NEW project's repository URL or files. Never generate fake his
 5. Preserve the chronological prompt→feedback→patch→quality-audit→commit history in a similar `AI-CODE-VIEWER-HANDOVER/` folder for that new project.
 
 **Latest override:** Follow Prompts 048–050, not the superseded green-gap variant. Do not draw synthetic colored boundary chips, and do not render green chips inside selected hierarchy scopes. Real source blanks inherit the active group color, while a thin green line appears only between adjacent distinct same-category groups in the code area.
+
+**Scaling addition (Prompt 055):** The actual nanoGPT modular viewer is now available at https://github.com/sabareeshrao/Project-Rebuild-Version-2/tree/main/nanogpt-modular-viewer. Inspect its separation between HTML/CSS/JS and JSON data chunks and its windowed page-scroll rendering. The original one-file viewer remains a visual comparison only. Do not copy the nanoGPT historical source lines into a different user's project.

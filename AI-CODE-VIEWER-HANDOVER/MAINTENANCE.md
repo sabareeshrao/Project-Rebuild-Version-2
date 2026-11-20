@@ -2,7 +2,7 @@
 
 This handover represents the user's iterative design process, not a generic ChatGPT template.
 
-- **Original prompts:** `prompts/001.md` ... `prompts/050.md`.
+- **Original prompts:** `prompts/001.md` ... `prompts/055.md`.
 - **Narrated outcomes:** in each prompt record. These are faithfully written summaries, **not full verbatim assistant response exports**.
 - **Actual code:** `reference/*.html` exact GitHub-sourced revisions; canonical `../commit-id-demo/index.html`.
 - **Actual implementation history:** `GIT-PROVENANCE.md` with SHA links.
@@ -11,7 +11,7 @@ This handover represents the user's iterative design process, not a generic Chat
 - **Quality rules:** `QUALITY-GATES.md`.
 
 ## How new learning is added
-1. Append the user's exact prompt (one new `prompts/051.md` etc.).
+1. Append the user's exact prompt (one new `prompts/056.md` etc.).
 2. Document assistant output as verbatim **only if actually captured**, otherwise label it as a summary.
 3. Link the actual code commit and include real code before/after revisions when saved.
 4. Capture what failed, how it was fixed, and the regressions that were tested.
@@ -33,3 +33,7 @@ Multi-file/module color alternation is specified but cannot be visually demonstr
 ## Current canonical style (Prompt 050)
 
 The current viewer is [../commit-id-demo/index.html](../commit-id-demo/index.html). Its exact GitHub-sourced copy lives in [reference/LATEST-30-COMMITS.html](reference/LATEST-30-COMMITS.html). Rejected sky-blue boundary chips and former green synthetic blank separators are historical prototypes only. No green chips inside active Class/Method/Block/Nested/File/Package/Module groups: all member source lines share the selected category color. Nonmember lines use neutral charcoal. Thin green line only in the code column between directly adjacent nonoverlapping groups of the same selected category. Preserve all historical data and STM IDs.
+
+## Prompt 055 milestone — modular nanoGPT viewer
+
+The accepted static demo at [../commit-id-demo/index.html](../commit-id-demo/index.html) remains unchanged. [../nanogpt-modular-viewer/](../nanogpt-modular-viewer/README.md) now holds a separate modular implementation with original nanoGPT commits 001–015, 76 verified model.py source lines, SourceStore, windowed DOM virtualization, a 15-commit data chunk and a tracker for the remaining 15 batches. Each new batch must append new verified source history while retaining existing STM IDs, user-selected hierarchy colors and conditional green dividers. Continue documenting prompts from 056 onward.

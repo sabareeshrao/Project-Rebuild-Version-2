@@ -40,3 +40,12 @@ For source-data generation, the first 30 nanoGPT build commits (starting SHA `ca
 - Only first 30 **build commits** were processed in this viewer, and they all added lines to `model.py`. Real-project edits, deletes, renames, branches and multi-file alternating colors still need robust implementation and QA.
 - The first 30 commits were initially derived by reading Git commit diffs. The demo's embedded source database is tied to the last of those commits; do not reuse source IDs unchanged for another project.
 - A GitHub Pages URL is given as a target; deployment availability is independent of creating a public GitHub repository.
+
+## New modular nanoGPT source history (after Prompt 055)
+
+- [Separate modular viewer](../nanogpt-modular-viewer/index.html) in a new directory. The earlier [single-file 30-commit prototype](../commit-id-demo/index.html) was **not altered**.
+- [Implementation commit — b9873f09](https://github.com/sabareeshrao/Project-Rebuild-Version-2/commit/b9873f09edf42c197a6002d42a3bf943c7ac3ac3) adds index.html, CSS, app/store/view/virtual JavaScript modules, manifest, batch source data and QA documents.
+- Batch 01 spans **15 original reconstructed nanoGPT commits** from cac2c626c007c5a5bb298f001a9efa7091a313ca through af0f71fda3840a543379f9e075d032a77d5380f1, with **76 physical lines** across the historical model.py. All 15 real snapshots were fetched and checked, including original whitespace/blank/comment lines.
+- Total scoped source history: **235 nanoGPT commits**, divided into **16 batches** (15 commits per batch, final 10). See [batch tracker](../nanogpt-modular-viewer/BATCH_TRACKER.md).
+- [Actual data manifest](../nanogpt-modular-viewer/data/manifest.json) and [Batch 01 source chunk](../nanogpt-modular-viewer/data/batches/001-015.json) are authoritative machine-readable artifacts for continued work.
+- The modular viewer's runtime source window has passed source-store/range/color/divider checks and mocked DOM virtualization checks; **real-browser rendering and live GitHub Pages deployment were not independently verified**.
