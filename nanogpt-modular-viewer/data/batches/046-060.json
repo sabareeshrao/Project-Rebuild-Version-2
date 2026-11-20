@@ -1,0 +1,495 @@
+{
+  "schemaVersion": 1,
+  "batch": "046-060",
+  "fromCommit": 46,
+  "toCommit": 57,
+  "fromLine": 262,
+  "toLine": 330,
+  "fileId": "FIL-001",
+  "file": "model.py",
+  "lines": [
+    {
+      "n": 262,
+      "id": "STM-262-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 46,
+      "kind": "blank"
+    },
+    {
+      "n": 263,
+      "id": "STM-263-FIL-001-model.py",
+      "text": "    def configure_optimizers(self, weight_decay, learning_rate, betas, device_type):",
+      "firstCommit": 46,
+      "kind": "code"
+    },
+    {
+      "n": 264,
+      "id": "STM-264-FIL-001-model.py",
+      "text": "        # start with all of the candidate parameters",
+      "firstCommit": 46,
+      "kind": "comment"
+    },
+    {
+      "n": 265,
+      "id": "STM-265-FIL-001-model.py",
+      "text": "        param_dict = {pn: p for pn, p in self.named_parameters()}",
+      "firstCommit": 46,
+      "kind": "code"
+    },
+    {
+      "n": 266,
+      "id": "STM-266-FIL-001-model.py",
+      "text": "        # filter out those that do not require grad",
+      "firstCommit": 46,
+      "kind": "comment"
+    },
+    {
+      "n": 267,
+      "id": "STM-267-FIL-001-model.py",
+      "text": "        param_dict = {pn: p for pn, p in param_dict.items() if p.requires_grad}",
+      "firstCommit": 46,
+      "kind": "code"
+    },
+    {
+      "n": 268,
+      "id": "STM-268-FIL-001-model.py",
+      "text": "        # create optim groups. Any parameters that is 2D will be weight decayed, otherwise no.",
+      "firstCommit": 47,
+      "kind": "comment"
+    },
+    {
+      "n": 269,
+      "id": "STM-269-FIL-001-model.py",
+      "text": "        # i.e. all weight tensors in matmuls + embeddings decay, all biases and layernorms don't.",
+      "firstCommit": 47,
+      "kind": "comment"
+    },
+    {
+      "n": 270,
+      "id": "STM-270-FIL-001-model.py",
+      "text": "        decay_params = [p for n, p in param_dict.items() if p.dim() >= 2]",
+      "firstCommit": 47,
+      "kind": "code"
+    },
+    {
+      "n": 271,
+      "id": "STM-271-FIL-001-model.py",
+      "text": "        nodecay_params = [p for n, p in param_dict.items() if p.dim() < 2]",
+      "firstCommit": 47,
+      "kind": "code"
+    },
+    {
+      "n": 272,
+      "id": "STM-272-FIL-001-model.py",
+      "text": "        optim_groups = [",
+      "firstCommit": 47,
+      "kind": "code"
+    },
+    {
+      "n": 273,
+      "id": "STM-273-FIL-001-model.py",
+      "text": "            {'params': decay_params, 'weight_decay': weight_decay},",
+      "firstCommit": 47,
+      "kind": "code"
+    },
+    {
+      "n": 274,
+      "id": "STM-274-FIL-001-model.py",
+      "text": "            {'params': nodecay_params, 'weight_decay': 0.0}",
+      "firstCommit": 47,
+      "kind": "code"
+    },
+    {
+      "n": 275,
+      "id": "STM-275-FIL-001-model.py",
+      "text": "        ]",
+      "firstCommit": 47,
+      "kind": "code"
+    },
+    {
+      "n": 276,
+      "id": "STM-276-FIL-001-model.py",
+      "text": "        num_decay_params = sum(p.numel() for p in decay_params)",
+      "firstCommit": 48,
+      "kind": "code"
+    },
+    {
+      "n": 277,
+      "id": "STM-277-FIL-001-model.py",
+      "text": "        num_nodecay_params = sum(p.numel() for p in nodecay_params)",
+      "firstCommit": 48,
+      "kind": "code"
+    },
+    {
+      "n": 278,
+      "id": "STM-278-FIL-001-model.py",
+      "text": "        print(f\"num decayed parameter tensors: {len(decay_params)}, with {num_decay_params:,} parameters\")",
+      "firstCommit": 48,
+      "kind": "code"
+    },
+    {
+      "n": 279,
+      "id": "STM-279-FIL-001-model.py",
+      "text": "        print(f\"num non-decayed parameter tensors: {len(nodecay_params)}, with {num_nodecay_params:,} parameters\")",
+      "firstCommit": 48,
+      "kind": "code"
+    },
+    {
+      "n": 280,
+      "id": "STM-280-FIL-001-model.py",
+      "text": "        # Create AdamW optimizer and use the fused version if it is available",
+      "firstCommit": 49,
+      "kind": "comment"
+    },
+    {
+      "n": 281,
+      "id": "STM-281-FIL-001-model.py",
+      "text": "        fused_available = 'fused' in inspect.signature(torch.optim.AdamW).parameters",
+      "firstCommit": 49,
+      "kind": "code"
+    },
+    {
+      "n": 282,
+      "id": "STM-282-FIL-001-model.py",
+      "text": "        use_fused = fused_available and device_type == 'cuda'",
+      "firstCommit": 49,
+      "kind": "code"
+    },
+    {
+      "n": 283,
+      "id": "STM-283-FIL-001-model.py",
+      "text": "        extra_args = dict(fused=True) if use_fused else dict()",
+      "firstCommit": 49,
+      "kind": "code"
+    },
+    {
+      "n": 284,
+      "id": "STM-284-FIL-001-model.py",
+      "text": "        optimizer = torch.optim.AdamW(optim_groups, lr=learning_rate, betas=betas, **extra_args)",
+      "firstCommit": 49,
+      "kind": "code"
+    },
+    {
+      "n": 285,
+      "id": "STM-285-FIL-001-model.py",
+      "text": "        print(f\"using fused AdamW: {use_fused}\")",
+      "firstCommit": 49,
+      "kind": "code"
+    },
+    {
+      "n": 286,
+      "id": "STM-286-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 50,
+      "kind": "blank"
+    },
+    {
+      "n": 287,
+      "id": "STM-287-FIL-001-model.py",
+      "text": "        return optimizer",
+      "firstCommit": 50,
+      "kind": "code"
+    },
+    {
+      "n": 288,
+      "id": "STM-288-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 51,
+      "kind": "blank"
+    },
+    {
+      "n": 289,
+      "id": "STM-289-FIL-001-model.py",
+      "text": "    def estimate_mfu(self, fwdbwd_per_iter, dt):",
+      "firstCommit": 51,
+      "kind": "code"
+    },
+    {
+      "n": 290,
+      "id": "STM-290-FIL-001-model.py",
+      "text": "        \"\"\" estimate model flops utilization (MFU) in units of A100 bfloat16 peak FLOPS \"\"\"",
+      "firstCommit": 51,
+      "kind": "docstring"
+    },
+    {
+      "n": 291,
+      "id": "STM-291-FIL-001-model.py",
+      "text": "        # first estimate the number of flops we do per iteration.",
+      "firstCommit": 51,
+      "kind": "comment"
+    },
+    {
+      "n": 292,
+      "id": "STM-292-FIL-001-model.py",
+      "text": "        # see PaLM paper Appendix B as ref: https://arxiv.org/abs/2204.02311",
+      "firstCommit": 51,
+      "kind": "comment"
+    },
+    {
+      "n": 293,
+      "id": "STM-293-FIL-001-model.py",
+      "text": "        N = self.get_num_params()",
+      "firstCommit": 51,
+      "kind": "code"
+    },
+    {
+      "n": 294,
+      "id": "STM-294-FIL-001-model.py",
+      "text": "        cfg = self.config",
+      "firstCommit": 51,
+      "kind": "code"
+    },
+    {
+      "n": 295,
+      "id": "STM-295-FIL-001-model.py",
+      "text": "        L, H, Q, T = cfg.n_layer, cfg.n_head, cfg.n_embd//cfg.n_head, cfg.block_size",
+      "firstCommit": 51,
+      "kind": "code"
+    },
+    {
+      "n": 296,
+      "id": "STM-296-FIL-001-model.py",
+      "text": "        flops_per_token = 6*N + 12*L*H*Q*T",
+      "firstCommit": 52,
+      "kind": "code"
+    },
+    {
+      "n": 297,
+      "id": "STM-297-FIL-001-model.py",
+      "text": "        flops_per_fwdbwd = flops_per_token * T",
+      "firstCommit": 52,
+      "kind": "code"
+    },
+    {
+      "n": 298,
+      "id": "STM-298-FIL-001-model.py",
+      "text": "        flops_per_iter = flops_per_fwdbwd * fwdbwd_per_iter",
+      "firstCommit": 52,
+      "kind": "code"
+    },
+    {
+      "n": 299,
+      "id": "STM-299-FIL-001-model.py",
+      "text": "        # express our flops throughput as ratio of A100 bfloat16 peak flops",
+      "firstCommit": 52,
+      "kind": "comment"
+    },
+    {
+      "n": 300,
+      "id": "STM-300-FIL-001-model.py",
+      "text": "        flops_achieved = flops_per_iter * (1.0/dt) # per second",
+      "firstCommit": 52,
+      "kind": "code"
+    },
+    {
+      "n": 301,
+      "id": "STM-301-FIL-001-model.py",
+      "text": "        flops_promised = 312e12 # A100 GPU bfloat16 peak flops is 312 TFLOPS",
+      "firstCommit": 52,
+      "kind": "code"
+    },
+    {
+      "n": 302,
+      "id": "STM-302-FIL-001-model.py",
+      "text": "        mfu = flops_achieved / flops_promised",
+      "firstCommit": 52,
+      "kind": "code"
+    },
+    {
+      "n": 303,
+      "id": "STM-303-FIL-001-model.py",
+      "text": "        return mfu",
+      "firstCommit": 52,
+      "kind": "code"
+    },
+    {
+      "n": 304,
+      "id": "STM-304-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 53,
+      "kind": "blank"
+    },
+    {
+      "n": 305,
+      "id": "STM-305-FIL-001-model.py",
+      "text": "    @torch.no_grad()",
+      "firstCommit": 53,
+      "kind": "code"
+    },
+    {
+      "n": 306,
+      "id": "STM-306-FIL-001-model.py",
+      "text": "    def generate(self, idx, max_new_tokens, temperature=1.0, top_k=None):",
+      "firstCommit": 53,
+      "kind": "code"
+    },
+    {
+      "n": 307,
+      "id": "STM-307-FIL-001-model.py",
+      "text": "        \"\"\"",
+      "firstCommit": 53,
+      "kind": "docstring"
+    },
+    {
+      "n": 308,
+      "id": "STM-308-FIL-001-model.py",
+      "text": "        Take a conditioning sequence of indices idx (LongTensor of shape (b,t)) and complete",
+      "firstCommit": 53,
+      "kind": "docstring"
+    },
+    {
+      "n": 309,
+      "id": "STM-309-FIL-001-model.py",
+      "text": "        the sequence max_new_tokens times, feeding the predictions back into the model each time.",
+      "firstCommit": 53,
+      "kind": "docstring"
+    },
+    {
+      "n": 310,
+      "id": "STM-310-FIL-001-model.py",
+      "text": "        Most likely you'll want to make sure to be in model.eval() mode of operation for this.",
+      "firstCommit": 53,
+      "kind": "docstring"
+    },
+    {
+      "n": 311,
+      "id": "STM-311-FIL-001-model.py",
+      "text": "        \"\"\"",
+      "firstCommit": 53,
+      "kind": "docstring"
+    },
+    {
+      "n": 312,
+      "id": "STM-312-FIL-001-model.py",
+      "text": "        for _ in range(max_new_tokens):",
+      "firstCommit": 54,
+      "kind": "code"
+    },
+    {
+      "n": 313,
+      "id": "STM-313-FIL-001-model.py",
+      "text": "            # if the sequence context is growing too long we must crop it at block_size",
+      "firstCommit": 54,
+      "kind": "comment"
+    },
+    {
+      "n": 314,
+      "id": "STM-314-FIL-001-model.py",
+      "text": "            idx_cond = idx if idx.size(1) <= self.config.block_size else idx[:, -self.config.block_size:]",
+      "firstCommit": 54,
+      "kind": "code"
+    },
+    {
+      "n": 315,
+      "id": "STM-315-FIL-001-model.py",
+      "text": "            # forward the model to get the logits for the index in the sequence",
+      "firstCommit": 54,
+      "kind": "comment"
+    },
+    {
+      "n": 316,
+      "id": "STM-316-FIL-001-model.py",
+      "text": "            logits, _ = self(idx_cond)",
+      "firstCommit": 54,
+      "kind": "code"
+    },
+    {
+      "n": 317,
+      "id": "STM-317-FIL-001-model.py",
+      "text": "            # pluck the logits at the final step and scale by desired temperature",
+      "firstCommit": 54,
+      "kind": "comment"
+    },
+    {
+      "n": 318,
+      "id": "STM-318-FIL-001-model.py",
+      "text": "            logits = logits[:, -1, :] / temperature",
+      "firstCommit": 54,
+      "kind": "code"
+    },
+    {
+      "n": 319,
+      "id": "STM-319-FIL-001-model.py",
+      "text": "            # optionally crop the logits to only the top k options",
+      "firstCommit": 55,
+      "kind": "comment"
+    },
+    {
+      "n": 320,
+      "id": "STM-320-FIL-001-model.py",
+      "text": "            if top_k is not None:",
+      "firstCommit": 55,
+      "kind": "code"
+    },
+    {
+      "n": 321,
+      "id": "STM-321-FIL-001-model.py",
+      "text": "                v, _ = torch.topk(logits, min(top_k, logits.size(-1)))",
+      "firstCommit": 55,
+      "kind": "code"
+    },
+    {
+      "n": 322,
+      "id": "STM-322-FIL-001-model.py",
+      "text": "                logits[logits < v[:, [-1]]] = -float('Inf')",
+      "firstCommit": 55,
+      "kind": "code"
+    },
+    {
+      "n": 323,
+      "id": "STM-323-FIL-001-model.py",
+      "text": "            # apply softmax to convert logits to (normalized) probabilities",
+      "firstCommit": 56,
+      "kind": "comment"
+    },
+    {
+      "n": 324,
+      "id": "STM-324-FIL-001-model.py",
+      "text": "            probs = F.softmax(logits, dim=-1)",
+      "firstCommit": 56,
+      "kind": "code"
+    },
+    {
+      "n": 325,
+      "id": "STM-325-FIL-001-model.py",
+      "text": "            # sample from the distribution",
+      "firstCommit": 56,
+      "kind": "comment"
+    },
+    {
+      "n": 326,
+      "id": "STM-326-FIL-001-model.py",
+      "text": "            idx_next = torch.multinomial(probs, num_samples=1)",
+      "firstCommit": 56,
+      "kind": "code"
+    },
+    {
+      "n": 327,
+      "id": "STM-327-FIL-001-model.py",
+      "text": "            # append sampled index to the running sequence and continue",
+      "firstCommit": 56,
+      "kind": "comment"
+    },
+    {
+      "n": 328,
+      "id": "STM-328-FIL-001-model.py",
+      "text": "            idx = torch.cat((idx, idx_next), dim=1)",
+      "firstCommit": 56,
+      "kind": "code"
+    },
+    {
+      "n": 329,
+      "id": "STM-329-FIL-001-model.py",
+      "text": "",
+      "firstCommit": 57,
+      "kind": "blank"
+    },
+    {
+      "n": 330,
+      "id": "STM-330-FIL-001-model.py",
+      "text": "        return idx",
+      "firstCommit": 57,
+      "kind": "code"
+    }
+  ]
+}
