@@ -1,8 +1,8 @@
-# Chronological Prompt Index — 82 User Turns
+# Chronological Prompt Index — 83 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **82 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
+Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **83 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
 
-**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 82 records.
+**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 83 records.
 
 | # | Prompt focus | Historical record |
 |---:|---|---|
@@ -88,6 +88,7 @@ Each file below has the **user's prompt**, the assistant's observable outcome (c
 | 080 | Screenshot: missing green divider between CausalSelfAttention and MLP classes | [Prompt 080](prompts/080.md) |
 | 081 | Activate orange Code Block and yellow Nested Block categories | [Prompt 081](prompts/081.md) |
 | 082 | Activate Module and Directory; fix Comments pink outside structural scopes | [Prompt 082](prompts/082.md) |
+| 083 | Approve and activate Project, Global, Imports, Assignments, Expressions chip colors | [Prompt 083](prompts/083.md) |
 
 The full archive covers **more than UI tweaks**: source-code identity, architecture, commit archaeology, batch planning, tests, review feedback and communication. For a UI-only curated list, use [UI-CHANGE-INDEX.md](UI-CHANGE-INDEX.md). For verified counts and important fidelity limits, use [PROMPT-COVERAGE-AUDIT.md](PROMPT-COVERAGE-AUDIT.md).
 
@@ -159,3 +160,5 @@ If a new AI finds a conflict between an earlier and a later prompt, the later ex
 - **081:** enabled historically derived Code Block orange and Nested Block yellow STM categories, including legitimate sibling green rules, independent File and Comments toggles, persisted state and Full file every-line behavior. [Prompt 081](prompts/081.md) · [27 targeted and 164 full-history checks](../nanogpt-original-history/QA-GREEN-SIBLING-DIVIDERS.md). Original source Git patches and both older viewers unchanged.
 
 - **082:** activated Module and Directory in the original-history viewer, honoring actual Python file modules and real containing directory paths with alternating group colors. Fixed the independent Comments overlay so all recognized standalone Python documentation is pink even outside active Class/Method/Block/Nested scopes; the screenshot's STM-00971, STM-02603 and STM-02614 are confirmed pink in tests. [Prompt 082](prompts/082.md) · [QA](../nanogpt-original-history/QA-MODULE-DIRECTORY-COMMENTS.md).
+
+- **083:** approved five exact new STM colors: Project teal, Global slate, Imports cyan, Assignments gold, Expressions ruby; implemented in the original-history viewer without changing source rows, historical IDs or existing palette/UI geometry. [Prompt 083](prompts/083.md) · [159 original commits × 12 primary modes, 1,908 Full File invariant views](../nanogpt-original-history/QA-PROMPT-083-NEW-CATEGORIES.md).
