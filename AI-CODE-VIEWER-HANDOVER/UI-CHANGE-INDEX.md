@@ -2,7 +2,7 @@
 
 This is the **UI-specific view** of the larger [chronological full prompt record](PROMPT-INDEX.md). It includes original design requests, bug reports, rejected visual experiments, and implementation approvals. Non-UI conversation prompts (such as source batch counting, architecture plans, and status questions) remain available in the full archive and are **not** listed here.
 
-**38 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
+**40 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
 
 | Prompt | UI request or issue | Record |
 |---:|---|---|
@@ -44,6 +44,8 @@ This is the **UI-specific view** of the larger [chronological full prompt record
 | 074 | Restore original UI and default complete 159-commit history source view | [View prompt](prompts/074.md) |
 | 075 | Fix deployed restored viewer appearing as unstyled HTML due to wrong CSS path | [View prompt](prompts/075.md) |
 | 076 | Preserve all viewing modes/filters on navigation and activate File + Comments together | [View prompt](prompts/076.md) |
+| 077 | Add historical Class and Method coloring; File filename-only toggle; wider filename chips | [View prompt](prompts/077.md) |
+| 078 | Full file displays all original source lines regardless of active hierarchy/color scope | [View prompt](prompts/078.md) |
 
 For **latest accepted design**, do not use old rejected prompts as specifications. Read [DESIGN-SPEC.md](DESIGN-SPEC.md), [the modular viewer](../nanogpt-modular-viewer/index.html), and [its verified UI QA](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md). For implementation before/after evidence, inspect [GIT-PROVENANCE.md](GIT-PROVENANCE.md). The original screenshots that were only present in ChatGPT were not saved as verifiable files.
 
@@ -58,3 +60,7 @@ For **latest accepted design**, do not use old rejected prompts as specification
 **Mobile styling fix — Prompt 075:** A real Android Chrome screenshot showed the restored history viewer HTML without CSS. The HTML linked `./assets/viewer.css`, but its actual stylesheet is `./assets/style.css`. Corrected the link without redesigning the page or changing source history. [Fix details](prompts/075.md).
 
 **Accepted persistent-state/UI correction — Prompt 076:** No implicit mode reset on a numeric Jump, commit stepper, range, All commits, or file/category changes. Keep the selected mode, file filter, category and independent Comments overlay; persist them across reload via localStorage. File now actively colors its own original historical source lines sky-blue; Comments can be ON simultaneously with File or Lines, coloring standalone Python # comments and multiline docstrings pink, even on struck-through historical deletions. Recolor mounted source rows in place, preserving scroll/geometry and STM IDs. [Historical source and interaction QA](../nanogpt-original-history/QA-STATE-PERSISTENCE-OVERLAY.md).
+
+**Accepted original-history hierarchy + layout refinement — Prompt 077:** Only STM chips represent structural categories: Lines (green), Class (red) and Method (blue). The File button is now a separate ON/OFF toggle for **filename chips only**; Comments remains another independent ON/OFF pink overlay within the current class/method/lines scope. File/Class/Comments or File/Method/Comments can be pressed together. Shift about 30% of the old STM chip's width to the filename: original left-column split ~38% filename / 62% STM becomes **57% filename / 43% STM**, without moving or shrinking the code column. Classify deleted code using its actual pre-edit original Git snapshot. [QA](../nanogpt-original-history/QA-CLASS-METHOD-FILE-WIDTH.md).
+
+**Full file non-negotiable — Prompt 078:** Full file **never** filters by the active Class/Method/Lines category, File color toggle or Comments overlay. All surviving source rows, including blanks and out-of-scope code, remain visible at that authentic Git commit; optional actual filename dropdown can narrow the file, without filtering by hierarchy. [57/57 regression checks](../nanogpt-original-history/QA-CLASS-METHOD-FILE-WIDTH.md).
