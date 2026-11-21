@@ -100,84 +100,125 @@ export function classifyFileLines(path,lines) {
 }
 
 
-// Class and Method scopes must be computed from each exact historical file
-// snapshot. No future/final source shape is imposed on earlier Git commits.
-// Method covers Python def / async def including top-level functions, so users
-// can follow both class methods and standalone functions in one blue view.
-// Lines not belonging to the chosen scope remain neutral; blank and comment
-// source rows inside a scope inherit its membership until dedent.
+// Exact-snapshot structural classifier. All scope IDs derive from permanent
+// original-history STM identities; the parser never changes original source.
+// Control-flow headers (if/elif/else/for/while/try/except/finally/with/
+// match/case and async variants) define Code Block groups. A control-flow
+// group nested within another is a Nested Block. Class and Method are
+// separate scopes and do not themselves count as Code Block headers.
+// Every source row is retained, including standalone comments, docstrings,
+// blank lines, declarations, and rows outside any structural scope.
 export function classifyFileScopes(path,lines,kinds=classifyFileLines(path,lines)) {
   const memberships=new Map();
-  if(!path.endsWith('.py')) {
-    for(const item of lines)memberships.set(item.id,{inClass:false,inMethod:false});
+  const empty=()=>({
+    inClass:false,inMethod:false,inBlock:false,inNested:false,
+    className:null,methodName:null,blockName:null,nestedName:null,
+    classId:null,methodId:null,blockId:null,nestedId:null,
+    classParentId:null,methodParentId:null,blockParentId:null,nestedParentId:null
+  });
+  if(!path.endsWith('.py')){
+    for(const item of lines)memberships.set(item.id,empty());
     return memberships;
   }
-  const stack=[];
-  const leadingWidth=text=>{
-    const chars=(text.match(/^[ \t]*/)||[''])[0];
-    // Match conventional Python tab stops; avoids arbitrary 1-tab=1-space.
-    let width=0;
-    for(const c of chars)width=c==='\t'?width+(8-width%8):width+1;
-    return width;
+  const indentation=text=>{
+    const start=(text.match(/^[ \t]*/)||[''])[0];
+    let n=0;
+    for(const character of start)
+      n=character==='\t'?n+(8-n%8):n+1;
+    return n;
   };
-  // Treat decorator lines as part of the following class/function scope only
-  // when the next significant code line is a matching-indent declaration.
+  const structure=[];
+  const blocks=[];
+  // Decorators are part of their immediately following declaration,
+  // including when a blank physical line separates two decorators.
   const decorated=new Map();
   for(let i=0;i<lines.length;i++){
-    const current=lines[i];
-    const value=current.text.trimStart();
-    if(!value.startsWith('@')||kinds.get(current.id)==='docstring')continue;
-    const indent=leadingWidth(current.text);
+    const item=lines[i],trim=item.text.trimStart();
+    if(!trim.startsWith('@')||kinds.get(item.id)==='docstring')continue;
+    const level=indentation(item.text);
     let j=i;
     while(j<lines.length){
-      const text=lines[j].text;
-      const clean=text.trimStart();
-      if(clean===''){j++;continue;}
-      if(clean.startsWith('@')&&leadingWidth(text)===indent){j++;continue;}
+      const next=lines[j].text.trimStart();
+      if(!next||(next.startsWith('@')&&indentation(lines[j].text)===level)){
+        j++;continue;
+      }
       break;
     }
-    if(j>=lines.length)continue;
-    const next=lines[j].text.trimStart();
-    const match=next.match(/^(async\s+def|def|class)\s+([a-zA-Z_]\w*)\b/);
-    if(!match||leadingWidth(lines[j].text)!==indent)continue;
+    if(j>=lines.length||indentation(lines[j].text)!==level)continue;
+    const decl=lines[j].text.trimStart().match(/^(class|(?:async\s+)?def)\s+([a-zA-Z_]\w*)\b/);
+    if(!decl)continue;
     for(let k=i;k<j;k++){
-      if(lines[k].text.trimStart().startsWith('@')&&leadingWidth(lines[k].text)===indent)
-        decorated.set(lines[k].id,{kind:match[1]==='class'?'class':'method',name:match[2]});
+      if(lines[k].text.trimStart().startsWith('@')&&indentation(lines[k].text)===level){
+        decorated.set(lines[k].id,{
+          id:lines[j].id,kind:decl[1]==='class'?'class':'method',name:decl[2]
+        });
+      }
     }
   }
+
   for(const item of lines){
-    const raw=item.text,trim=raw.trimStart(),kind=kinds.get(item.id);
-    const indentation=leadingWidth(raw);
-    const isEmpty=trim.length===0;
-    const isCode=!isEmpty&&kind!=='comment'&&kind!=='docstring';
-    // Comments at a smaller indentation clearly exited an inner scope,
-    // whereas a physically blank row belongs to the previous scope.
-    if(!isEmpty&&(isCode||kind==='comment')){
-      while(stack.length&&indentation<=stack[stack.length-1].indent)stack.pop();
+    const trim=item.text.trimStart(),level=indentation(item.text);
+    const kind=kinds.get(item.id);
+    const blank=trim.length===0;
+    const significant=!blank&&(kind==='code'||kind==='comment');
+    // Blank rows inherit the preceding real scope. A dedented source row,
+    // including a top-level comment, genuinely closes the old scope.
+    if(significant){
+      while(structure.length&&level<=structure[structure.length-1].indent)
+        structure.pop();
+      while(blocks.length&&level<=blocks[blocks.length-1].indent)
+        blocks.pop();
     }
-    const decl=(isCode&&!trim.startsWith('@'))
-      ?trim.match(/^(async\s+def|def|class)\s+([a-zA-Z_]\w*)\b/):null;
-    const decoration=decorated.get(item.id);
-    let marker=null;
-    if(decl){
-      marker={kind:decl[1]==='class'?'class':'method',name:decl[2],indent:indentation};
-      stack.push(marker);
-    }else if(decoration){
-      marker={...decoration,indent:indentation};
-      stack.push(marker);
+
+    const declaration=kind==='code'&&!trim.startsWith('@')
+      ?trim.match(/^(class|(?:async\s+)?def)\s+([a-zA-Z_]\w*)\b/):null;
+    const decorator=decorated.get(item.id);
+    if(declaration||decorator){
+      const candidate=declaration
+        ?{id:item.id,kind:declaration[1]==='class'?'class':'method',name:declaration[2]}
+        :decorator;
+      structure.push({
+        ...candidate,indent:level,parentId:structure.at(-1)?.id||'root'
+      });
     }
-    const activeClass=[...stack].reverse().find(scope=>scope.kind==='class');
-    const activeMethod=[...stack].reverse().find(scope=>scope.kind==='method');
+
+    const currentClass=[...structure].reverse().find(s=>s.kind==='class');
+    const currentMethod=[...structure].reverse().find(s=>s.kind==='method');
+    // Parse actual compound-statement headers rather than using indentation
+    // alone: ordinary statements do not manufacture a new block.
+    const head=kind==='code'&&trim.match(
+      /^(?:async\s+)?(if|elif|else|for|while|try|except|finally|with|match|case)\b/
+    );
+    if(head){
+      const parent=blocks.at(-1);
+      const marker={
+        id:item.id,
+        name:head[1],indent:level,
+        parentId:parent?.id||currentMethod?.id||currentClass?.id||'root'
+      };
+      blocks.push(marker);
+    }
+
+    const firstBlock=blocks[0]||null;
+    const nearestNested=blocks.length>1?blocks[blocks.length-1]:null;
     memberships.set(item.id,{
-      inClass:!!activeClass,inMethod:!!activeMethod,
-      className:activeClass?.name||null,methodName:activeMethod?.name||null
+      inClass:!!currentClass,
+      inMethod:!!currentMethod,
+      inBlock:!!firstBlock,
+      inNested:!!nearestNested,
+      className:currentClass?.name||null,
+      methodName:currentMethod?.name||null,
+      blockName:firstBlock?.name||null,
+      nestedName:nearestNested?.name||null,
+      classId:currentClass?.id||null,
+      methodId:currentMethod?.id||null,
+      blockId:firstBlock?.id||null,
+      nestedId:nearestNested?.id||null,
+      classParentId:currentClass?.parentId||null,
+      methodParentId:currentMethod?.parentId||null,
+      blockParentId:firstBlock?.parentId||null,
+      nestedParentId:nearestNested?.parentId||null
     });
-    // A decorated declaration's own line reuses the same scope after
-    // same-indent dedent; the earlier decorator annotations are still correct.
-    if(marker&&decoration&&!decl){
-      // Decorators remain a group until the matching declaration; subsequent
-      // decorator rows pop the marker then add their own equivalent marker.
-    }
   }
   return memberships;
 }
