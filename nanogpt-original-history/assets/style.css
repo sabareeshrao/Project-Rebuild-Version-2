@@ -251,3 +251,35 @@ html,body{overflow-x:clip}
   background:var(--chip-bg,#15803d);
   color:var(--chip-ink,#fff);
 }
+
+/* Prompt 077: move about 30% of the former STM width to the filename chip.
+   Previous split was approximately File 38% / STM 62%.
+   New split is File 57% / STM 43% within the SAME original left column.
+   Do not change the overall code-column width or original UI shape. */
+.chip-cell .filename-chip{
+  flex:0 0 calc(57% - 2px);
+  max-width:none;
+  min-width:0;
+  background:var(--file-bg,#292929);
+  color:var(--file-ink,#e2e8f0);
+  border-color:var(--file-edge,#494949);
+}
+.chip-cell .line-chip{
+  flex:1 1 0;
+  min-width:0;
+}
+@media(max-width:580px){
+  .chip-cell .filename-chip{
+    flex-basis:calc(57% - 1.5px);
+    max-width:none;
+    font-size:8.4px;
+  }
+  .chip-cell .line-chip .line-id{font-size:8.8px}
+}
+/* File only recolors the filename chip, never the STM/category chip.
+   Class/Method/Lines own STM, Comments may overlay them with pink. */
+.category[data-kind="file"][aria-pressed="true"],
+.category[data-kind="comment"][aria-pressed="true"]{
+  border-color:#fff;
+  box-shadow:0 0 0 1px #fff;
+}
