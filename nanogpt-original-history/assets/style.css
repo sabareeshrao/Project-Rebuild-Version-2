@@ -46,6 +46,12 @@ h1{font-size:19px;letter-spacing:-.03em;margin:0 0 3px}
 .category[data-kind="file"]{--active:#00bfff;--ink:#071b27}
 .category[data-kind="package"]{--active:#78350f;--ink:#fff}
 .category[data-kind="module"]{--active:#881337;--ink:#fff}
+/* Prompt 083: exact approved new STM-chip palettes. No geometry changes. */
+.category[data-kind="project"]{--active:#0d9488;--ink:#fff}
+.category[data-kind="global"]{--active:#475569;--ink:#fff}
+.category[data-kind="imports"]{--active:#0e7490;--ink:#fff}
+.category[data-kind="assignments"]{--active:#a16207;--ink:#fff}
+.category[data-kind="expressions"]{--active:#be123c;--ink:#fff}
 .summary{margin:10px 0 3px;display:flex;gap:9px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
 #commit-title{font-size:12px;font-weight:800;color:#fafafa}
 #commit-link{font-size:10px;color:#80c7ff;text-decoration:none}
