@@ -1,5 +1,13 @@
 # Accepted UI and ID Contract
 
+## Latest original-history override — Prompt 083 (five new STM modes)
+
+In `nanogpt-original-history/`, the user approved five additional selectable **primary STM categories**: Project `#0D9488` (every nanoGPT source line), Global / Module-level `#475569` (Python outside class/function scope), Imports `#0E7490`, Assignments `#A16207`, and Expressions / Calls `#BE123C`. Original Module, Directory, Class, Method, Code Block, Nested Block, Lines, filename-only File toggle, Comments pink overlay and all earlier colors stay intact.
+
+Separate structural membership (where the code belongs) from statement type (what the code does). A physical Python line can be inside a method and also be an assignment; only the selected mode paints STM chips. Use historical pre-/post-change full-file contexts for deleting/adding lines, conservative syntax detection and continued physical lines, not fabricated AST types. Do not reclassify arbitrary markdown/notebook lines as Python imports, assignments or expressions. Never filter source rows by active mode, and never add group chips. All source IDs, scrolling, green code-column dividers, filename/STM layout, mode+filter persistence and authentic Git data remain unchanged.
+
+[Approved color prompt 083](prompts/083.md) · [Executed 159-commit / 12-category QA](../nanogpt-original-history/QA-PROMPT-083-NEW-CATEGORIES.md).
+
 ## Latest original-history override — Prompt 082 (Module / Directory / Comments)
 
 In `nanogpt-original-history/` only, **Module and Directory are fully active primary STM categories**. Module denotes real Python `.py` files, not arbitrary extension-less or notebook files; Directory denotes the literal parent folder, including repository root. Adjacent visible group runs alternate colors: Module burgundy/graphite and Directory brown/silver. The File toggle stays independent and affects filename chips only, with alternation on consecutive file changes.
