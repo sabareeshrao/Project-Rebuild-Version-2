@@ -1,8 +1,8 @@
-# Chronological Prompt Index — 78 User Turns
+# Chronological Prompt Index — 81 User Turns
 
-Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **78 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
+Each file below has the **user's prompt**, the assistant's observable outcome (clearly marked as verbatim or summary), accepted/rejected decisions, and verified implementation links when available. All **81 prompt records** were committed as separate documentation commits; the original 60 were retrospective and Prompts 061–062 record the continued work across chats.
 
-**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 78 records.
+**Read them in this order**. For fast replication, read [NEXT-AI-INSTRUCTIONS.md](NEXT-AI-INSTRUCTIONS.md) and [DESIGN-SPEC.md](DESIGN-SPEC.md) first, then browse the 81 records.
 
 | # | Prompt focus | Historical record |
 |---:|---|---|
@@ -84,6 +84,9 @@ Each file below has the **user's prompt**, the assistant's observable outcome (c
 | 076 | Persist view modes/filters across commits and make File + Comments work simultaneously | [Prompt 076](prompts/076.md) |
 | 077 | Enable Class and Method STM colors; make File filename-only toggle; rebalance chip widths | [Prompt 077](prompts/077.md) |
 | 078 | Require Full file to display all source lines independently of selected category level | [Prompt 078](prompts/078.md) |
+| 079 | Restore the thin green line between touching hierarchy siblings inside code only | [Prompt 079](prompts/079.md) |
+| 080 | Screenshot: missing green divider between CausalSelfAttention and MLP classes | [Prompt 080](prompts/080.md) |
+| 081 | Activate orange Code Block and yellow Nested Block categories | [Prompt 081](prompts/081.md) |
 
 The full archive covers **more than UI tweaks**: source-code identity, architecture, commit archaeology, batch planning, tests, review feedback and communication. For a UI-only curated list, use [UI-CHANGE-INDEX.md](UI-CHANGE-INDEX.md). For verified counts and important fidelity limits, use [PROMPT-COVERAGE-AUDIT.md](PROMPT-COVERAGE-AUDIT.md).
 
@@ -147,3 +150,9 @@ If a new AI finds a conflict between an earlier and a later prompt, the later ex
 - **077:** implemented historically scoped Class red and Method blue STM categories from genuine nanoGPT snapshots, independent File toggle coloring only filename chips, independent pink Comments overlay, and 57% filename / 43% STM split within unchanged left code-label lane. Persisted preferences and original 159-commit dataset unchanged. [Prompt 077](prompts/077.md) · [QA](../nanogpt-original-history/QA-CLASS-METHOD-FILE-WIDTH.md).
 
 - **078:** confirmed Full file shows **every actual surviving line at the chosen original Git commit regardless of Class/Method/Comments/File selection**; only an explicit filename dropdown can filter files. Added user hint and source comment; 57/57 full-file invariance checks passed. [Prompt 078](prompts/078.md) · [QA](../nanogpt-original-history/QA-CLASS-METHOD-FILE-WIDTH.md).
+
+- **079:** restored original thin 2px green code-column-only divider rule for actual touching sibling hierarchy groups; no boundary chips or synthetic source rows. [Prompt 079](prompts/079.md) · [QA](../nanogpt-original-history/QA-GREEN-SIBLING-DIVIDERS.md).
+
+- **080:** screenshot-proven adjacent CausalSelfAttention → MLP class boundary in the first real original nanoGPT model snapshot now draws the missing green line directly above the MLP code text. Real source-line adjacency is checked using file, original commit, pre/post snapshot, physical line indices, distinct STM-derived class scope IDs and equal parents. [Prompt 080](prompts/080.md).
+
+- **081:** enabled historically derived Code Block orange and Nested Block yellow STM categories, including legitimate sibling green rules, independent File and Comments toggles, persisted state and Full file every-line behavior. [Prompt 081](prompts/081.md) · [27 targeted and 164 full-history checks](../nanogpt-original-history/QA-GREEN-SIBLING-DIVIDERS.md). Original source Git patches and both older viewers unchanged.
