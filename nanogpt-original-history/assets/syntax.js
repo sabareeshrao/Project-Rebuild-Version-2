@@ -222,3 +222,102 @@ export function classifyFileScopes(path,lines,kinds=classifyFileLines(path,lines
   }
   return memberships;
 }
+
+
+// Prompt 083: statement TYPE is a separate axis from structural membership.
+// Classify the exact historical Python snapshot, never just a diff fragment.
+// Only Python source is classified. Every returned key is the original STM ID.
+//
+// This conservative, display-only scanner skips comments/docstrings, strings,
+// comparisons, definition/control headers, and keyword arguments inside calls.
+// It follows physical lines of (), [], {}, explicit backslashes, and string
+// continuations so multiline imports/assignments/calls retain their type.
+// It is not a complete Python AST and deliberately leaves ambiguous lines gray.
+export function classifyStatementTypes(path, lines, kinds=classifyFileLines(path,lines)) {
+  const result=new Map();
+  if(!path.endsWith('.py')){
+    for(const line of lines)result.set(line.id,null);
+    return result;
+  }
+
+  const state={brackets:[],quote:null,continued:false,kind:null};
+
+  // Remove strings and comments without treating their contents as Python
+  // operators. Keep only characters outside brackets for assignment checks.
+  function scan(raw) {
+    let outside='',trailing='',escaped=false,comment=false;
+    for(let i=0;i<raw.length;i++){
+      const char=raw[i];
+      if(state.quote){
+        const quote=state.quote;
+        if(quote.length===3&&raw.slice(i,i+3)===quote){
+          state.quote=null;i+=2;outside+='   ';trailing+='   ';continue;
+        }
+        if(quote.length===1&&char===quote&&!escaped)state.quote=null;
+        escaped=char==='\\'&&!escaped;
+        if(char!=='\\')escaped=false;
+        outside+=' ';trailing+=' ';continue;
+      }
+      if(char==='#'){comment=true;break;}
+      if(char==='"'||char==="'"){
+        const triple=raw.slice(i,i+3)===char.repeat(3);
+        state.quote=triple?char.repeat(3):char;
+        if(triple){i+=2;outside+='   ';trailing+='   ';}
+        else{outside+=' ';trailing+=' ';}
+        escaped=false;continue;
+      }
+      if(char==='('||char==='['||char==='{'){
+        outside+=' ';trailing+=char;state.brackets.push(char);continue;
+      }
+      if(char===')'||char===']'||char==='}'){
+        outside+=' ';trailing+=char;
+        const paired={')':'(',']':'[','}':'{'};
+        if(state.brackets.at(-1)===paired[char])state.brackets.pop();
+        continue;
+      }
+      outside+=state.brackets.length===0?char:' ';
+      trailing+=char;
+    }
+    const explicitContinuation=/\\\s*$/.test(trailing);
+    return {outside:outside.trim(),continues:state.brackets.length>0||!!state.quote||explicitContinuation,comment};
+  }
+
+  function classifyRoot(root,raw) {
+    if(/^(?:from\b[\s\S]*?\bimport\b|import\b)/.test(root))return 'import';
+    if(/^\s*(?:@|(?:async\s+)?def\b|class\b|(?:async\s+)?for\b|if\b|elif\b|else\b|while\b|try\b|except\b|finally\b|(?:async\s+)?with\b|match\b|case\b|return\b|raise\b|yield\b|assert\b|pass\b|break\b|continue\b|global\b|nonlocal\b|del\b)/.test(root))
+      return null;
+    // Simple/augmented/annotated assignments only. Exclude ==, !=, <=, >=,
+    // := and the keyword-argument '=' inside parenthesized function calls.
+    const assignment=/(?:^|[^!=<>:])=(?!=)|(?:\*\*|\/\/|<<|>>|[+*/%@&|^-])=/.test(root);
+    if(assignment||/^[a-zA-Z_]\w*\s*:\s*[a-zA-Z_][\w.\[\], ]*$/.test(root))
+      return 'assignment';
+    // A statement consisting of an expression or call (not every nested
+    // expression inside a different statement). Keep the match cautious.
+    if(/^(?:[a-zA-Z_]\w*|[([]|[-+]?\d)/.test(root))return 'expression';
+    return null;
+  }
+
+  for(const line of lines){
+    const raw=line.text||'',trim=raw.trim();
+    const kind=kinds.get(line.id);
+    const continuing=state.continued;
+    let category=continuing?state.kind:null;
+
+    // Standalone docs and whitespace do not create new statements.
+    if(kind==='docstring'||kind==='comment'||!trim){
+      if(continuing&&kind==='comment')category=state.kind;
+      result.set(line.id,category);
+      continue;
+    }
+
+    const scanned=scan(raw);
+    if(!continuing)category=classifyRoot(scanned.outside,raw);
+    result.set(line.id,category);
+    state.continued=scanned.continues;
+    state.kind=scanned.continues?category:null;
+    if(!state.continued){
+      state.brackets=[];state.quote=null;
+    }
+  }
+  return result;
+}
