@@ -70,6 +70,26 @@ Both formerly disabled category buttons are active. Module uses actual Python `.
 
 [**Actual 159-commit replay and screenshot-line QA**](QA-MODULE-DIRECTORY-COMMENTS.md) confirmed all 3,533 verified events and all 1,925 latest Full File rows across all seven primary categories, with 283 qualifying documentation rows pink in each. Live Android/GitHub Pages rendering was not independently checked.
 
+## Five new primary categories — Prompt 083
+
+The original-history viewer now has **14 active category controls**: **12 primary colors** (Project, Module, Directory, Global, Class, Method, Code Block, Nested Block, Imports, Assignments, Expressions, Lines) plus independent **File** and **Comments** toggles. New categories were approved before implementation; no previous colors were changed.
+
+| New primary STM mode | Chip color | Meaning |
+|---|---|---|
+| **Project** | Teal `#0D9488` | All genuine source rows belonging to this nanoGPT project, including available non-Python files |
+| **Global / Module-level** | Slate `#475569` | Python rows not enclosed by any class/function scope; includes top-level script control-flow |
+| **Imports** | Cyan `#0E7490` | Python import statements and continued physical source lines |
+| **Assignments** | Gold `#A16207` | Python assignments, annotations, augmented assignments and continued source lines |
+| **Expressions / Calls** | Ruby `#BE123C` | Standalone Python expression/call statement lines |
+
+A structural scope and a statement type are separate axes: an assignment may also belong to a method or control block. Selecting a category **only changes STM colors**, not which code rows are shown. File still colors filename chips only and Comments still independently overrides recognized documentation pink; unmatched rows remain charcoal.
+
+Statement-type classification uses conservative Python source scanning against the exact historical **pre-deletion or post-addition full snapshot**, not a fabricated line-by-line reconstruction. It follows continuations and filters comments, strings and comparisons, but is not a full Python AST parser; ambiguous syntax stays neutral.
+
+**Full File remains every surviving physical source line.** The history replay QA checked all **159 original commit snapshots × 12 primary categories = 1,908 invariant source-row/order views**, plus the 3,533 verified source history events, without modifying any STM identity or original source.
+
+[**Full QA for Prompt 083**](QA-PROMPT-083-NEW-CATEGORIES.md) · [**Original instruction and approved colors**](../AI-CODE-VIEWER-HANDOVER/prompts/083.md).
+
 ## Thin green horizontal dividers — real adjacent siblings
 
 The original viewer's **thin 2px green divider** is restored in the authentic Git-history viewer. It is drawn **only at the top of the right-side source-code column**, not across the gray filename chip, the colored STM chip, the whole row, or an inserted/spacer source line.
