@@ -4,7 +4,6 @@ import {syntaxHTML,sourceKind,classifyFileLines,classifyFileScopes} from './synt
 const $=id=>document.getElementById(id);
 const state={commit:1,mode:'all',selection:null,file:'',category:'line',fileOverlay:false,commentsOverlay:false};
 let manifest=null,history=null,windowRows=null,allEvents=[];
-let filePalette=new Map();
 const classified=new WeakMap();
 const structuralScopes=new WeakMap();
 const storageKey='nanogpt-original-history-viewer-preferences-v1';
@@ -25,7 +24,7 @@ function restoreState(){
     // Migrate older state: File used to color STM chips. It is now an
     // independent filename-column toggle, so preserve the user's preference.
     if(saved.category==='file'){state.category='line';state.fileOverlay=true;}
-    else if(['line','class','method','block','nested'].includes(saved.category))state.category=saved.category;
+    else if(['line','class','method','block','nested','module','package'].includes(saved.category))state.category=saved.category;
     if(typeof saved.fileOverlay==='boolean')state.fileOverlay=saved.fileOverlay;
     state.commentsOverlay=saved.commentsOverlay===true;
     if(Number.isInteger(saved.commit)&&saved.commit>=1&&saved.commit<=manifest.dataAvailableThrough)
@@ -55,25 +54,60 @@ function scopeClassifications(path,lines){
     paths.set(path,classifyFileScopes(path,lines,classifications(path,lines)));
   return paths.get(path);
 }
+// Actual repository path determines membership: a .py file is a Python
+// module, and each directory is its literal parent path (or repository root).
+function groupKey(path,kind){
+  if(kind==='module')return path.endsWith('.py')?path:null;
+  if(kind==='package'){
+    const slash=path.lastIndexOf('/');
+    return slash<0?'(root)':path.slice(0,slash);
+  }
+  return path;
+}
+// Palette A/B alternates on each new consecutive visible run, including
+// original Git events that revisit previously seen files or directories.
+function annotateGroupRuns(rows){
+  let prevFile=null,prevModule=null,prevDirectory=null;
+  let fileRun=-1,moduleRun=-1,directoryRun=-1;
+  for(const entry of rows){
+    const file=entry.path;
+    const module=groupKey(file,'module');
+    const directory=groupKey(file,'package');
+    if(file!==prevFile){fileRun++;prevFile=file;}
+    if(module!==prevModule){if(module!==null)moduleRun++;prevModule=module;}
+    if(directory!==prevDirectory){directoryRun++;prevDirectory=directory;}
+    entry.fileRun=fileRun;
+    entry.moduleRun=module===null?null:moduleRun;
+    entry.directoryRun=directoryRun;
+  }
+  return rows;
+}
 function chipPaint(entry){
   const scopes=entry.scope||{inClass:false,inMethod:false};
   const member=state.category==='line'||
     (state.category==='class'&&scopes.inClass)||
     (state.category==='method'&&scopes.inMethod)||
     (state.category==='block'&&scopes.inBlock)||
-    (state.category==='nested'&&scopes.inNested);
+    (state.category==='nested'&&scopes.inNested)||
+    (state.category==='module'&&entry.moduleRun!==null)||
+    state.category==='package';
   const documentation=entry.lineKind==='comment'||entry.lineKind==='docstring';
-  // Comments overlay only within the active selected hierarchy.
-  const pink=state.commentsOverlay&&documentation&&member;
+  // Comments ON paints every recognized standalone Python comment/docstring,
+  // including those outside the currently selected structural scope.
+  const pink=state.commentsOverlay&&documentation;
   const base=state.category==='class'?'#dc2626':
     state.category==='method'?'#2563eb':
     state.category==='block'?'#ea580c':
-    state.category==='nested'?'#facc15':'#15803d';
+    state.category==='nested'?'#facc15':
+    state.category==='module'?(entry.moduleRun%2===0?'#881337':'#52525b'):
+    state.category==='package'?(entry.directoryRun%2===0?'#78350f':'#94a3b8'):
+    '#15803d';
   const color=pink?'#db2777':member?base:'#232323';
-  const index=filePalette.get(entry.path)??0;
+  const index=entry.fileRun??0;
   const fileColor=index%2===0?'#00bfff':'#008cff';
   return {
-    color,ink:member?(state.category==='nested'&&!pink?'#302400':'#fff'):'#a3a3a3',
+    color,ink:pink?'#fff':member?
+      ((state.category==='nested'||(state.category==='package'&&entry.directoryRun%2===1))?'#302400':'#fff'):'#a3a3a3',
     fileColor:state.fileOverlay?fileColor:'#292929',
     fileInk:state.fileOverlay?'#071b27':'#e2e8f0',
     fileBorder:state.fileOverlay?fileColor:'#494949',
@@ -82,6 +116,8 @@ function chipPaint(entry){
        state.category==='method'?'Method · '+(scopes.methodName||'scope'):
        state.category==='block'?'Code Block · '+(scopes.blockName||'scope'):
        state.category==='nested'?'Nested Block · '+(scopes.nestedName||'scope'):
+       state.category==='module'?'Python module · '+entry.path:
+       state.category==='package'?'Directory · '+groupKey(entry.path,'package'):
        'Lines category'):'Outside '+state.category+' scope'
   };
 }
@@ -374,7 +410,7 @@ function getRows(){
       (state.mode!=='added'||r.kind==='add'));
   }
   if(state.file)rows=rows.filter(r=>r.path===state.file);
-  return rows;
+  return annotateGroupRuns(rows);
 }
 function setFileOptions(){
   const select=$('file-select');
@@ -422,7 +458,9 @@ function display(){
   $('file-meta').textContent=rows.length+' source rows · '+fileCount+' files';
   const scope=state.category==='class'?'Class red':state.category==='method'
     ?'Method blue':state.category==='block'?'Code Block orange':
-     state.category==='nested'?'Nested Block yellow':'Lines green';
+     state.category==='nested'?'Nested Block yellow':
+      state.category==='module'?'Module burgundy/graphite':
+      state.category==='package'?'Directory brown/silver':'Lines green';
   const overlay=' · File '+(state.fileOverlay?'ON (filename chips)':'OFF')+
     ' · Comments '+(state.commentsOverlay?'ON (pink)':'OFF');
   $('hint').textContent=(isAll
@@ -480,7 +518,7 @@ function attach(){
     if(!button||button.disabled)return;
     if(button.dataset.kind==='comment')state.commentsOverlay=!state.commentsOverlay;
     else if(button.dataset.kind==='file')state.fileOverlay=!state.fileOverlay;
-    else if(['line','class','method','block','nested'].includes(button.dataset.kind))
+    else if(['line','class','method','block','nested','module','package'].includes(button.dataset.kind))
       state.category=button.dataset.kind;
     else return;
     saveState();display();
@@ -524,9 +562,6 @@ async function start(){
     message('Reconstructing '+manifest.dataAvailableThrough+' genuine Git commits and their source lines…');
     await history.get(manifest.dataAvailableThrough);
     allEvents=collectAllEvents();
-    filePalette=new Map();
-    for(const entry of allEvents)
-      if(!filePalette.has(entry.path))filePalette.set(entry.path,filePalette.size);
     state.commit=manifest.dataAvailableThrough;
     windowRows=new HistoryWindow($('line-area'),$('line-window'),$('top-spacer'),$('bottom-spacer'));
     setFileOptions();restoreState();attach();display();
