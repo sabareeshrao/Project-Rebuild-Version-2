@@ -13,7 +13,7 @@ The first prototype of this original-history viewer had a redesigned blue-gray G
 
 There are **no + / − prefixes** beside code and no Git diff file cards. Deleted source lines are struck through **in the code column only**; their green STM chips and original filename labels stay visible.
 
-**Lines** (green), **Class** (red), and **Method** (blue) are the primary STM hierarchy modes. **File** is a separate toggle coloring only the filename chip; **Comments** is another separate pink STM-documentation overlay. Other hierarchy categories remain disabled until original historical classification is added. No synthetic source code is inserted.
+**Lines** (green), **Class** (red), **Method** (blue), **Code Block** (orange) and **Nested Block** (yellow) are selectable STM hierarchy modes. **File** independently colors filename chips; **Comments** independently overlays pink on genuine documentation inside the chosen structural category. Module and Directory remain disabled. No synthetic source code is inserted.
 
 ## All lines in one go — default
 
@@ -30,9 +30,9 @@ The entire historical timeline is one continuous document scroll, with no per-co
 | **Previous / Next** | Move to adjacent real Git commits. |
 | **Jump** | One number or range changes the focused commit(s) **without changing the selected viewing mode**. In Full file, show the surviving snapshot at the selected final commit; in Added only, show only additions; in Selected, show adds/deletions; in All commits, keep the full timeline and scroll to the requested commit. |
 | **File** | Optional filter; **All files** is default. |
-| **Lines / Class / Method** | Exclusive primary colors on STM chips: green lines, red class members, blue methods/functions. Out-of-scope rows remain visible in neutral gray. |
+| **Lines / Class / Method / Code Block / Nested Block** | Exclusive primary STM colors: green lines, red classes, blue methods/functions, orange compound-statement blocks, and yellow blocks nested within another control-flow block. Out-of-scope rows stay visible in neutral gray. |
 | **File** | Independent ON/OFF coloring of the *filename chip only* in alternating sky blues; no STM recoloring. |
-| **Comments** | Independent pink overlay for genuine documentation inside the selected Lines/Class/Method scope. |
+| **Comments** | Independent pink overlay for genuine documentation within whichever Lines/Class/Method/Code Block/Nested Block category is selected. |
 
 The original historical source rows use stable `STM-NNNNN` IDs. Each addition receives a permanent identifier; when later removed, the deleted source line uses the same green STM chip with a strike through on its original code. Switching modes never reassigns STM IDs.
 
@@ -42,7 +42,7 @@ The viewer now **preserves the selected viewing mode** (`Full file`, `Added only
 
 The file dropdown stays selected across mode/commit changes. The `All commits` button no longer silently clears it; choose `All files` explicitly to clear the filter.
 
-`Lines` (green), `Class` (red), and `Method` (blue) are selectable STM hierarchy colors. **File** independently recolors only the neutral filename chip (two sky-blue shades), while **Comments** independently colors documentation pink on the STM chip inside the selected hierarchy. They can be active simultaneously. Out-of-scope code remains present and neutral, including in Full file; other structural categories remain future work.
+`Lines` (green), `Class` (red), `Method` (blue), `Code Block` (orange), and `Nested Block` (yellow) are selectable STM hierarchy colors. **File** independently recolors only filename chips (two sky-blue shades), while **Comments** independently colors documentation pink within the selected hierarchy. All three controls may be active simultaneously. Out-of-scope code remains present and neutral, including in Full file. Module and Directory are still inactive.
 
 The current mode, commit, selected range, file filter, primary STM color, independent File toggle and independent Comments toggle are stored in browser localStorage and restored on reload when available. Category-only toggling recolors mounted rows in place, without rebuilding the source window or resetting scroll measurements.
 
@@ -56,9 +56,21 @@ The **File** button is now an independent ON/OFF toggle, just like Comments. It 
 
 The former left-column filename/STM split (approximately **38% / 62%**) is now **57% filename / 43% STM**: about 30% of the STM chip's former share was transferred to make long filenames easier to read. The code column width, original dark theme, sticky toolbar and original row geometry remain unchanged.
 
-**Full file shows ALL source lines regardless of what hierarchy level is selected.** Selecting Method or Class never filters Full file down to just its members; the dropdown's explicit file filter and the chosen historical Git commit are the only constraints. Historically later code remains absent in earlier snapshots.
+**Full file shows ALL source lines regardless of what hierarchy level is selected.** Selecting Class, Method, Code Block, or Nested Block never filters Full file down to just its members; the dropdown's explicit file filter and the chosen historical Git commit are the only constraints. Historically later code remains absent in earlier snapshots.
 
 [QA: historical Class/Method, File toggle, wider chips and Full file invariance](QA-CLASS-METHOD-FILE-WIDTH.md) documents 18 structural/fixture checks, 14 complete history replay checks, 23 interaction checks, 9 persistence checks, and 57 Full file invariance checks.
+
+## Thin green horizontal dividers — real adjacent siblings
+
+The original viewer's **thin 2px green divider** is restored in the authentic Git-history viewer. It is drawn **only at the top of the right-side source-code column**, not across the gray filename chip, the colored STM chip, the whole row, or an inserted/spacer source line.
+
+A divider appears only when **two different, non-overlapping sibling scopes touch in the actual original source**, in the currently selected primary category: Class, Method, Code Block, or Nested Block. For example, in the first original `model.py` snapshot, a blank line is still inside `CausalSelfAttention`, immediately followed by `class MLP(nn.Module)`; **Class view displays the green code-area boundary above the MLP declaration**. Adjacent Methods, orange Blocks, and yellow Nested Blocks follow the same rule. Lines mode does not add dividers.
+
+To avoid inventing adjacency, the viewer checks the **actual original file path, commit snapshot, pre/post-edit side and consecutive physical source positions**. Separate commits, different files, unrelated scopes, and a parent/child overlap do not get a false divider. File and Comments toggle colors cannot introduce a divider. Green divider classes are recalculated on existing visible source rows without replacing the row or altering scroll height.
+
+Code Block recognizes Python compound control-flow statements such as `if`, `else`, `elif`, `for`, `while`, `try`, `except`, `with`, `match`, and `case`. Nested Block applies when such a control statement is inside another compound control block. Structural identities are computed from each original Git source snapshot, including the pre-deletion version of historically removed lines, without editing the source or permanent STM IDs.
+
+[**Verified green-divider, Code Block and Nested Block QA**](QA-GREEN-SIBLING-DIVIDERS.md): 27 targeted structural/renderer assertions and 164 complete-history / full-source invariance assertions passed. A browser screenshot of the newly deployed version was not independently verified.
 
 ## Authentic historical scope
 
