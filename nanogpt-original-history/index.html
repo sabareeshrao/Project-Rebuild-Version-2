@@ -49,15 +49,20 @@
     <!-- A single row of always-filled colors, swipeable on narrow screens without horizontal CODE scroll. -->
     <div class="categories-scroller">
       <div id="categories" class="categories" role="group" aria-label="Color code source by hierarchy category">
+        <button type="button" class="category" data-kind="project" aria-label="Color every verified nanoGPT project source line teal" aria-pressed="false">Project</button>
         <button type="button" class="category" data-kind="module" aria-label="Color STM chips by actual Python modules (source .py files)" aria-pressed="false">Module</button>
         <button type="button" class="category" data-kind="package" aria-label="Color STM chips by actual parent directories; root files belong to the repository root" aria-pressed="false">Directory</button>
         <button type="button" class="category" data-kind="file" aria-pressed="false" aria-label="Toggle blue coloring of the filename chip only, independently of Class, Method, Lines and Comments">File</button>
+        <button type="button" class="category" data-kind="global" aria-label="Color Python module-level code outside classes and functions slate" aria-pressed="false">Global</button>
         <button type="button" class="category" data-kind="class" aria-pressed="false" aria-label="Color STM chips red for lines inside the original historical Python classes">Class</button>
         <button type="button" class="category" data-kind="method" aria-pressed="false" aria-label="Color STM chips blue for original historical Python methods and functions">Method</button>
         <button type="button" class="category" data-kind="block" aria-label="Color STM chips orange inside original historical Python code blocks" aria-pressed="false">Code Block</button>
         <button type="button" class="category" data-kind="nested" aria-label="Color STM chips yellow inside original nested Python code blocks" aria-pressed="false">Nested Block</button>
+        <button type="button" class="category" data-kind="imports" aria-label="Color complete historical Python import statements cyan" aria-pressed="false">Imports</button>
+        <button type="button" class="category" data-kind="assignments" aria-label="Color Python assignment statements gold" aria-pressed="false">Assignments</button>
+        <button type="button" class="category" data-kind="expressions" aria-label="Color standalone Python expressions and calls ruby" aria-pressed="false">Expressions</button>
         <button type="button" class="category" data-kind="line" aria-pressed="true">Lines</button>
-        <button type="button" class="category" data-kind="comment" aria-pressed="false" aria-label="Independently toggle pink comments and docstrings inside Lines, Class, Method, Code Block or Nested Block">Comments</button>
+        <button type="button" class="category" data-kind="comment" aria-pressed="false" aria-label="Independently toggle pink for all recognized Python comments and docstrings regardless of the current category">Comments</button>
       </div>
     </div>
   </section>
@@ -73,7 +78,7 @@
     </div>
   </section>
   <p id="status" role="status" aria-live="polite">Loading original nanoGPT Git history…</p>
-  <p id="hint">Choose Module, Directory, Lines, Class, Method, Code Block or Nested Block for STM colors. File colors filename chips; Comments paints all standalone Python documentation pink. Thin green rules divide touching sibling groups only in code.</p>
+  <p id="hint">Choose Project, Module, Directory, Global, Class, Method, Block, Nested, Imports, Assignments, Expressions or Lines. File and Comments toggle independently.</p>
 
   <section id="line-area" class="line-area" aria-label="Original nanoGPT source code and permanent green statement identifiers">
     <div id="top-spacer" aria-hidden="true"></div>
