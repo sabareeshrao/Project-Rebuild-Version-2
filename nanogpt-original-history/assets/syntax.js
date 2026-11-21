@@ -98,3 +98,86 @@ export function classifyFileLines(path,lines) {
   }
   return kinds;
 }
+
+
+// Class and Method scopes must be computed from each exact historical file
+// snapshot. No future/final source shape is imposed on earlier Git commits.
+// Method covers Python def / async def including top-level functions, so users
+// can follow both class methods and standalone functions in one blue view.
+// Lines not belonging to the chosen scope remain neutral; blank and comment
+// source rows inside a scope inherit its membership until dedent.
+export function classifyFileScopes(path,lines,kinds=classifyFileLines(path,lines)) {
+  const memberships=new Map();
+  if(!path.endsWith('.py')) {
+    for(const item of lines)memberships.set(item.id,{inClass:false,inMethod:false});
+    return memberships;
+  }
+  const stack=[];
+  const leadingWidth=text=>{
+    const chars=(text.match(/^[ \t]*/)||[''])[0];
+    // Match conventional Python tab stops; avoids arbitrary 1-tab=1-space.
+    let width=0;
+    for(const c of chars)width=c==='\t'?width+(8-width%8):width+1;
+    return width;
+  };
+  // Treat decorator lines as part of the following class/function scope only
+  // when the next significant code line is a matching-indent declaration.
+  const decorated=new Map();
+  for(let i=0;i<lines.length;i++){
+    const current=lines[i];
+    const value=current.text.trimStart();
+    if(!value.startsWith('@')||kinds.get(current.id)==='docstring')continue;
+    const indent=leadingWidth(current.text);
+    let j=i;
+    while(j<lines.length){
+      const text=lines[j].text;
+      const clean=text.trimStart();
+      if(clean===''){j++;continue;}
+      if(clean.startsWith('@')&&leadingWidth(text)===indent){j++;continue;}
+      break;
+    }
+    if(j>=lines.length)continue;
+    const next=lines[j].text.trimStart();
+    const match=next.match(/^(async\s+def|def|class)\s+([a-zA-Z_]\w*)\b/);
+    if(!match||leadingWidth(lines[j].text)!==indent)continue;
+    for(let k=i;k<j;k++){
+      if(lines[k].text.trimStart().startsWith('@')&&leadingWidth(lines[k].text)===indent)
+        decorated.set(lines[k].id,{kind:match[1]==='class'?'class':'method',name:match[2]});
+    }
+  }
+  for(const item of lines){
+    const raw=item.text,trim=raw.trimStart(),kind=kinds.get(item.id);
+    const indentation=leadingWidth(raw);
+    const isEmpty=trim.length===0;
+    const isCode=!isEmpty&&kind!=='comment'&&kind!=='docstring';
+    // Comments at a smaller indentation clearly exited an inner scope,
+    // whereas a physically blank row belongs to the previous scope.
+    if(!isEmpty&&(isCode||kind==='comment')){
+      while(stack.length&&indentation<=stack[stack.length-1].indent)stack.pop();
+    }
+    const decl=(isCode&&!trim.startsWith('@'))
+      ?trim.match(/^(async\s+def|def|class)\s+([a-zA-Z_]\w*)\b/):null;
+    const decoration=decorated.get(item.id);
+    let marker=null;
+    if(decl){
+      marker={kind:decl[1]==='class'?'class':'method',name:decl[2],indent:indentation};
+      stack.push(marker);
+    }else if(decoration){
+      marker={...decoration,indent:indentation};
+      stack.push(marker);
+    }
+    const activeClass=[...stack].reverse().find(scope=>scope.kind==='class');
+    const activeMethod=[...stack].reverse().find(scope=>scope.kind==='method');
+    memberships.set(item.id,{
+      inClass:!!activeClass,inMethod:!!activeMethod,
+      className:activeClass?.name||null,methodName:activeMethod?.name||null
+    });
+    // A decorated declaration's own line reuses the same scope after
+    // same-indent dedent; the earlier decorator annotations are still correct.
+    if(marker&&decoration&&!decl){
+      // Decorators remain a group until the matching declaration; subsequent
+      // decorator rows pop the marker then add their own equivalent marker.
+    }
+  }
+  return memberships;
+}
