@@ -2,7 +2,7 @@
 
 This is the **UI-specific view** of the larger [chronological full prompt record](PROMPT-INDEX.md). It includes original design requests, bug reports, rejected visual experiments, and implementation approvals. Non-UI conversation prompts (such as source batch counting, architecture plans, and status questions) remain available in the full archive and are **not** listed here.
 
-**40 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
+**43 UI-related prompts** are linked below, in their original chronological order. An inclusion here does not assert that every idea was accepted or committed.
 
 | Prompt | UI request or issue | Record |
 |---:|---|---|
@@ -46,6 +46,9 @@ This is the **UI-specific view** of the larger [chronological full prompt record
 | 076 | Preserve all viewing modes/filters on navigation and activate File + Comments together | [View prompt](prompts/076.md) |
 | 077 | Add historical Class and Method coloring; File filename-only toggle; wider filename chips | [View prompt](prompts/077.md) |
 | 078 | Full file displays all original source lines regardless of active hierarchy/color scope | [View prompt](prompts/078.md) |
+| 079 | Restore the thin green code-area horizontal divider for adjacent sibling groups | [View prompt](prompts/079.md) |
+| 080 | Fix screenshot-adjacent classes CausalSelfAttention and MLP lacking divider | [View prompt](prompts/080.md) |
+| 081 | Activate Code Block orange and Nested Block yellow for real historical code | [View prompt](prompts/081.md) |
 
 For **latest accepted design**, do not use old rejected prompts as specifications. Read [DESIGN-SPEC.md](DESIGN-SPEC.md), [the modular viewer](../nanogpt-modular-viewer/index.html), and [its verified UI QA](../nanogpt-modular-viewer/QA-UI-REFINEMENT.md). For implementation before/after evidence, inspect [GIT-PROVENANCE.md](GIT-PROVENANCE.md). The original screenshots that were only present in ChatGPT were not saved as verifiable files.
 
@@ -64,3 +67,7 @@ For **latest accepted design**, do not use old rejected prompts as specification
 **Accepted original-history hierarchy + layout refinement — Prompt 077:** Only STM chips represent structural categories: Lines (green), Class (red) and Method (blue). The File button is now a separate ON/OFF toggle for **filename chips only**; Comments remains another independent ON/OFF pink overlay within the current class/method/lines scope. File/Class/Comments or File/Method/Comments can be pressed together. Shift about 30% of the old STM chip's width to the filename: original left-column split ~38% filename / 62% STM becomes **57% filename / 43% STM**, without moving or shrinking the code column. Classify deleted code using its actual pre-edit original Git snapshot. [QA](../nanogpt-original-history/QA-CLASS-METHOD-FILE-WIDTH.md).
 
 **Full file non-negotiable — Prompt 078:** Full file **never** filters by the active Class/Method/Lines category, File color toggle or Comments overlay. All surviving source rows, including blanks and out-of-scope code, remain visible at that authentic Git commit; optional actual filename dropdown can narrow the file, without filtering by hierarchy. [57/57 regression checks](../nanogpt-original-history/QA-CLASS-METHOD-FILE-WIDTH.md).
+
+**Accepted green sibling code divider — Prompts 079–080:** Render the original thin **2px green horizontal rule inside the source-code cell only** when two different non-overlapping sibling groups physically touch in the same real Git file snapshot. Screenshot repro: `class MLP(nn.Module):` immediately follows a blank STM line belonging to `CausalSelfAttention`. Draw green code-area-only rule at MLP's row. Detect with same original file, same authentic Git commit snapshot, same pre/post side, consecutive physical source line indices, distinct scope IDs and equal scope parent. No rule for Lines, File/Comments palette transitions, nonadjacent groups or mixed source versions; no synthetic rows, chips or scroll-height changes. [Targeted QA](../nanogpt-original-history/QA-GREEN-SIBLING-DIVIDERS.md).
+
+**Active orange/yellow hierarchy — Prompt 081:** Code Block (orange) and Nested Block (yellow) now fully work in original-history viewer. Identify real Python compound-statement groups from exact historical snapshots, including pre-edit scopes for deleted source. Colors are applied only to STM chips of member lines and all out-of-scope rows remain visible neutral. Green divider also supports actual adjacent sibling Code Blocks and Nested Blocks. File and Comments remain independent; Full file remains complete; category switches recolor existing rows without remounting. [Verification: 27/27 targeted + 164/164 full history](../nanogpt-original-history/QA-GREEN-SIBLING-DIVIDERS.md).
