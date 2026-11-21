@@ -13,7 +13,7 @@ The first prototype of this original-history viewer had a redesigned blue-gray G
 
 There are **no + / − prefixes** beside code and no Git diff file cards. Deleted source lines are struck through **in the code column only**; their green STM chips and original filename labels stay visible.
 
-**Lines** (green), **Class** (red), **Method** (blue), **Code Block** (orange) and **Nested Block** (yellow) are selectable STM hierarchy modes. **File** independently colors filename chips; **Comments** independently overlays pink on genuine documentation inside the chosen structural category. Module and Directory remain disabled. No synthetic source code is inserted.
+**Module** (burgundy/graphite), **Directory** (brown/silver), **Lines** (green), **Class** (red), **Method** (blue), **Code Block** (orange), and **Nested Block** (yellow) are selectable STM modes. **File** independently colors filename chips. **Comments** independently turns every recognized standalone Python comment/docstring pink, even outside a selected structural scope. No synthetic source code is inserted.
 
 ## All lines in one go — default
 
@@ -30,19 +30,21 @@ The entire historical timeline is one continuous document scroll, with no per-co
 | **Previous / Next** | Move to adjacent real Git commits. |
 | **Jump** | One number or range changes the focused commit(s) **without changing the selected viewing mode**. In Full file, show the surviving snapshot at the selected final commit; in Added only, show only additions; in Selected, show adds/deletions; in All commits, keep the full timeline and scroll to the requested commit. |
 | **File** | Optional filter; **All files** is default. |
-| **Lines / Class / Method / Code Block / Nested Block** | Exclusive primary STM colors: green lines, red classes, blue methods/functions, orange compound-statement blocks, and yellow blocks nested within another control-flow block. Out-of-scope rows stay visible in neutral gray. |
+| **Lines / Class / Method / Code Block / Nested Block** | Exclusive primary STM colors: green lines, red classes, blue methods/functions, orange compound-statement blocks, and yellow blocks nested within another control-flow block. Out-of-scope non-documentation rows stay visible in neutral gray. |
 | **File** | Independent ON/OFF coloring of the *filename chip only* in alternating sky blues; no STM recoloring. |
-| **Comments** | Independent pink overlay for genuine documentation within whichever Lines/Class/Method/Code Block/Nested Block category is selected. |
+| **Module** | Colors actual Python `.py` source-file modules in alternating burgundy/graphite STM-chip shades; non-Python files remain neutral. |
+| **Directory** | Colors STM chips by the real source file's containing directory (repository root included), alternating brown/silver on consecutive visible directory runs; does not invent Python packages. |
+| **Comments** | Independently turns all recognized standalone Python comments and triple-quoted documentation lines pink in every primary category, including outside structural scope. |
 
 The original historical source rows use stable `STM-NNNNN` IDs. Each addition receives a permanent identifier; when later removed, the deleted source line uses the same green STM chip with a strike through on its original code. Switching modes never reassigns STM IDs.
 
 ## Persistent view settings and File + Comments overlay
 
-The viewer now **preserves the selected viewing mode** (`Full file`, `Added only`, `Selected`, or `All commits`) when using Previous / Next or entering another number/range and pressing Go. For example, **Added only + Jump 5** stays in Added only and shows only real additions at original commit 5. If a range is entered in Added only, additions across that range are shown. **All commits** remains All commits on a numeric jump and scrolls to the chosen original commit in the continuous history.
+The viewer **preserves the selected viewing mode** (`Full file`, `Added only`, `Selected`, or `All commits`) when using Previous / Next or entering another number/range and pressing Go. For example, **Added only + Jump 5** stays in Added only and shows only real additions at original commit 5. If a range is entered in Added only, additions across that range are shown. **All commits** remains All commits on a numeric jump and scrolls to the chosen original commit in the continuous history.
 
 The file dropdown stays selected across mode/commit changes. The `All commits` button no longer silently clears it; choose `All files` explicitly to clear the filter.
 
-`Lines` (green), `Class` (red), `Method` (blue), `Code Block` (orange), and `Nested Block` (yellow) are selectable STM hierarchy colors. **File** independently recolors only filename chips (two sky-blue shades), while **Comments** independently colors documentation pink within the selected hierarchy. All three controls may be active simultaneously. Out-of-scope code remains present and neutral, including in Full file. Module and Directory are still inactive.
+`Lines`, `Class`, `Method`, `Code Block`, `Nested Block`, `Module`, and `Directory` are selectable primary STM colors. **File** independently recolors only filename chips (two sky-blue shades); **Comments** independently paints all recognized standalone Python documentation pink in any view. All controls are composable. Non-documentation lines outside the selected structural scope remain visible and neutral, including in Full file.
 
 The current mode, commit, selected range, file filter, primary STM color, independent File toggle and independent Comments toggle are stored in browser localStorage and restored on reload when available. Category-only toggling recolors mounted rows in place, without rebuilding the source window or resetting scroll measurements.
 
@@ -52,13 +54,21 @@ The current mode, commit, selected range, file filter, primary STM color, indepe
 
 The STM column now represents structural hierarchy only. Select **Lines** (green), **Class** (red) or **Method** (blue). The original Python source is classified **at each actual historical commit snapshot**, and removed lines retain pre-removal scope colors. Method includes both member methods and top-level Python functions. Lines outside the selected scope remain visible in neutral gray.
 
-The **File** button is now an independent ON/OFF toggle, just like Comments. It colors only the dedicated filename chip sky blue while preserving whichever red/blue/green/pink category is active on the STM chip. **Comments** remains independent, turning qualifying standalone Python comments and triple-quoted documentation lines pink within the active scope. File + Method + Comments can all be ON simultaneously.
+The **File** button is now an independent ON/OFF toggle, just like Comments. It colors only the dedicated filename chip sky blue while preserving whichever red/blue/green/pink category is active on the STM chip. **Comments** remains independent, turning qualifying standalone Python comments and triple-quoted documentation lines pink **even outside the active scope**. File + Method + Comments can all be ON simultaneously.
 
 The former left-column filename/STM split (approximately **38% / 62%**) is now **57% filename / 43% STM**: about 30% of the STM chip's former share was transferred to make long filenames easier to read. The code column width, original dark theme, sticky toolbar and original row geometry remain unchanged.
 
 **Full file shows ALL source lines regardless of what hierarchy level is selected.** Selecting Class, Method, Code Block, or Nested Block never filters Full file down to just its members; the dropdown's explicit file filter and the chosen historical Git commit are the only constraints. Historically later code remains absent in earlier snapshots.
 
 [QA: historical Class/Method, File toggle, wider chips and Full file invariance](QA-CLASS-METHOD-FILE-WIDTH.md) documents 18 structural/fixture checks, 14 complete history replay checks, 23 interaction checks, 9 persistence checks, and 57 Full file invariance checks.
+
+## Activated Module and Directory + complete Comments coverage
+
+Both formerly disabled category buttons are active. Module uses actual Python `.py` file paths (not fake modules for markdown or notebooks), while Directory uses the real parent directory, with root-level files assigned to `(root)`. Their STM colors alternate by consecutive visible group runs. File remains a separate filename-chip toggle; its sky-blue shades likewise alternate by actual consecutive file groups. Colors never change code text or permanent STM IDs.
+
+**Comments ON now overrides the primary STM color for all recognized standalone Python `#` comments and actual triple-quoted documentation lines**, even if they are outside Class/Method/Code Block/Nested Block. For example, screenshot IDs `STM-00971`, `STM-02603` and `STM-02614` now turn pink in Code Block mode. Inline trailing comments on executable code do not convert the entire code line into a documentation row. The independent toggle and active hierarchy persist on reload.
+
+[**Actual 159-commit replay and screenshot-line QA**](QA-MODULE-DIRECTORY-COMMENTS.md) confirmed all 3,533 verified events and all 1,925 latest Full File rows across all seven primary categories, with 283 qualifying documentation rows pink in each. Live Android/GitHub Pages rendering was not independently checked.
 
 ## Thin green horizontal dividers — real adjacent siblings
 
