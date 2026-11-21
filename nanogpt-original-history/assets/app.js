@@ -304,6 +304,9 @@ function collectAllEvents(){
 function getRows(){
   let rows;
   if(state.mode==='full'){
+    // Full file means EVERY physical source line in the selected historical
+    // snapshot. Class, Method, Lines, File and Comments are display colors only:
+    // never filter this list by structural scope or documentation kind.
     const snapshot=history.snapshots.get(state.commit);
     rows=[];
     for(const [path,lines] of snapshot.files){
@@ -377,7 +380,7 @@ function display(){
   $('hint').textContent=(isAll
     ? 'All commits: chronological source additions and struck-through deletions across real files.'
     :state.mode==='full'
-      ? 'Full file: all source lines surviving original commit '+state.commit+'.'
+      ? 'Full file: EVERY source line at original commit '+state.commit+'; hierarchy controls only change colors.'
       :state.mode==='added'
         ? 'Added only: actual new source lines from selected original commit(s).'
         : 'Selected: genuine source additions and struck-through deletions.')+
