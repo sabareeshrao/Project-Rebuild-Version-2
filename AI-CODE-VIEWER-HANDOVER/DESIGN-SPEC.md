@@ -1,6 +1,14 @@
 # Accepted UI and ID Contract
 
-## Latest accepted category override — Prompt 065
+## Latest original-history override — Prompt 082 (Module / Directory / Comments)
+
+In `nanogpt-original-history/` only, **Module and Directory are fully active primary STM categories**. Module denotes real Python `.py` files, not arbitrary extension-less or notebook files; Directory denotes the literal parent folder, including repository root. Adjacent visible group runs alternate colors: Module burgundy/graphite and Directory brown/silver. The File toggle stays independent and affects filename chips only, with alternation on consecutive file changes.
+
+**Crucial Comments bug fix:** Comments ON paints every recognized standalone Python `#` comment and true triple-quoted documentation row **pink even when it is outside the selected structural category's membership**. The prior in-scope-only rule is superseded for this viewer. Executable inline `#` comments remain ordinary code lines. Comments OFF exposes the normal primary STM color or neutral out-of-scope color. This adjustment must not change historical source, STM IDs, All commits, Full File, sticky UI, or green code-area-only sibling dividers. The separate older modular viewer retains its Prompt 065 behavior.
+
+[Prompt 082](prompts/082.md) · [Executed source and UI-logic QA](../nanogpt-original-history/QA-MODULE-DIRECTORY-COMMENTS.md).
+
+## Earlier Comments rule — Prompt 065 (superseded in original-history viewer)
 
 **Comments is a pink ON/OFF overlay, not an exclusive category mode.** A selected hierarchy category (Class, Method, Code Block, Nested Block, Lines, File, Directory or Module) stays selected when Comments is turned ON. Only standalone `#` comments and recognized Python docstrings **within that category's selected-colored member lines** become pink `#DB2777`. Ordinary member code and blank lines retain the hierarchy's original color, and lines **outside a Class/Method/Block/Nested selection remain neutral** even if they are comment/docstring lines. For Lines, File, Directory and Module every corresponding displayed file row belongs to the base category, so Comments may recolor matching documented lines across that selection.
 
