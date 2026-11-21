@@ -1,11 +1,12 @@
 import {OriginalHistory} from './history.js';
-import {syntaxHTML,sourceKind,classifyFileLines,classifyFileScopes} from './syntax.js';
+import {syntaxHTML,sourceKind,classifyFileLines,classifyFileScopes,classifyStatementTypes} from './syntax.js';
 
 const $=id=>document.getElementById(id);
 const state={commit:1,mode:'all',selection:null,file:'',category:'line',fileOverlay:false,commentsOverlay:false};
 let manifest=null,history=null,windowRows=null,allEvents=[];
 const classified=new WeakMap();
 const structuralScopes=new WeakMap();
+const statementScopes=new WeakMap();
 const storageKey='nanogpt-original-history-viewer-preferences-v1';
 
 function saveState(){
@@ -24,7 +25,7 @@ function restoreState(){
     // Migrate older state: File used to color STM chips. It is now an
     // independent filename-column toggle, so preserve the user's preference.
     if(saved.category==='file'){state.category='line';state.fileOverlay=true;}
-    else if(['line','class','method','block','nested','module','package'].includes(saved.category))state.category=saved.category;
+    else if(['line','class','method','block','nested','module','package','project','global','imports','assignments','expressions'].includes(saved.category))state.category=saved.category;
     if(typeof saved.fileOverlay==='boolean')state.fileOverlay=saved.fileOverlay;
     state.commentsOverlay=saved.commentsOverlay===true;
     if(Number.isInteger(saved.commit)&&saved.commit>=1&&saved.commit<=manifest.dataAvailableThrough)
@@ -52,6 +53,15 @@ function scopeClassifications(path,lines){
   if(!paths){paths=new Map();structuralScopes.set(lines,paths);}
   if(!paths.has(path))
     paths.set(path,classifyFileScopes(path,lines,classifications(path,lines)));
+  return paths.get(path);
+}
+// Statement categories are derived once per actual pre/post historical source
+// file snapshot, not from an isolated added/deleted line or a final-file guess.
+function statementClassifications(path,lines){
+  let paths=statementScopes.get(lines);
+  if(!paths){paths=new Map();statementScopes.set(lines,paths);}
+  if(!paths.has(path))
+    paths.set(path,classifyStatementTypes(path,lines,classifications(path,lines)));
   return paths.get(path);
 }
 // Actual repository path determines membership: a .py file is a Python
@@ -84,7 +94,12 @@ function annotateGroupRuns(rows){
 }
 function chipPaint(entry){
   const scopes=entry.scope||{inClass:false,inMethod:false};
-  const member=state.category==='line'||
+  const member=state.category==='line'||state.category==='project'||
+    (state.category==='global'&&entry.path.endsWith('.py')&&
+      !scopes.inClass&&!scopes.inMethod)||
+    (state.category==='imports'&&entry.statementKind==='import')||
+    (state.category==='assignments'&&entry.statementKind==='assignment')||
+    (state.category==='expressions'&&entry.statementKind==='expression')||
     (state.category==='class'&&scopes.inClass)||
     (state.category==='method'&&scopes.inMethod)||
     (state.category==='block'&&scopes.inBlock)||
@@ -101,6 +116,11 @@ function chipPaint(entry){
     state.category==='nested'?'#facc15':
     state.category==='module'?(entry.moduleRun%2===0?'#881337':'#52525b'):
     state.category==='package'?(entry.directoryRun%2===0?'#78350f':'#94a3b8'):
+    state.category==='project'?'#0d9488':
+    state.category==='global'?'#475569':
+    state.category==='imports'?'#0e7490':
+    state.category==='assignments'?'#a16207':
+    state.category==='expressions'?'#be123c':
     '#15803d';
   const color=pink?'#db2777':member?base:'#232323';
   const index=entry.fileRun??0;
@@ -118,6 +138,11 @@ function chipPaint(entry){
        state.category==='nested'?'Nested Block · '+(scopes.nestedName||'scope'):
        state.category==='module'?'Python module · '+entry.path:
        state.category==='package'?'Directory · '+groupKey(entry.path,'package'):
+       state.category==='project'?'nanoGPT project':
+       state.category==='global'?'Global / module-level Python scope':
+       state.category==='imports'?'Import statement':
+       state.category==='assignments'?'Assignment statement':
+       state.category==='expressions'?'Expression or call statement':
        'Lines category'):'Outside '+state.category+' scope'
   };
 }
@@ -360,6 +385,8 @@ function collectAllEvents(){
       const oldKinds=classifications(file.path,oldLines);
       const newScopes=scopeClassifications(file.path,newLines);
       const oldScopes=scopeClassifications(file.path,oldLines);
+      const newStatements=statementClassifications(file.path,newLines);
+      const oldStatements=statementClassifications(file.path,oldLines);
       const newPositions=new Map(newLines.map((item,i)=>[item.id,i]));
       const oldPositions=new Map(oldLines.map((item,i)=>[item.id,i]));
       for(const record of snapshot.changes){
@@ -369,8 +396,9 @@ function collectAllEvents(){
           ||sourceKind(file.path,record.item.text);
         const scope=(deleted?oldScopes:newScopes).get(record.item.id)||
           {inClass:false,inMethod:false};
+        const statementKind=(deleted?oldStatements:newStatements).get(record.item.id)||null;
         rows.push({
-          path:record.path,item:record.item,kind:record.kind,commit,lineKind,scope,
+          path:record.path,item:record.item,kind:record.kind,commit,lineKind,scope,statementKind,
           snapshotCommit:commit,snapshotSide:deleted?'before':'after',
           sourceIndex:(deleted?oldPositions:newPositions).get(record.item.id)
         });
@@ -390,12 +418,14 @@ function getRows(){
     for(const [path,lines] of snapshot.files){
       const kinds=classifications(path,lines);
       const scopes=scopeClassifications(path,lines);
+      const statements=statementClassifications(path,lines);
       for(let sourceIndex=0;sourceIndex<lines.length;sourceIndex++){
         const item=lines[sourceIndex];
         rows.push({
           path,item,kind:'context',commit:state.commit,
           lineKind:kinds.get(item.id)||sourceKind(path,item.text),
           scope:scopes.get(item.id)||{inClass:false,inMethod:false},
+          statementKind:statements.get(item.id)||null,
           snapshotCommit:state.commit,snapshotSide:'after',sourceIndex
         });
       }
@@ -460,7 +490,12 @@ function display(){
     ?'Method blue':state.category==='block'?'Code Block orange':
      state.category==='nested'?'Nested Block yellow':
       state.category==='module'?'Module burgundy/graphite':
-      state.category==='package'?'Directory brown/silver':'Lines green';
+      state.category==='package'?'Directory brown/silver':
+      state.category==='project'?'Project teal':
+      state.category==='global'?'Global slate':
+      state.category==='imports'?'Imports cyan':
+      state.category==='assignments'?'Assignments gold':
+      state.category==='expressions'?'Expressions ruby':'Lines green';
   const overlay=' · File '+(state.fileOverlay?'ON (filename chips)':'OFF')+
     ' · Comments '+(state.commentsOverlay?'ON (pink)':'OFF');
   $('hint').textContent=(isAll
@@ -518,7 +553,7 @@ function attach(){
     if(!button||button.disabled)return;
     if(button.dataset.kind==='comment')state.commentsOverlay=!state.commentsOverlay;
     else if(button.dataset.kind==='file')state.fileOverlay=!state.fileOverlay;
-    else if(['line','class','method','block','nested','module','package'].includes(button.dataset.kind))
+    else if(['line','class','method','block','nested','module','package','project','global','imports','assignments','expressions'].includes(button.dataset.kind))
       state.category=button.dataset.kind;
     else return;
     saveState();display();
