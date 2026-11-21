@@ -49,8 +49,8 @@
     <!-- A single row of always-filled colors, swipeable on narrow screens without horizontal CODE scroll. -->
     <div class="categories-scroller">
       <div id="categories" class="categories" role="group" aria-label="Color code source by hierarchy category">
-        <button type="button" class="category" data-kind="module" disabled aria-label="Coming later: module hierarchy color" aria-pressed="false">Module</button>
-        <button type="button" class="category" data-kind="package" disabled aria-label="Coming later: package hierarchy color" aria-pressed="false">Directory</button>
+        <button type="button" class="category" data-kind="module" aria-label="Color STM chips by actual Python modules (source .py files)" aria-pressed="false">Module</button>
+        <button type="button" class="category" data-kind="package" aria-label="Color STM chips by actual parent directories; root files belong to the repository root" aria-pressed="false">Directory</button>
         <button type="button" class="category" data-kind="file" aria-pressed="false" aria-label="Toggle blue coloring of the filename chip only, independently of Class, Method, Lines and Comments">File</button>
         <button type="button" class="category" data-kind="class" aria-pressed="false" aria-label="Color STM chips red for lines inside the original historical Python classes">Class</button>
         <button type="button" class="category" data-kind="method" aria-pressed="false" aria-label="Color STM chips blue for original historical Python methods and functions">Method</button>
@@ -73,7 +73,7 @@
     </div>
   </section>
   <p id="status" role="status" aria-live="polite">Loading original nanoGPT Git history…</p>
-  <p id="hint">Choose Lines, Class, Method, Code Block or Nested Block for STM colors. File and Comments toggle independently. Thin green rules divide touching sibling groups only in code.</p>
+  <p id="hint">Choose Module, Directory, Lines, Class, Method, Code Block or Nested Block for STM colors. File colors filename chips; Comments paints all standalone Python documentation pink. Thin green rules divide touching sibling groups only in code.</p>
 
   <section id="line-area" class="line-area" aria-label="Original nanoGPT source code and permanent green statement identifiers">
     <div id="top-spacer" aria-hidden="true"></div>
