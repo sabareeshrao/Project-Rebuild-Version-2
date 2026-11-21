@@ -25,7 +25,7 @@ function restoreState(){
     // Migrate older state: File used to color STM chips. It is now an
     // independent filename-column toggle, so preserve the user's preference.
     if(saved.category==='file'){state.category='line';state.fileOverlay=true;}
-    else if(['line','class','method'].includes(saved.category))state.category=saved.category;
+    else if(['line','class','method','block','nested'].includes(saved.category))state.category=saved.category;
     if(typeof saved.fileOverlay==='boolean')state.fileOverlay=saved.fileOverlay;
     state.commentsOverlay=saved.commentsOverlay===true;
     if(Number.isInteger(saved.commit)&&saved.commit>=1&&saved.commit<=manifest.dataAvailableThrough)
@@ -59,30 +59,61 @@ function chipPaint(entry){
   const scopes=entry.scope||{inClass:false,inMethod:false};
   const member=state.category==='line'||
     (state.category==='class'&&scopes.inClass)||
-    (state.category==='method'&&scopes.inMethod);
+    (state.category==='method'&&scopes.inMethod)||
+    (state.category==='block'&&scopes.inBlock)||
+    (state.category==='nested'&&scopes.inNested);
   const documentation=entry.lineKind==='comment'||entry.lineKind==='docstring';
   // Comments overlay only within the active selected hierarchy.
   const pink=state.commentsOverlay&&documentation&&member;
   const base=state.category==='class'?'#dc2626':
-    state.category==='method'?'#2563eb':'#15803d';
+    state.category==='method'?'#2563eb':
+    state.category==='block'?'#ea580c':
+    state.category==='nested'?'#facc15':'#15803d';
   const color=pink?'#db2777':member?base:'#232323';
   const index=filePalette.get(entry.path)??0;
   const fileColor=index%2===0?'#00bfff':'#008cff';
   return {
-    color,ink:member?'#fff':'#a3a3a3',
+    color,ink:member?(state.category==='nested'&&!pink?'#302400':'#fff'):'#a3a3a3',
     fileColor:state.fileOverlay?fileColor:'#292929',
     fileInk:state.fileOverlay?'#071b27':'#e2e8f0',
     fileBorder:state.fileOverlay?fileColor:'#494949',
     label:pink?'Comments overlay':member?
       (state.category==='class'?'Class · '+(scopes.className||'scope'):
        state.category==='method'?'Method · '+(scopes.methodName||'scope'):
+       state.category==='block'?'Code Block · '+(scopes.blockName||'scope'):
+       state.category==='nested'?'Nested Block · '+(scopes.nestedName||'scope'):
        'Lines category'):'Outside '+state.category+' scope'
   };
 }
-function paintRow(row,entry){
+// A green boundary exists ONLY between directly touching sibling groups in
+// the current primary hierarchy, never because Comments/File paint changes.
+// Adjacent means consecutive *original physical lines* from the exact same
+// pre- or post-commit source snapshot. Diff events from different commits or
+// opposite sides of a replacement are NOT neighboring source lines.
+function needsHierarchyDivider(previous,current,category){
+  if(!previous||!current||!['class','method','block','nested'].includes(category))
+    return false;
+  if(previous.path!==current.path||
+     previous.snapshotCommit!==current.snapshotCommit||
+     previous.snapshotSide!==current.snapshotSide||
+     !Number.isInteger(previous.sourceIndex)||
+     current.sourceIndex!==previous.sourceIndex+1)return false;
+  const before=previous.scope||{},after=current.scope||{};
+  const key={
+    class:['classId','classParentId'],
+    method:['methodId','methodParentId'],
+    block:['blockId','blockParentId'],
+    nested:['nestedId','nestedParentId']
+  }[category];
+  const [id,parent]=key;
+  return Boolean(before[id]&&after[id]&&before[id]!==after[id]&&
+    before[parent]===after[parent]);
+}
+function paintRow(row,entry,previous=null){
   const chip=row.querySelector('.line-chip');
   const filename=row.querySelector('.filename-chip');
-  if(!chip||!filename)throw new Error('Source row is missing a filename or STM chip');
+  const codeCell=row.querySelector('.code-cell');
+  if(!chip||!filename||!codeCell)throw new Error('Source row is missing a filename, STM or code cell');
   const paint=chipPaint(entry);
   chip.style.setProperty('--chip-bg',paint.color);
   chip.style.setProperty('--chip-ink',paint.ink);
@@ -93,6 +124,10 @@ function paintRow(row,entry){
     ' · original file '+entry.path);
   filename.setAttribute('aria-label','Original source file '+entry.path+
     (state.fileOverlay?' · File colors ON':' · File colors OFF'));
+  // Existing CSS draws a 2px #15803d line ONLY across the CODE column.
+  // No extra source row, chip, DOM node, or row-height change.
+  codeCell.classList.toggle('category-divider',
+    needsHierarchyDivider(previous,entry,state.category));
 }
 const sourceBase='https://github.com/karpathy/nanoGPT/commit/';
 const pad=n=>String(n).padStart(3,'0');
@@ -115,7 +150,7 @@ function parseSelection(value,max){
   if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<1||start>end||end>max)return null;
   return {start,end};
 }
-function htmlRow(entry,index) {
+function htmlRow(entry,index,previous=null) {
   const {path,item,kind,commit}=entry;
   const deleted=kind==='del';
   const row=document.createElement('div');
@@ -157,7 +192,7 @@ function htmlRow(entry,index) {
   code.innerHTML=syntaxHTML(source.slice(leading.length),entry.lineKind||sourceKind(path,source));
   cell.append(indent,code);
   row.append(chips,cell);
-  paintRow(row,entry);
+  paintRow(row,entry,previous);
   return row;
 }
 
@@ -207,7 +242,7 @@ class HistoryWindow {
     for(const row of this.rows.children){
       const index=Number(row.dataset.rowIndex);
       const entry=this.items[index];
-      if(entry)paintRow(row,entry);
+      if(entry)paintRow(row,entry,this.items[index-1]||null);
     }
   }
   scrollToCommit(commit){
@@ -265,7 +300,8 @@ class HistoryWindow {
       this.positionSpacers();return;
     }
     const frag=document.createDocumentFragment();
-    for(let n=wanted.start;n<wanted.end;n++)frag.appendChild(htmlRow(this.items[n],n));
+    for(let n=wanted.start;n<wanted.end;n++)
+      frag.appendChild(htmlRow(this.items[n],n,this.items[n-1]||null));
     this.observer.disconnect();
     this.rows.replaceChildren(frag);
     this.rendered=wanted;
@@ -288,6 +324,8 @@ function collectAllEvents(){
       const oldKinds=classifications(file.path,oldLines);
       const newScopes=scopeClassifications(file.path,newLines);
       const oldScopes=scopeClassifications(file.path,oldLines);
+      const newPositions=new Map(newLines.map((item,i)=>[item.id,i]));
+      const oldPositions=new Map(oldLines.map((item,i)=>[item.id,i]));
       for(const record of snapshot.changes){
         if(record.path!==file.path)continue;
         const deleted=record.kind==='del';
@@ -295,7 +333,11 @@ function collectAllEvents(){
           ||sourceKind(file.path,record.item.text);
         const scope=(deleted?oldScopes:newScopes).get(record.item.id)||
           {inClass:false,inMethod:false};
-        rows.push({path:record.path,item:record.item,kind:record.kind,commit,lineKind,scope});
+        rows.push({
+          path:record.path,item:record.item,kind:record.kind,commit,lineKind,scope,
+          snapshotCommit:commit,snapshotSide:deleted?'before':'after',
+          sourceIndex:(deleted?oldPositions:newPositions).get(record.item.id)
+        });
       }
     }
   }
@@ -312,10 +354,15 @@ function getRows(){
     for(const [path,lines] of snapshot.files){
       const kinds=classifications(path,lines);
       const scopes=scopeClassifications(path,lines);
-      for(const item of lines)
-        rows.push({path,item,kind:'context',commit:state.commit,
+      for(let sourceIndex=0;sourceIndex<lines.length;sourceIndex++){
+        const item=lines[sourceIndex];
+        rows.push({
+          path,item,kind:'context',commit:state.commit,
           lineKind:kinds.get(item.id)||sourceKind(path,item.text),
-          scope:scopes.get(item.id)||{inClass:false,inMethod:false}});
+          scope:scopes.get(item.id)||{inClass:false,inMethod:false},
+          snapshotCommit:state.commit,snapshotSide:'after',sourceIndex
+        });
+      }
 
     }
   }else if(state.mode==='all')rows=allEvents;
@@ -374,7 +421,8 @@ function display(){
   const fileCount=new Set(rows.map(r=>r.path)).size;
   $('file-meta').textContent=rows.length+' source rows · '+fileCount+' files';
   const scope=state.category==='class'?'Class red':state.category==='method'
-    ?'Method blue':'Lines green';
+    ?'Method blue':state.category==='block'?'Code Block orange':
+     state.category==='nested'?'Nested Block yellow':'Lines green';
   const overlay=' · File '+(state.fileOverlay?'ON (filename chips)':'OFF')+
     ' · Comments '+(state.commentsOverlay?'ON (pink)':'OFF');
   $('hint').textContent=(isAll
@@ -432,7 +480,7 @@ function attach(){
     if(!button||button.disabled)return;
     if(button.dataset.kind==='comment')state.commentsOverlay=!state.commentsOverlay;
     else if(button.dataset.kind==='file')state.fileOverlay=!state.fileOverlay;
-    else if(['line','class','method'].includes(button.dataset.kind))
+    else if(['line','class','method','block','nested'].includes(button.dataset.kind))
       state.category=button.dataset.kind;
     else return;
     saveState();display();
