@@ -13,7 +13,7 @@ The first prototype of this original-history viewer had a redesigned blue-gray G
 
 There are **no + / − prefixes** beside code and no Git diff file cards. Deleted source lines are struck through **in the code column only**; their green STM chips and original filename labels stay visible.
 
-**Lines** (green), **File** (alternating sky blue), and independent pink **Comments** are implemented. The remaining hierarchy categories remain disabled until original historical classification is added. No synthetic code lines or categories are inserted.
+**Lines** (green), **Class** (red), and **Method** (blue) are the primary STM hierarchy modes. **File** is a separate toggle coloring only the filename chip; **Comments** is another separate pink STM-documentation overlay. Other hierarchy categories remain disabled until original historical classification is added. No synthetic source code is inserted.
 
 ## All lines in one go — default
 
@@ -24,13 +24,15 @@ The entire historical timeline is one continuous document scroll, with no per-co
 | Original-style control | Behavior |
 |---|---|
 | **All commits** | Default. All verified historical additions and deletions across original commits 1–159, with authentic file switching. Clears file filter when activated. |
-| **Full file** | All surviving source lines available at the selected historical commit, across all files unless a file filter is selected. No deleted source shown as current code. |
+| **Full file** | **Every surviving source line**, including blanks, comments, and code outside the selected Class or Method hierarchy, at the selected original Git commit; all source files unless dropdown filters a file. Category buttons only recolor, never hide source. |
 | **Added only** | Only additions in the selected original commit. |
 | **Selected** | Additions and struck-through deletions of the selected commit or selected inclusive range. |
 | **Previous / Next** | Move to adjacent real Git commits. |
 | **Jump** | One number or range changes the focused commit(s) **without changing the selected viewing mode**. In Full file, show the surviving snapshot at the selected final commit; in Added only, show only additions; in Selected, show adds/deletions; in All commits, keep the full timeline and scroll to the requested commit. |
 | **File** | Optional filter; **All files** is default. |
-| **Lines** | Green STM chip color. Other hierarchy colors will be classified later. |
+| **Lines / Class / Method** | Exclusive primary colors on STM chips: green lines, red class members, blue methods/functions. Out-of-scope rows remain visible in neutral gray. |
+| **File** | Independent ON/OFF coloring of the *filename chip only* in alternating sky blues; no STM recoloring. |
+| **Comments** | Independent pink overlay for genuine documentation inside the selected Lines/Class/Method scope. |
 
 The original historical source rows use stable `STM-NNNNN` IDs. Each addition receives a permanent identifier; when later removed, the deleted source line uses the same green STM chip with a strike through on its original code. Switching modes never reassigns STM IDs.
 
@@ -40,11 +42,23 @@ The viewer now **preserves the selected viewing mode** (`Full file`, `Added only
 
 The file dropdown stays selected across mode/commit changes. The `All commits` button no longer silently clears it; choose `All files` explicitly to clear the filter.
 
-`Lines` (green) and `File` (two sky-blue shades for original source files) are both working structural color modes. **Comments** is an **independent pink overlay** that can be ON alongside Lines or File; it highlights genuine standalone Python `#` comments and triple-quoted documentation lines, including historically deleted lines shown in strikethrough. Non-comment code keeps its green/sky-blue hierarchy chip. Other structural categories remain future work.
+`Lines` (green), `Class` (red), and `Method` (blue) are selectable STM hierarchy colors. **File** independently recolors only the neutral filename chip (two sky-blue shades), while **Comments** independently colors documentation pink on the STM chip inside the selected hierarchy. They can be active simultaneously. Out-of-scope code remains present and neutral, including in Full file; other structural categories remain future work.
 
-The current mode, commit, selected range, file filter, structural color, and independent Comments toggle are stored in browser localStorage and restored on reload when available. Category-only toggling recolors mounted rows in place, without rebuilding the source window or resetting scroll measurements.
+The current mode, commit, selected range, file filter, primary STM color, independent File toggle and independent Comments toggle are stored in browser localStorage and restored on reload when available. Category-only toggling recolors mounted rows in place, without rebuilding the source window or resetting scroll measurements.
 
 [Verified persistence and File+Comments QA](QA-STATE-PERSISTENCE-OVERLAY.md): **21 mode/interaction checks**, **12 full-history replay checks**, **12 static contract checks**, all passed in controlled tests. No live Android visual test was performed.
+
+## Class and Method, independent File toggle, and balanced source chips
+
+The STM column now represents structural hierarchy only. Select **Lines** (green), **Class** (red) or **Method** (blue). The original Python source is classified **at each actual historical commit snapshot**, and removed lines retain pre-removal scope colors. Method includes both member methods and top-level Python functions. Lines outside the selected scope remain visible in neutral gray.
+
+The **File** button is now an independent ON/OFF toggle, just like Comments. It colors only the dedicated filename chip sky blue while preserving whichever red/blue/green/pink category is active on the STM chip. **Comments** remains independent, turning qualifying standalone Python comments and triple-quoted documentation lines pink within the active scope. File + Method + Comments can all be ON simultaneously.
+
+The former left-column filename/STM split (approximately **38% / 62%**) is now **57% filename / 43% STM**: about 30% of the STM chip's former share was transferred to make long filenames easier to read. The code column width, original dark theme, sticky toolbar and original row geometry remain unchanged.
+
+**Full file shows ALL source lines regardless of what hierarchy level is selected.** Selecting Method or Class never filters Full file down to just its members; the dropdown's explicit file filter and the chosen historical Git commit are the only constraints. Historically later code remains absent in earlier snapshots.
+
+[QA: historical Class/Method, File toggle, wider chips and Full file invariance](QA-CLASS-METHOD-FILE-WIDTH.md) documents 18 structural/fixture checks, 14 complete history replay checks, 23 interaction checks, 9 persistence checks, and 57 Full file invariance checks.
 
 ## Authentic historical scope
 
