@@ -1,18 +1,19 @@
 import {OriginalHistory} from './history.js';
-import {syntaxHTML,sourceKind,classifyFileLines} from './syntax.js';
+import {syntaxHTML,sourceKind,classifyFileLines,classifyFileScopes} from './syntax.js';
 
 const $=id=>document.getElementById(id);
-const state={commit:1,mode:'all',selection:null,file:'',category:'line',commentsOverlay:false};
+const state={commit:1,mode:'all',selection:null,file:'',category:'line',fileOverlay:false,commentsOverlay:false};
 let manifest=null,history=null,windowRows=null,allEvents=[];
 let filePalette=new Map();
 const classified=new WeakMap();
+const structuralScopes=new WeakMap();
 const storageKey='nanogpt-original-history-viewer-preferences-v1';
 
 function saveState(){
   try{
     localStorage.setItem(storageKey,JSON.stringify({
       commit:state.commit,mode:state.mode,selection:state.selection,file:state.file,
-      category:state.category,commentsOverlay:state.commentsOverlay
+      category:state.category,fileOverlay:state.fileOverlay,commentsOverlay:state.commentsOverlay
     }));
   }catch(_){/* Storage may be disabled; normal navigation still works. */}
 }
@@ -21,7 +22,11 @@ function restoreState(){
     const saved=JSON.parse(localStorage.getItem(storageKey)||'null');
     if(!saved||typeof saved!=='object')return;
     if(['all','full','added','selected'].includes(saved.mode))state.mode=saved.mode;
-    if(['line','file'].includes(saved.category))state.category=saved.category;
+    // Migrate older state: File used to color STM chips. It is now an
+    // independent filename-column toggle, so preserve the user's preference.
+    if(saved.category==='file'){state.category='line';state.fileOverlay=true;}
+    else if(['line','class','method'].includes(saved.category))state.category=saved.category;
+    if(typeof saved.fileOverlay==='boolean')state.fileOverlay=saved.fileOverlay;
     state.commentsOverlay=saved.commentsOverlay===true;
     if(Number.isInteger(saved.commit)&&saved.commit>=1&&saved.commit<=manifest.dataAvailableThrough)
       state.commit=saved.commit;
@@ -43,23 +48,51 @@ function classifications(path,lines){
   if(!paths.has(path))paths.set(path,classifyFileLines(path,lines));
   return paths.get(path);
 }
+function scopeClassifications(path,lines){
+  let paths=structuralScopes.get(lines);
+  if(!paths){paths=new Map();structuralScopes.set(lines,paths);}
+  if(!paths.has(path))
+    paths.set(path,classifyFileScopes(path,lines,classifications(path,lines)));
+  return paths.get(path);
+}
 function chipPaint(entry){
+  const scopes=entry.scope||{inClass:false,inMethod:false};
+  const member=state.category==='line'||
+    (state.category==='class'&&scopes.inClass)||
+    (state.category==='method'&&scopes.inMethod);
+  const documentation=entry.lineKind==='comment'||entry.lineKind==='docstring';
+  // Comments overlay only within the active selected hierarchy.
+  const pink=state.commentsOverlay&&documentation&&member;
+  const base=state.category==='class'?'#dc2626':
+    state.category==='method'?'#2563eb':'#15803d';
+  const color=pink?'#db2777':member?base:'#232323';
   const index=filePalette.get(entry.path)??0;
-  const overlay=state.commentsOverlay&&
-    (entry.lineKind==='comment'||entry.lineKind==='docstring');
-  const color=overlay?'#db2777':state.category==='file'
-    ?(index%2===0?'#00bfff':'#008cff'):'#15803d';
-  return {color,ink:state.category==='file'&&!overlay?'#06192d':'#fff',
-    label:overlay?'Comments overlay':state.category==='file'?'File category':'Lines category'};
+  const fileColor=index%2===0?'#00bfff':'#008cff';
+  return {
+    color,ink:member?'#fff':'#a3a3a3',
+    fileColor:state.fileOverlay?fileColor:'#292929',
+    fileInk:state.fileOverlay?'#071b27':'#e2e8f0',
+    fileBorder:state.fileOverlay?fileColor:'#494949',
+    label:pink?'Comments overlay':member?
+      (state.category==='class'?'Class · '+(scopes.className||'scope'):
+       state.category==='method'?'Method · '+(scopes.methodName||'scope'):
+       'Lines category'):'Outside '+state.category+' scope'
+  };
 }
 function paintRow(row,entry){
   const chip=row.querySelector('.line-chip');
-  if(!chip)throw new Error('Source row is missing its STM chip');
+  const filename=row.querySelector('.filename-chip');
+  if(!chip||!filename)throw new Error('Source row is missing a filename or STM chip');
   const paint=chipPaint(entry);
   chip.style.setProperty('--chip-bg',paint.color);
   chip.style.setProperty('--chip-ink',paint.ink);
+  filename.style.setProperty('--file-bg',paint.fileColor);
+  filename.style.setProperty('--file-ink',paint.fileInk);
+  filename.style.setProperty('--file-edge',paint.fileBorder);
   chip.setAttribute('aria-label',entry.item.id+' · '+paint.label+
     ' · original file '+entry.path);
+  filename.setAttribute('aria-label','Original source file '+entry.path+
+    (state.fileOverlay?' · File colors ON':' · File colors OFF'));
 }
 const sourceBase='https://github.com/karpathy/nanoGPT/commit/';
 const pad=n=>String(n).padStart(3,'0');
@@ -249,13 +282,20 @@ function collectAllEvents(){
     // a deleted comment retains its true historical comment/docstring identity.
     const before=history.snapshots.get(commit-1);
     for(const file of snapshot.fileStats){
-      const newKinds=classifications(file.path,snapshot.files.get(file.path)||[]);
-      const oldKinds=classifications(file.path,before.files.get(file.path)||[]);
+      const newLines=snapshot.files.get(file.path)||[];
+      const oldLines=before.files.get(file.path)||[];
+      const newKinds=classifications(file.path,newLines);
+      const oldKinds=classifications(file.path,oldLines);
+      const newScopes=scopeClassifications(file.path,newLines);
+      const oldScopes=scopeClassifications(file.path,oldLines);
       for(const record of snapshot.changes){
         if(record.path!==file.path)continue;
-        const lineKind=(record.kind==='del'?oldKinds:newKinds).get(record.item.id)
+        const deleted=record.kind==='del';
+        const lineKind=(deleted?oldKinds:newKinds).get(record.item.id)
           ||sourceKind(file.path,record.item.text);
-        rows.push({path:record.path,item:record.item,kind:record.kind,commit,lineKind});
+        const scope=(deleted?oldScopes:newScopes).get(record.item.id)||
+          {inClass:false,inMethod:false};
+        rows.push({path:record.path,item:record.item,kind:record.kind,commit,lineKind,scope});
       }
     }
   }
@@ -268,9 +308,12 @@ function getRows(){
     rows=[];
     for(const [path,lines] of snapshot.files){
       const kinds=classifications(path,lines);
+      const scopes=scopeClassifications(path,lines);
       for(const item of lines)
         rows.push({path,item,kind:'context',commit:state.commit,
-          lineKind:kinds.get(item.id)||sourceKind(path,item.text)});
+          lineKind:kinds.get(item.id)||sourceKind(path,item.text),
+          scope:scopes.get(item.id)||{inClass:false,inMethod:false}});
+
     }
   }else if(state.mode==='all')rows=allEvents;
   else{
@@ -319,15 +362,18 @@ function display(){
   });
   $('categories').querySelectorAll('button[data-kind]').forEach(button=>{
     button.setAttribute('aria-pressed',String(button.dataset.kind==='comment'
-      ?state.commentsOverlay:button.dataset.kind===state.category));
+      ?state.commentsOverlay:button.dataset.kind==='file'
+        ?state.fileOverlay:button.dataset.kind===state.category));
   });
   const rows=getRows();
   const deleted=rows.filter(r=>r.kind==='del').length;
   const added=rows.filter(r=>r.kind==='add').length;
   const fileCount=new Set(rows.map(r=>r.path)).size;
   $('file-meta').textContent=rows.length+' source rows · '+fileCount+' files';
-  const scope=state.category==='file'?'File colors':'Green Lines';
-  const overlay=state.commentsOverlay?' · Comments ON (pink)':' · Comments OFF';
+  const scope=state.category==='class'?'Class red':state.category==='method'
+    ?'Method blue':'Lines green';
+  const overlay=' · File '+(state.fileOverlay?'ON (filename chips)':'OFF')+
+    ' · Comments '+(state.commentsOverlay?'ON (pink)':'OFF');
   $('hint').textContent=(isAll
     ? 'All commits: chronological source additions and struck-through deletions across real files.'
     :state.mode==='full'
@@ -382,7 +428,9 @@ function attach(){
     const button=e.target.closest('button[data-kind]');
     if(!button||button.disabled)return;
     if(button.dataset.kind==='comment')state.commentsOverlay=!state.commentsOverlay;
-    else if(['file','line'].includes(button.dataset.kind))state.category=button.dataset.kind;
+    else if(button.dataset.kind==='file')state.fileOverlay=!state.fileOverlay;
+    else if(['line','class','method'].includes(button.dataset.kind))
+      state.category=button.dataset.kind;
     else return;
     saveState();display();
   });
